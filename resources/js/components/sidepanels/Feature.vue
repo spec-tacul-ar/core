@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import FormInput from '@core/components/forms/FormInput.vue';
 import FormRichText from '@core/components/forms/FormRichText.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
@@ -93,7 +92,7 @@ export default {
             const endpoint = this.is_creating ? 'features/add' : 'features/' + this.feature_id + '/edit';
             const data = this.is_creating ? {...this.form, 'project_id': this.project_id} : this.form;
 
-            api.post(endpoint, data)
+            this.$api.post(endpoint, data)
                 .then((result) => {
                     const feature = {...result.data, was_recently_created: this.is_creating};
                     

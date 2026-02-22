@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import FormInput from '@core/components/forms/FormInput.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
@@ -42,7 +41,7 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            api.post('unknowns/' + this.unknown.id + '/delete')
+            this.$api.post('unknowns/' + this.unknown.id + '/delete')
                 .then(() => {
                     if (this.form.clarification) {
                         let description = this.unknown.requirement.description;
@@ -53,7 +52,7 @@ export default {
 
                         description = description + this.form.clarification;
 
-                        api.post('requirements/' + this.unknown.requirement_id + '/edit', { description })
+                        this.$api.post('requirements/' + this.unknown.requirement_id + '/edit', { description })
                             .then((result) => useRequirementsStore().save(result.data));
                     }
 

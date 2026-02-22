@@ -45,7 +45,7 @@ function handleError(error, method) {
     throw error;
 }
 
-export default {
+const api = {
     get: (url, options) => {
         return mande('/api/', { credentials: 'same-origin' })
             .get(url, options)
@@ -67,3 +67,11 @@ export default {
             .catch(error => handleError(error, 'post'));
     },
 };
+
+api.install = app => {
+    app.config.globalProperties.$api = api;
+    app.provide('api', api);
+    globalThis.$api = api;
+};
+
+export default api;

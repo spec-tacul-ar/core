@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import Draggable from 'vuedraggable';
 import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
@@ -133,7 +132,7 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            api.post('projects/' + this.project_id + '/organise', this.form)
+            this.$api.post('projects/' + this.project_id + '/organise', this.form)
                 .then((result) => {
                     useFeaturesStore().saveMany(result.data.features);
                     useRequirementsStore().saveMany(result.data.requirements);

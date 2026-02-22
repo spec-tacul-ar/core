@@ -219,7 +219,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import Draggable from 'vuedraggable';
 import FormInput from '@core/components/forms/FormInput.vue';
 import FormLabel from '@core/components/forms/FormLabel.vue';
@@ -351,7 +350,7 @@ export default {
                 data.blocked_reason = null;
             }
 
-            api.post(endpoint, data)
+            this.$api.post(endpoint, data)
                 .then((result) => {
                     const requirement = {...result.data, was_recently_created: this.is_creating};
                     

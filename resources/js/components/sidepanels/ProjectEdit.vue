@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import FormInput from '@core/components/forms/FormInput.vue';
 import FormRichText from '@core/components/forms/FormRichText.vue';
 import IconSet from '@core/components/IconSet.vue';
@@ -91,7 +90,7 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            api.post('projects/' + this.project_id + '/edit', this.form)
+            this.$api.post('projects/' + this.project_id + '/edit', this.form)
                 .then((result) => {
                     useProjectsStore().save(result.data);
 

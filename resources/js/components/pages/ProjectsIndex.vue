@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import Card from '@core/components/Card.vue';
 import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
 import IconSet from '@core/components/IconSet.vue';
@@ -50,7 +49,7 @@ export default {
             this.is_loading_projects = true;
         }
 
-        api.get('projects/browse')
+        this.$api.get('projects/browse')
             .then((result) => {
                 useProjectsStore().saveMany(result.data);
             })

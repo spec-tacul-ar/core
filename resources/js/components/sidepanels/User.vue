@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import FormInput from '@core/components/forms/FormInput.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
@@ -87,7 +86,7 @@ export default {
             const endpoint = this.is_creating ? 'users/add' : 'users/' + this.user_id + '/edit';
             const data = this.is_creating ? {...this.form, 'project_id': this.project_id} : this.form;
 
-            api.post(endpoint, data)
+            this.$api.post(endpoint, data)
                 .then((result) => {
                     const user = result.data;
                     

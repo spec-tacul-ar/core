@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import FormInput from '@core/components/forms/FormInput.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
@@ -48,7 +47,7 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            api.post('requirements/' + this.requirement.id + '/delete')
+            this.$api.post('requirements/' + this.requirement.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 

@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import DropdownMenu from '@core/components/DropdownMenu.vue';
 import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
 import { useAlertsStore, useTasksStore } from '@core/stores';
@@ -55,7 +54,7 @@ export default {
         toggleComplete() {
             this.is_waiting_for_complete = true;
 
-            api.post('tasks/' + this.task.id + '/edit', {
+            this.$api.post('tasks/' + this.task.id + '/edit', {
                     'is_complete': !this.task.is_complete
                 })
                 .then((result) => {
@@ -70,7 +69,7 @@ export default {
         remove() {
             this.is_waiting_for_remove = true;
 
-            api.post('tasks/' + this.task.id + '/delete')
+            this.$api.post('tasks/' + this.task.id + '/delete')
                 .then((result) => {
                     this.$nextTick(function () {
                         useTasksStore().delete(this.task.id);

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
@@ -51,7 +50,7 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            api.post('features/' + this.feature.id + '/delete')
+            this.$api.post('features/' + this.feature.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 

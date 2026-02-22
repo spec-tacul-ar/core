@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import DropdownMenu from '@core/components/DropdownMenu.vue';
 import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
 import RequirementDelete from '@core/components/modals/RequirementDelete.vue';
@@ -44,7 +43,7 @@ export default {
         complete() {
             this.is_waiting_for_complete = true;
 
-            api.post('requirements/' + this.requirement.id + '/tasks/complete')
+            this.$api.post('requirements/' + this.requirement.id + '/tasks/complete')
                 .then((result) => {
                     useTasksStore().saveMany(result.data);
 
@@ -58,7 +57,7 @@ export default {
         unblock() {
             this.is_waiting_for_unblock = true;
 
-            api.post('requirements/' + this.requirement.id + '/edit', {blocked_reason: null})
+            this.$api.post('requirements/' + this.requirement.id + '/edit', {blocked_reason: null})
                 .then((result) => {
                     useRequirementsStore().save(result.data);
 

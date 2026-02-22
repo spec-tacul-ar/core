@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
 import FeatureItem from '@core/components/items/FeatureItem.vue';
 import IconSet from '@core/components/IconSet.vue';
@@ -80,6 +79,7 @@ import ProjectFilters from '@core/components/sidebars/ProjectFilters.vue';
 import ProjectOutline from '@core/components/sidebars/ProjectOutline.vue';
 import UserItem from '@core/components/items/UserItem.vue';
 import { useProjectsStore } from '@core/stores';
+import { inject } from 'vue';
 
 export default {
     components: {
@@ -142,6 +142,7 @@ export default {
         }
     },
     async setup(props) {
+        const api = inject('api');
         const project = useProjectsStore().find(props.project_id);
 
         if (!project || !project.is_hydrated) {

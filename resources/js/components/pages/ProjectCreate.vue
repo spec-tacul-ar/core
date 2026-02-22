@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import api from '@core/api';
 import Card from '@core/components/Card.vue';
 import FormInput from '@core/components/forms/FormInput.vue';
 import IconSet from '@core/components/IconSet.vue';
@@ -127,7 +126,7 @@ export default {
                 users: this.form.users.map(item => item.name).map(item => item.trim()).filter(item => item.length > 0),
             };
 
-            api.post('projects/add', data)
+            this.$api.post('projects/add', data)
                 .then((result) => {
                     const project = result.data;
                     
