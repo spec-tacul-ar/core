@@ -4,13 +4,13 @@ import { isBefore, subMinutes } from 'date-fns';
 
 // TODO Switch to getting CSRF on demand and replaying requests if necessary.
 export class Api {
-    constructor(base = '/api/') {
-        this.base = base;
+    constructor(base) {
+        this.base = base || 'api';
         this.csrf_last_refreshed_at = null;
     }
 
     get(url, options) {
-        return mande(this.base, { credentials: 'same-origin' })
+        return mande('/' + this.base, { credentials: 'same-origin' })
             .get(url, options)
             .then(response => {
                 if (!this.csrf_last_refreshed_at) {
@@ -23,7 +23,7 @@ export class Api {
     }
 
     async post(url, data, options) {
-        return mande(this.base, {
+        return mande('/' + this.base, {
             credentials: 'same-origin',
             headers: { 'X-XSRF-TOKEN': await this.getCsrfToken() }
         })
@@ -76,8 +76,7 @@ export class Api {
 }
 
 export default {
-  install(app, base = '/api/') {
+  install(app, base) {
     app.provide('api', new Api(base));
   },
 };
-

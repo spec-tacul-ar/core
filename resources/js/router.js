@@ -9,7 +9,7 @@ import RequirementForm from '@core/components/sidepanels/Requirement.vue';
 import UserForm from '@core/components/sidepanels/User.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
-export default function buildRouter(base = null) {
+export function buildRouter(base) {
     // If we haven't been given a base path, look in the environment or just use root
     if (!base) {
         base = import.meta.env.VITE_ROUTER_BASE || '/';
@@ -173,3 +173,27 @@ export default function buildRouter(base = null) {
 
     return router;
 }
+
+export default {
+    install(app, options = {}) {
+        let base = null;
+        let callback = null;
+
+        if (typeof options === 'string') {
+            base = options;
+        } else if (typeof options === 'function') {
+            callback = options;
+        } else if (options && typeof options === 'object') {
+            base = options.base;
+            callback = options.callback;
+        }
+
+        const router = buildRouter(base);
+
+        if (callback) {
+            callback(router);
+        }
+
+        app.use(router);
+    },
+};
