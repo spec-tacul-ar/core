@@ -56,9 +56,11 @@ import SpinnerButton from '@core/components/SpinnerButton.vue';
 import Tooltip from '@core/components/Tooltip.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useModalStore, useProjectsStore } from '@core/stores';
+import Project from '@core/stores/models/Project';
+import { useAlertsStore, useModalStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -71,7 +73,7 @@ export default {
         Tooltip,
     },
     data() {
-        const project = useProjectsStore().find(this.project_id);
+        const project = Project.repository().find(this.project_id);
 
         return {
             form: {
@@ -90,9 +92,9 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            this.$api.post('projects/' + this.project_id + '/edit', this.form)
+            this.api.post('projects/' + this.project_id + '/edit', this.form)
                 .then((result) => {
-                    useProjectsStore().save(result.data);
+                    Project.repository().save(result.data);
 
                     this.setCleanForm();
 
@@ -117,7 +119,7 @@ export default {
     },
     async setup(props) {
         return {
-            project: useProjectsStore().find(props.project_id),
+            project: Project.repository().find(props.project_id),
         };
     },
 };

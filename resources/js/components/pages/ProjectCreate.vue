@@ -56,9 +56,11 @@ import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useProjectsStore } from '@core/stores';
+import Project from '@core/stores/models/Project';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -126,11 +128,11 @@ export default {
                 users: this.form.users.map(item => item.name).map(item => item.trim()).filter(item => item.length > 0),
             };
 
-            this.$api.post('projects/add', data)
+            this.api.post('projects/add', data)
                 .then((result) => {
                     const project = result.data;
-                    
-                    useProjectsStore().save(project);
+
+                    Project.repository().save(project);
 
                     this.setCleanForm();
 

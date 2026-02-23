@@ -20,9 +20,12 @@ import DropdownMenu from '@core/components/DropdownMenu.vue';
 import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
 import RequirementDelete from '@core/components/modals/RequirementDelete.vue';
 import IconSet from '@core/components/IconSet.vue';
-import { useAlertsStore, useModalStore, useTasksStore, useRequirementsStore } from '@core/stores';
+import Requirement from '@core/stores/models/Requirement';
+import Task from '@core/stores/models/Task';
+import { useAlertsStore, useModalStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         DropdownMenu,
         DropdownMenuItem,
@@ -43,9 +46,9 @@ export default {
         complete() {
             this.is_waiting_for_complete = true;
 
-            this.$api.post('requirements/' + this.requirement.id + '/tasks/complete')
+            this.api.post('requirements/' + this.requirement.id + '/tasks/complete')
                 .then((result) => {
-                    useTasksStore().saveMany(result.data);
+                    Task.repository().saveMany(result.data);
 
                     useAlertsStore().push('Requirement completed.');
                 })
@@ -57,9 +60,9 @@ export default {
         unblock() {
             this.is_waiting_for_unblock = true;
 
-            this.$api.post('requirements/' + this.requirement.id + '/edit', {blocked_reason: null})
+            this.api.post('requirements/' + this.requirement.id + '/edit', {blocked_reason: null})
                 .then((result) => {
-                    useRequirementsStore().save(result.data);
+                    Requirement.repository().save(result.data);
 
                     useAlertsStore().push('Requirement unblocked.');
                 })

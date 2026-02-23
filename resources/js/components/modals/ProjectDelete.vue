@@ -20,9 +20,11 @@ import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useProjectsStore } from '@core/stores';
+import Project from '@core/stores/models/Project';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         FormInput,
         ModalLayout,
@@ -40,13 +42,13 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.$api.post('projects/' + this.project.id + '/delete')
+            this.api.post('projects/' + this.project.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 
                     this.$router.push({ name: 'projects.index' })
                         .then(() => {
-                            useProjectsStore().delete(this.project.id);
+                            Project.repository().delete(this.project.id);
                             useAlertsStore().push('Project deleted.');
                         });
                 })

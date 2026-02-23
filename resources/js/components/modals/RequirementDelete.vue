@@ -22,9 +22,11 @@ import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useRequirementsStore } from '@core/stores';
+import Requirement from '@core/stores/models/Requirement';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         FormInput,
         ModalLayout,
@@ -47,11 +49,11 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.$api.post('requirements/' + this.requirement.id + '/delete')
+            this.api.post('requirements/' + this.requirement.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 
-                    useRequirementsStore().delete(this.requirement.id);
+                    Requirement.repository().delete(this.requirement.id);
                     useAlertsStore().push('Requirement deleted.');
                 })
                 .finally(() => this.is_waiting = false);

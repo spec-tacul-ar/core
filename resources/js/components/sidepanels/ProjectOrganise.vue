@@ -86,9 +86,14 @@ import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import IconSet from '@core/components/IconSet.vue';
-import { useAlertsStore, useUsersStore, useFeaturesStore, useProjectsStore, useRequirementsStore } from '@core/stores';
+import Feature from '@core/stores/models/Feature';
+import Project from '@core/stores/models/Project';
+import Requirement from '@core/stores/models/Requirement';
+import User from '@core/stores/models/User';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -110,7 +115,7 @@ export default {
         },
     },
     data() {
-        const project = useProjectsStore().find(this.project_id);
+        const project = Project.repository().find(this.project_id);
 
         const features = project.features.sortBy('id').sortBy('weight').map(feature => {
             return {
@@ -132,11 +137,11 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            this.$api.post('projects/' + this.project_id + '/organise', this.form)
+            this.api.post('projects/' + this.project_id + '/organise', this.form)
                 .then((result) => {
-                    useFeaturesStore().saveMany(result.data.features);
-                    useRequirementsStore().saveMany(result.data.requirements);
-                    useUsersStore().saveMany(result.data.users);
+                    Feature.repository().saveMany(result.data.features);
+                    Requirement.repository().saveMany(result.data.requirements);
+                    User.repository().saveMany(result.data.users);
 
                     this.setCleanForm();
 
@@ -168,7 +173,7 @@ export default {
     },
     async setup(props) {
         return {
-            project: useProjectsStore().find(props.project_id),
+            project: Project.repository().find(props.project_id),
         };
     },
 };

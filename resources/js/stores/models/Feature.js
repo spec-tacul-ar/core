@@ -1,5 +1,4 @@
 import Model from '../Model';
-import { useProjectsStore, useRequirementsStore } from '@core/stores';
 
 export default class Feature extends Model {
     get has_tasks () {
@@ -7,14 +6,14 @@ export default class Feature extends Model {
     }
 
     get project() {
-        return useProjectsStore().find(this.project_id);
+        return this.constructor.repository('projects').find(this.project_id);
     }
 
     get requirements() {
-        return useRequirementsStore().collection.where('feature_id', this.id);
+        return this.constructor.repository('requirements').collection.where('feature_id', this.id);
     }
     set requirements(requirements) {
-        useRequirementsStore().saveMany(requirements);
+        this.constructor.repository('requirements').saveMany(requirements);
     }
     
     get requirements_estimate () {

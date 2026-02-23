@@ -55,9 +55,12 @@ import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
 import ValidationMessages from '@core/components/ValidationMessages.vue';
-import { useAlertsStore, useFeaturesStore } from '@core/stores';
+import Feature from '@core/stores/models/Feature';
+import { useAlertsStore } from '@core/stores';
+import { inject } from 'vue';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -92,11 +95,15 @@ export default {
             const endpoint = this.is_creating ? 'features/add' : 'features/' + this.feature_id + '/edit';
             const data = this.is_creating ? {...this.form, 'project_id': this.project_id} : this.form;
 
-            this.$api.post(endpoint, data)
+            this.api.post(endpoint, data)
                 .then((result) => {
                     const feature = {...result.data, was_recently_created: this.is_creating};
-                    
-                    useFeaturesStore().save(feature);
+
+                    if (this.is_creating) {
+                        Feature.repository().save(feature);
+                    } else {
+                        Feature.repository().save(feature);
+                    }
 
                     useAlertsStore().push('Feature saved.');
 
@@ -135,8 +142,17 @@ export default {
             return;
         }
 
+        const api = inject('api');
+        const repository = Feature.repository();
+        let feature = repository.find(props.feature_id);
+
+        if (!feature) {
+            const result = await api.get('features/' + props.feature_id + '/read');
+            feature = repository.save(result.data);
+        }
+
         return {
-            feature: await useFeaturesStore().findOrFetch(props.feature_id),
+            feature,
         };
     },
 };

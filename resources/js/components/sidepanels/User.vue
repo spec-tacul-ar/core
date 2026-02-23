@@ -50,9 +50,12 @@ import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
 import ValidationMessages from '@core/components/ValidationMessages.vue';
-import { useAlertsStore, useUsersStore } from '@core/stores';
+import User from '@core/stores/models/User';
+import { useAlertsStore } from '@core/stores';
+import { inject } from 'vue';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -86,11 +89,11 @@ export default {
             const endpoint = this.is_creating ? 'users/add' : 'users/' + this.user_id + '/edit';
             const data = this.is_creating ? {...this.form, 'project_id': this.project_id} : this.form;
 
-            this.$api.post(endpoint, data)
+            this.api.post(endpoint, data)
                 .then((result) => {
                     const user = result.data;
                     
-                    useUsersStore().save(user);
+                    User.repository().save(user);
 
                     useAlertsStore().push('User saved.');
 
@@ -129,8 +132,17 @@ export default {
             return;
         }
 
+        const api = inject('api');
+        const users = User.repository();
+        let user = users.find(props.user_id);
+
+        if (!user) {
+            const result = await api.get('users/' + props.user_id + '/read');
+            user = User.repository().save(result.data);
+        }
+
         return {
-            user: await useUsersStore().findOrFetch(props.user_id),
+            user,
         };
     },
 };

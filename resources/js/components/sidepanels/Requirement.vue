@@ -232,9 +232,15 @@ import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
 import ValidationMessages from '@core/components/ValidationMessages.vue';
-import { useAlertsStore, useAssignmentsStore, useProjectsStore, useUnknownsStore, useRequirementsStore, useTasksStore } from '@core/stores';
+import Assignment from '@core/stores/models/Assignment';
+import Requirement from '@core/stores/models/Requirement';
+import Task from '@core/stores/models/Task';
+import Unknown from '@core/stores/models/Unknown';
+import { useAlertsStore } from '@core/stores';
+import { inject } from 'vue';
 
 export default {
+    inject: ['api'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -350,20 +356,24 @@ export default {
                 data.blocked_reason = null;
             }
 
-            this.$api.post(endpoint, data)
+            this.api.post(endpoint, data)
                 .then((result) => {
                     const requirement = {...result.data, was_recently_created: this.is_creating};
-                    
-                    useRequirementsStore().save(requirement);
+
+                    if (this.is_creating) {
+                        Requirement.repository().save(requirement);
+                    } else {
+                        Requirement.repository().save(requirement);
+                    }
 
                     if (this.requirement) {
                         // TODO: Are these not working? deleted_unknown_id should be plural?
-                        useUnknownsStore().deleteMany(this.deleted_unknown_id);
-                        useTasksStore().deleteMany(this.deleted_task_ids);
+                        Unknown.repository().deleteMany(this.deleted_unknown_id);
+                        Task.repository().deleteMany(this.deleted_task_ids);
 
                         const user_ids = requirement.assignments.map(assignment => assignment.user_id);
                         const deleted_assignments = this.requirement.assignments.whereNotIn('user_id', user_ids).pluck('id').all();
-                        useAssignmentsStore().deleteMany(deleted_assignments);
+                        Assignment.repository().deleteMany(deleted_assignments);
                     }
 
                     useAlertsStore().push('Requirement saved.');
@@ -416,9 +426,24 @@ export default {
         },
     },
     async setup(props) {
+        const api = inject('api');
+        const repository = Requirement.repository();
+        const projects = Requirement.repository('projects');
+        
+        let requirement = null;
+
+        if (props.requirement_id) {
+            requirement = repository.find(props.requirement_id);
+
+            if (!requirement) {
+                const result = await api.get('requirements/' + props.requirement_id + '/read');
+                requirement = repository.save(result.data);
+            }
+        }
+
         return {
-            requirement: props.requirement_id ? await useRequirementsStore().findOrFetch(props.requirement_id) : null,
-            project: useProjectsStore().find(props.project_id),
+            requirement,
+            project: projects.find(props.project_id),
         };
     },
 };

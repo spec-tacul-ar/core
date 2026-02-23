@@ -77,8 +77,8 @@ import IconSet from '@core/components/IconSet.vue';
 import RichText from '@core/components/RichText.vue';
 import ProjectFilters from '@core/components/sidebars/ProjectFilters.vue';
 import ProjectOutline from '@core/components/sidebars/ProjectOutline.vue';
+import Project from '@core/stores/models/Project';
 import UserItem from '@core/components/items/UserItem.vue';
-import { useProjectsStore } from '@core/stores';
 import { inject } from 'vue';
 
 export default {
@@ -96,7 +96,7 @@ export default {
             return this.project.features.sortBy('id').sortBy('weight');
         },
         project() {
-            return useProjectsStore().find(this.project_id);
+            return Project.repository().find(this.project_id);
         },
         users() {
             return this.project.users.sortBy('id').sortBy('weight');
@@ -143,11 +143,19 @@ export default {
     },
     async setup(props) {
         const api = inject('api');
-        const project = useProjectsStore().find(props.project_id);
+        const store = Project.repository();
+        const project = store.find(props.project_id);
 
         if (!project || !project.is_hydrated) {
             await api.get('projects/' + props.project_id + '/read', {query: {'hydrated': true}})
-                .then((result) => useProjectsStore().save({...result.data, is_hydrated: true}));
+                .then((result) => {
+                    if (project) {
+                        Project.repository().save({...result.data, is_hydrated: true});
+                        return;
+                    }
+
+                    Project.repository().save({...result.data, is_hydrated: true});
+                });
         }
     },
     unmounted() {

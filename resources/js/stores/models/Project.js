@@ -1,9 +1,5 @@
 import Filters from '../Filters';
 import Model from '../Model';
-import {
-    useFeaturesStore,
-    useUsersStore
-} from '@core/stores';
 
 export default class Project extends Model {
     constructor(data) {
@@ -13,10 +9,10 @@ export default class Project extends Model {
     }
 
     get features() {
-        return useFeaturesStore().collection.where('project_id', this.id);
+        return this.constructor.repository('features').collection.where('project_id', this.id);
     }
     set features(features) {
-        useFeaturesStore().saveMany(features);
+        this.constructor.repository('features').saveMany(features);
     }
 
     get features_estimate() {
@@ -28,9 +24,9 @@ export default class Project extends Model {
     }
 
     get users() {
-        return useUsersStore().collection.where('project_id', this.id);
+        return this.constructor.repository('users').collection.where('project_id', this.id);
     }
     set users(users) {
-        useUsersStore().saveMany(users);
+        this.constructor.repository('users').saveMany(users);
     }
 }

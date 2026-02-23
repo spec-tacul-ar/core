@@ -30,9 +30,11 @@ import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useUsersStore } from '@core/stores';
+import User from '@core/stores/models/User';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         ModalLayout,
         SpinnerButton
@@ -54,11 +56,11 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.$api.post('users/' + this.user.id + '/delete')
+            this.api.post('users/' + this.user.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 
-                    useUsersStore().delete(this.user.id);
+                    User.repository().delete(this.user.id);
                     useAlertsStore().push('User deleted.');
                 })
                 .finally(() => this.is_waiting = false);

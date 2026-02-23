@@ -25,9 +25,10 @@ import IconSet from '@core/components/IconSet.vue';
 import LoadingSpinner from '@core/components/LoadingSpinner.vue';
 import ProjectItem from '@core/components/items/ProjectItem.vue';
 import { formatDistance } from 'date-fns';
-import { useProjectsStore } from '@core/stores';
+import Project from '@core/stores/models/Project';
 
 export default {
+    inject: ['api'],
     components: {
         Card,
         DefaultLayout,
@@ -41,7 +42,9 @@ export default {
         };
     },
     computed: {
-        projects: () => useProjectsStore().collection.sortBy('name'),
+        projects() {
+            return Project.repository().collection.sortBy('name');
+        },
     },
     mounted() {
         // Projects
@@ -49,9 +52,9 @@ export default {
             this.is_loading_projects = true;
         }
 
-        this.$api.get('projects/browse')
+        this.api.get('projects/browse')
             .then((result) => {
-                useProjectsStore().saveMany(result.data);
+                Project.repository().saveMany(result.data);
             })
             .finally(() => this.is_loading_projects = false);
     },

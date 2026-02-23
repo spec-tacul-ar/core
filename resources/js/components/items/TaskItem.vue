@@ -35,10 +35,12 @@
 <script>
 import DropdownMenu from '@core/components/DropdownMenu.vue';
 import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import { useAlertsStore, useTasksStore } from '@core/stores';
+import { useAlertsStore } from '@core/stores';
 import IconSet from '@core/components/IconSet.vue';
+import Task from '@core/stores/models/Task';
 
 export default {
+    inject: ['api'],
     components: {
         IconSet,
         DropdownMenu,
@@ -54,11 +56,11 @@ export default {
         toggleComplete() {
             this.is_waiting_for_complete = true;
 
-            this.$api.post('tasks/' + this.task.id + '/edit', {
+            this.api.post('tasks/' + this.task.id + '/edit', {
                     'is_complete': !this.task.is_complete
                 })
                 .then((result) => {
-                    useTasksStore().save(result.data);
+                    Task.repository().save(result.data);
 
                     useAlertsStore().push('Task updated.');
 
@@ -69,10 +71,10 @@ export default {
         remove() {
             this.is_waiting_for_remove = true;
 
-            this.$api.post('tasks/' + this.task.id + '/delete')
+            this.api.post('tasks/' + this.task.id + '/delete')
                 .then((result) => {
                     this.$nextTick(function () {
-                        useTasksStore().delete(this.task.id);
+                        Task.repository().delete(this.task.id);
                     });
 
                     useAlertsStore().push('Task deleted.');

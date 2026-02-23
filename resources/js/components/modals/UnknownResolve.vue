@@ -21,9 +21,12 @@ import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useRequirementsStore, useUnknownsStore } from '@core/stores';
+import Requirement from '@core/stores/models/Requirement';
+import Unknown from '@core/stores/models/Unknown';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         FormInput,
         ModalLayout,
@@ -41,7 +44,7 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.$api.post('unknowns/' + this.unknown.id + '/delete')
+            this.api.post('unknowns/' + this.unknown.id + '/delete')
                 .then(() => {
                     if (this.form.clarification) {
                         let description = this.unknown.requirement.description;
@@ -52,13 +55,13 @@ export default {
 
                         description = description + this.form.clarification;
 
-                        this.$api.post('requirements/' + this.unknown.requirement_id + '/edit', { description })
-                            .then((result) => useRequirementsStore().save(result.data));
+                        this.api.post('requirements/' + this.unknown.requirement_id + '/edit', { description })
+                            .then((result) => Requirement.repository().save(result.data));
                     }
 
                     this.$emit('close');
 
-                    useUnknownsStore().delete(this.unknown.id);
+                    Unknown.repository().delete(this.unknown.id);
                     useAlertsStore().push('Unknown resolved.');
                 })
                 .finally(() => this.is_waiting = false);

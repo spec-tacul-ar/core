@@ -1,19 +1,15 @@
 import Model from '../Model';
-import { useAssignmentsStore } from '@core/stores';
-import { useFeaturesStore } from '@core/stores';
-import { useTasksStore } from '@core/stores';
-import { useUnknownsStore } from '@core/stores';
 
 export default class Requirement extends Model {
     get assignments() {
-        return useAssignmentsStore().collection.where('requirement_id', this.id);
+        return this.constructor.repository('assignments').collection.where('requirement_id', this.id);
     }
     set assignments(assignments) {
-        useAssignmentsStore().saveMany(assignments);
+        this.constructor.repository('assignments').saveMany(assignments);
     }
 
     get feature() {
-        return useFeaturesStore().find(this.feature_id);
+        return this.constructor.repository('features').find(this.feature_id);
     }
 
     get has_unknowns() {
@@ -33,10 +29,10 @@ export default class Requirement extends Model {
     }
 
     get unknowns() {
-        return useUnknownsStore().collection.where('requirement_id', this.id);
+        return this.constructor.repository('unknowns').collection.where('requirement_id', this.id);
     }
     set unknowns(unknowns) {
-        useUnknownsStore().saveMany(unknowns);
+        this.constructor.repository('unknowns').saveMany(unknowns);
     }
 
     get short_title() {
@@ -44,10 +40,10 @@ export default class Requirement extends Model {
     }
 
     get tasks() {
-        return useTasksStore().collection.where('requirement_id', this.id);
+        return this.constructor.repository('tasks').collection.where('requirement_id', this.id);
     }
     set tasks(tasks) {
-        useTasksStore().saveMany(tasks);
+        this.constructor.repository('tasks').saveMany(tasks);
     }
 
     get title() {

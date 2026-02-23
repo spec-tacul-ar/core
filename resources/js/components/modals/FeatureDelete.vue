@@ -29,9 +29,11 @@ import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import UniqueId from '@core/mixins/UniqueId';
-import { useAlertsStore, useFeaturesStore } from '@core/stores';
+import Feature from '@core/stores/models/Feature';
+import { useAlertsStore } from '@core/stores';
 
 export default {
+    inject: ['api'],
     components: {
         ModalLayout,
         SpinnerButton
@@ -50,11 +52,11 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.$api.post('features/' + this.feature.id + '/delete')
+            this.api.post('features/' + this.feature.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 
-                    useFeaturesStore().delete(this.feature.id);
+                    Feature.repository().delete(this.feature.id);
                     useAlertsStore().push('Feature deleted.');
                 })
                 .finally(() => this.is_waiting = false);

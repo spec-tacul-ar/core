@@ -33,15 +33,6 @@ export default (model) => {
             deleteMany(ids) {
                 ids.forEach(id => this.delete(id));
             },
-            async findOrFetch(id) {
-                const entity = this.find(id);
-
-                if (entity) {
-                    return entity;
-                }
-
-                return model.fetch(id, this);
-            },
         },
         getters: {
             collection: (state) => {
