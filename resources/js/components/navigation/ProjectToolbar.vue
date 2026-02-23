@@ -11,8 +11,8 @@
             </Tooltip>
         </template>
 
-        <DropdownMenuItem :href="route('export.html', { project })" icon="html-file" download>HTML</DropdownMenuItem>
-        <DropdownMenuItem :href="route('export.markdown', { project })" icon="markdown-file" download>Markdown</DropdownMenuItem>
+        <DropdownMenuItem :href="'/export/' + project.id + '/html'" icon="html-file" download>HTML</DropdownMenuItem>
+        <DropdownMenuItem :href="'/export/' + project.id + '/markdown'" icon="markdown-file" download>Markdown</DropdownMenuItem>
     </DropdownMenu>
 
     <slot name="after" />
@@ -25,8 +25,6 @@ import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
 import IconSet from '@core/components/IconSet.vue';
 import NavbarButton from '@core/components/NavbarButton.vue';
 import Tooltip from '@core/components/Tooltip.vue';
-import { route } from 'ziggy-js';
-import { Ziggy } from '@core/ziggy.js';
 
 export default {
     components: {
@@ -36,11 +34,6 @@ export default {
         IconSet,
         NavbarButton,
         Tooltip,
-    },
-    methods: {
-        route(name, params = {}, absolute = false) {
-            return route(name, params, absolute, Ziggy);
-        },
     },
     props: ['project'],
 };

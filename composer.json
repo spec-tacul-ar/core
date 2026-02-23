@@ -15,8 +15,7 @@
         "laravel/tinker": "^2.10.1",
         "league/html-to-markdown": "^5.1",
         "mews/purifier": "^3.4",
-        "staudenmeir/eloquent-has-many-deep": "^1.7",
-        "tightenco/ziggy": "^2.6"
+        "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
