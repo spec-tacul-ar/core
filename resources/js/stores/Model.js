@@ -11,7 +11,7 @@ export default class {
 
     static repository(name = null) {
         if (!name) {
-            name = this.name.toLowerCase() + 's'; // TODO Use a pluraliser.
+            name = this.repository_name;
         }
 
         return this.repositories[name]();

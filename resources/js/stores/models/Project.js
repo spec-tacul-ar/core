@@ -2,6 +2,8 @@ import Filters from '../Filters';
 import Model from '../Model';
 
 export default class Project extends Model {
+    static repository_name = 'projects';
+
     constructor(data) {
         super(data);
 

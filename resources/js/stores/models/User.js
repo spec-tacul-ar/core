@@ -1,6 +1,8 @@
 import Model from '../Model';
 
 export default class User extends Model {
+    static repository_name = 'users';
+
     get project() {
         return this.constructor.repository('projects').find(this.project_id);
     }

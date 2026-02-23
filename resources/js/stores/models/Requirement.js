@@ -1,6 +1,8 @@
 import Model from '../Model';
 
 export default class Requirement extends Model {
+    static repository_name = 'requirements';
+
     get assignments() {
         return this.constructor.repository('assignments').collection.where('requirement_id', this.id);
     }

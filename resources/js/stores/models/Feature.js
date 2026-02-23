@@ -1,6 +1,8 @@
 import Model from '../Model';
 
 export default class Feature extends Model {
+    static repository_name = 'features';
+
     get has_tasks () {
         return this.requirements.some(requirement => requirement.has_tasks);
     }
