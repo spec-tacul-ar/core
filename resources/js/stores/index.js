@@ -13,7 +13,7 @@ import User from './models/User';
 import { createPinia, defineStore } from 'pinia';
 
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate)
+pinia.use(piniaPluginPersistedstate);
 
 export const useAlertsStore = defineStore('alerts', alerts);
 export const useModalStore = defineStore('modal', modal);

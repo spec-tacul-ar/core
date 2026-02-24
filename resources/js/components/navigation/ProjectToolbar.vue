@@ -1,5 +1,5 @@
 <template>
-    <NavbarButton :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex">Add requirement</NavbarButton>
+    <NavbarButton :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex" />
     <NavbarButton :to="{ name: 'projects.organise' }" icon="organise" tooltip="Organise" class="hidden sm:flex" />
 
     <DropdownMenu class="hidden sm:flex">

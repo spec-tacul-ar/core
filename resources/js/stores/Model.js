@@ -1,5 +1,5 @@
 export default class {
-    static repositories = null;
+    static repositories = {};
 
     constructor(data) {
         Object.assign(this, data);
@@ -15,5 +15,9 @@ export default class {
         }
 
         return this.repositories[name]();
+    }
+
+    static resetRepositories() {
+        Object.values(this.repositories).forEach(repository => repository().$reset());
     }
 }
