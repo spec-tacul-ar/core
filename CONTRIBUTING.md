@@ -27,6 +27,7 @@ These are guidelines. Please conform to them where you can but don't sweat it.
 * End arrays and object fields with commas.
 * Use alphabetical sorting where another doesn't make sense.
 * snake_case for variables, camelCase for functions (unless a dependency demands otherwise).
+
 ## Other notes
 * IDs are never zero.
 * Summary fields are short plain text. Description is rich text.

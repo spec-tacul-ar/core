@@ -12,7 +12,7 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (contains(id, ['/@tiptap/', '/prosemirror-'])) {
-                        return 'vendor-editor';
+                        return 'vendor-rte';
                     }
 
                     if (contains(id, ['node_modules'])) {
