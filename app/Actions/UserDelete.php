@@ -1,12 +1,12 @@
 <?php
 
-namespace Spectacular\Core\Actions\Users;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Response;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\User;
 
-class DeleteUser
+class UserDelete
 {
     use AsAction;
 

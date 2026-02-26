@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Actions\Tasks;
+namespace Spectacular\Core\Actions;
 
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -8,7 +8,7 @@ use Spectacular\Core\Http\Resources\TaskResource;
 use Spectacular\Core\Models\Task;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
 
-class StoreTask
+class TaskStore
 {
     use AsAction;
 

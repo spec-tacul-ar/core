@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Users;
+namespace Spectacular\Core\Actions;
 
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\UserResource;
 use Spectacular\Core\Models\User;
 
-class UpdateUser
+class UserUpdate
 {
     use AsAction;
 

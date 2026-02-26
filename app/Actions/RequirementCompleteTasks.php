@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Requirements;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Requirement;
 
-class CompleteRequirementTasks
+class RequirementCompleteTasks
 {
     use AsAction;
 

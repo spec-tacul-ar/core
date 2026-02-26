@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
 
-class BrowseProjects
+class ProjectBrowse
 {
     use AsAction;
 

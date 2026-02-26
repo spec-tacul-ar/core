@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -8,7 +8,7 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Project;
 
-class OrganiseProject
+class ProjectOrganise
 {
     use AsAction;
 

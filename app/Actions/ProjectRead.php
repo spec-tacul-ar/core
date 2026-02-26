@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace Spectacular\Core\Actions;
 
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
 
-class ReadProject
+class ProjectRead
 {
     use AsAction;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Spectacular\Core\Actions\Unknowns;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Response;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Unknown;
 
-class DeleteUnknown
+class UnknownDelete
 {
     use AsAction;
 

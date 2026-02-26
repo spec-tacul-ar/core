@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Unknowns;
+namespace Spectacular\Core\Actions;
 
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\UnknownResource;
 use Spectacular\Core\Models\Unknown;
 
-class StoreUnknown
+class UnknownStore
 {
     use AsAction;
 

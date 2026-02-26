@@ -1,12 +1,12 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace Spectacular\Core\Actions;
 
 use Illuminate\Http\Response;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Project;
 
-class DeleteProject
+class ProjectDelete
 {
     use AsAction;
 
