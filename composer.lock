@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc3323bbccdc98c6e053fca003a1a772",
+    "content-hash": "70a83e1e83aeb1f01d6727d9d5f11ff0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2399,6 +2399,154 @@
                 }
             ],
             "time": "2026-01-15T06:54:53+00:00"
+        },
+        {
+            "name": "lorisleiva/laravel-actions",
+            "version": "v2.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lorisleiva/laravel-actions.git",
+                "reference": "11c2531366ca8bd5efcd0afc9e8047e7999926ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lorisleiva/laravel-actions/zipball/11c2531366ca8bd5efcd0afc9e8047e7999926ff",
+                "reference": "11c2531366ca8bd5efcd0afc9e8047e7999926ff",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^10.0|^11.0|^12.0",
+                "lorisleiva/lody": "^0.6",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^2.34|^3.0",
+                "phpunit/phpunit": "^10.5|^11.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Action": "Lorisleiva\\Actions\\Facades\\Actions"
+                    },
+                    "providers": [
+                        "Lorisleiva\\Actions\\ActionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lorisleiva\\Actions\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Loris Leiva",
+                    "email": "loris.leiva@gmail.com",
+                    "homepage": "https://lorisleiva.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel components that take care of one specific task",
+            "homepage": "https://github.com/lorisleiva/laravel-actions",
+            "keywords": [
+                "action",
+                "command",
+                "component",
+                "controller",
+                "job",
+                "laravel",
+                "listener",
+                "object"
+            ],
+            "support": {
+                "issues": "https://github.com/lorisleiva/laravel-actions/issues",
+                "source": "https://github.com/lorisleiva/laravel-actions/tree/v2.9.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/lorisleiva",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-08-10T08:58:19+00:00"
+        },
+        {
+            "name": "lorisleiva/lody",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lorisleiva/lody.git",
+                "reference": "6bada710ebc75f06fdf62db26327be1592c4f014"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lorisleiva/lody/zipball/6bada710ebc75f06fdf62db26327be1592c4f014",
+                "reference": "6bada710ebc75f06fdf62db26327be1592c4f014",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^10.0|^11.0|^12.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^2.34|^3.0",
+                "phpunit/phpunit": "^10.5|^11.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Lody": "Lorisleiva\\Lody\\Lody"
+                    },
+                    "providers": [
+                        "Lorisleiva\\Lody\\LodyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lorisleiva\\Lody\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Loris Leiva",
+                    "email": "loris.leiva@gmail.com",
+                    "homepage": "https://lorisleiva.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Load files and classes as lazy collections in Laravel.",
+            "homepage": "https://github.com/lorisleiva/lody",
+            "keywords": [
+                "classes",
+                "collection",
+                "files",
+                "laravel",
+                "load"
+            ],
+            "support": {
+                "issues": "https://github.com/lorisleiva/lody/issues",
+                "source": "https://github.com/lorisleiva/lody/tree/v0.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/lorisleiva",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-01T19:21:17+00:00"
         },
         {
             "name": "mews/purifier",
@@ -6471,76 +6619,6 @@
                 }
             ],
             "time": "2026-01-01T22:13:48+00:00"
-        },
-        {
-            "name": "tightenco/ziggy",
-            "version": "v2.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tighten/ziggy.git",
-                "reference": "6b9d38415b684b798ba25ae73324f6652ff15314"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tighten/ziggy/zipball/6b9d38415b684b798ba25ae73324f6652ff15314",
-                "reference": "6b9d38415b684b798ba25ae73324f6652ff15314",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": ">=9.0",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "laravel/folio": "^1.1",
-                "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
-                "pestphp/pest": "^2.0 || ^3.0 || ^4.0",
-                "pestphp/pest-plugin-laravel": "^2.0 || ^3.0 || ^4.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tighten\\Ziggy\\ZiggyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tighten\\Ziggy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Coulbourne",
-                    "email": "daniel@tighten.co"
-                },
-                {
-                    "name": "Jake Bathman",
-                    "email": "jake@tighten.co"
-                },
-                {
-                    "name": "Jacob Baker-Kretzmar",
-                    "email": "jacob@tighten.co"
-                }
-            ],
-            "description": "Use your Laravel named routes in JavaScript.",
-            "homepage": "https://github.com/tighten/ziggy",
-            "keywords": [
-                "Ziggy",
-                "javascript",
-                "laravel",
-                "routes"
-            ],
-            "support": {
-                "issues": "https://github.com/tighten/ziggy/issues",
-                "source": "https://github.com/tighten/ziggy/tree/v2.6.1"
-            },
-            "time": "2026-02-16T20:20:46+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

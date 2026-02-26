@@ -1,49 +1,53 @@
 <?php
 
-use Spectacular\Core\Http\Controllers\Api\FeaturesController;
-use Spectacular\Core\Http\Controllers\Api\ProjectsController;
-use Spectacular\Core\Http\Controllers\Api\UnknownsController;
-use Spectacular\Core\Http\Controllers\Api\RequirementsController;
-use Spectacular\Core\Http\Controllers\Api\TasksController;
-use Spectacular\Core\Http\Controllers\Api\UsersController;
 use Illuminate\Support\Facades\Route;
+use Spectacular\Core\Actions\Features\DeleteFeature;
+use Spectacular\Core\Actions\Features\StoreFeature;
+use Spectacular\Core\Actions\Features\UpdateFeature;
+use Spectacular\Core\Actions\Projects\BrowseProjects;
+use Spectacular\Core\Actions\Projects\DeleteProject;
+use Spectacular\Core\Actions\Projects\OrganiseProject;
+use Spectacular\Core\Actions\Projects\ReadProject;
+use Spectacular\Core\Actions\Projects\StoreProject;
+use Spectacular\Core\Actions\Projects\UpdateProject;
+use Spectacular\Core\Actions\Requirements\CompleteRequirementTasks;
+use Spectacular\Core\Actions\Requirements\DeleteRequirement;
+use Spectacular\Core\Actions\Requirements\StoreRequirement;
+use Spectacular\Core\Actions\Requirements\UpdateRequirement;
+use Spectacular\Core\Actions\Tasks\DeleteTask;
+use Spectacular\Core\Actions\Tasks\StoreTask;
+use Spectacular\Core\Actions\Tasks\UpdateTask;
+use Spectacular\Core\Actions\Unknowns\DeleteUnknown;
+use Spectacular\Core\Actions\Unknowns\StoreUnknown;
+use Spectacular\Core\Actions\Unknowns\UpdateUnknown;
+use Spectacular\Core\Actions\Users\DeleteUser;
+use Spectacular\Core\Actions\Users\StoreUser;
+use Spectacular\Core\Actions\Users\UpdateUser;
 
-Route::controller(FeaturesController::class)->group(function () {
-    Route::post('features/{feature}/edit', 'update');
-    Route::post('features/add', 'store');
-    Route::post('features/{feature}/delete', 'destroy');
-});
+Route::post('features/{feature}/edit', UpdateFeature::class);
+Route::post('features/add', StoreFeature::class);
+Route::post('features/{feature}/delete', DeleteFeature::class);
 
-Route::controller(ProjectsController::class)->group(function () {
-     Route::get('projects/browse', 'index');
-    Route::post('projects/add', 'store');
-     Route::get('projects/{project}/read', 'show');
-    Route::post('projects/{project}/edit', 'update');
-    Route::post('projects/{project}/delete', 'destroy');
-    Route::post('projects/{project}/organise', 'organise');
-});
+Route::get('projects/browse', BrowseProjects::class);
+Route::post('projects/add', StoreProject::class);
+Route::get('projects/{project}/read', ReadProject::class);
+Route::post('projects/{project}/edit', UpdateProject::class);
+Route::post('projects/{project}/delete', DeleteProject::class);
+Route::post('projects/{project}/organise', OrganiseProject::class);
 
-Route::controller(UnknownsController::class)->group(function () {
-    Route::post('unknowns/{unknown}/edit', 'update');
-    Route::post('unknowns/add', 'store');
-    Route::post('unknowns/{unknown}/delete', 'destroy');
-});
+Route::post('unknowns/{unknown}/edit', UpdateUnknown::class);
+Route::post('unknowns/add', StoreUnknown::class);
+Route::post('unknowns/{unknown}/delete', DeleteUnknown::class);
 
-Route::controller(RequirementsController::class)->group(function () {
-    Route::post('requirements/{requirement}/edit', 'update');
-    Route::post('requirements/add', 'store');
-    Route::post('requirements/{requirement}/delete', 'destroy');
-    Route::post('requirements/{requirement}/tasks/complete', 'completeTasks');
-});
+Route::post('requirements/{requirement}/edit', UpdateRequirement::class);
+Route::post('requirements/add', StoreRequirement::class);
+Route::post('requirements/{requirement}/delete', DeleteRequirement::class);
+Route::post('requirements/{requirement}/tasks/complete', CompleteRequirementTasks::class);
 
-Route::controller(TasksController::class)->group(function () {
-    Route::post('tasks/{task}/edit', 'update');
-    Route::post('tasks/add', 'store');
-    Route::post('tasks/{task}/delete', 'destroy');
-});
+Route::post('tasks/{task}/edit', UpdateTask::class);
+Route::post('tasks/add', StoreTask::class);
+Route::post('tasks/{task}/delete', DeleteTask::class);
 
-Route::controller(UsersController::class)->group(function () {
-    Route::post('users/add', 'store');
-    Route::post('users/{user}/edit', 'update');
-    Route::post('users/{user}/delete', 'destroy');
-});
+Route::post('users/add', StoreUser::class);
+Route::post('users/{user}/edit', UpdateUser::class);
+Route::post('users/{user}/delete', DeleteUser::class);

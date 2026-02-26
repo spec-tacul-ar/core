@@ -14,6 +14,7 @@
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
         "league/html-to-markdown": "^5.1",
+        "lorisleiva/laravel-actions": "^2.9",
         "mews/purifier": "^3.4",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
