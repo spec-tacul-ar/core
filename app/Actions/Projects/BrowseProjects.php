@@ -4,6 +4,7 @@ namespace Spectacular\Core\Actions\Projects;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Router;
+use Illuminate\Database\Eloquent\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
@@ -17,9 +18,9 @@ class BrowseProjects
         $router->get('projects/browse', static::class);
     }
 
-    public function handle(): ResourceCollection
+    public function handle(): Collection
     {
-        $projects = Project::query()
+        return Project::query()
             ->withCount([
                 'requirements',
                 'requirements as blocked_requirements_count' => fn ($query) => $query->whereNotNull('blocked_reason'),
@@ -32,12 +33,10 @@ class BrowseProjects
             ])
             ->orderBy('name', 'asc')
             ->get();
-
-        return ProjectResource::collection($projects);
     }
 
     public function asController(): ResourceCollection
     {
-        return $this->handle();
+        return ProjectResource::collection($this->handle());
     }
 }
