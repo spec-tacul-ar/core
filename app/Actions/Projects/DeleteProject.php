@@ -1,14 +1,20 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Projects;
 
 use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Project;
 
-class ProjectDelete
+class DeleteProject
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('projects/{project}/delete', static::class);
+    }
 
     public function handle(Project $project): void
     {

@@ -1,16 +1,22 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Tasks;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\TaskResource;
 use Spectacular\Core\Models\Task;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
 
-class TaskUpdate
+class EditTask
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('tasks/{task}/edit', static::class);
+    }
 
     public function rules(): array
     {

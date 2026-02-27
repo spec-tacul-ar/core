@@ -1,15 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Users;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\UserResource;
 use Spectacular\Core\Models\User;
 
-class UserStore
+class AddUser
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('users/add', static::class);
+    }
 
     public function rules(): array
     {

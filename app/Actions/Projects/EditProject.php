@@ -1,16 +1,22 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Projects;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
 use Spectacular\Core\Rules\SluggableName as SluggableNameRule;
 
-class ProjectUpdate
+class EditProject
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('projects/{project}/edit', static::class);
+    }
 
     public function rules(): array
     {

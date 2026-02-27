@@ -1,15 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Features;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\FeatureResource;
 use Spectacular\Core\Models\Feature;
 
-class FeatureUpdate
+class EditFeature
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('features/{feature}/edit', static::class);
+    }
 
     public function rules(): array
     {

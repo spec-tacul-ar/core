@@ -1,14 +1,20 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Unknowns;
 
 use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Unknown;
 
-class UnknownDelete
+class DeleteUnknown
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('unknowns/{unknown}/delete', static::class);
+    }
 
     public function handle(Unknown $unknown): void
     {

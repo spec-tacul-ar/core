@@ -1,16 +1,22 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Projects;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Project;
 
-class ProjectOrganise
+class OrganiseProject
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('projects/{project}/organise', static::class);
+    }
 
     public function rules(): array
     {

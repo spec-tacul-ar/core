@@ -1,15 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Unknowns;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\UnknownResource;
 use Spectacular\Core\Models\Unknown;
 
-class UnknownUpdate
+class EditUnknown
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('unknowns/{unknown}/edit', static::class);
+    }
 
     public function rules(): array
     {

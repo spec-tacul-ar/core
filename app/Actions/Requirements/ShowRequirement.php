@@ -1,12 +1,12 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Requirements;
 
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\RequirementResource;
 use Spectacular\Core\Models\Requirement;
 
-class RequirementShow
+class ShowRequirement
 {
     use AsAction;
 

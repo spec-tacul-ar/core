@@ -1,15 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Projects;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
 
-class ProjectRead
+class ReadProject
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->get('projects/{project}/read', static::class);
+    }
 
     public function handle(Project $project, bool $hydrate): Project
     {

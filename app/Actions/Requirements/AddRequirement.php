@@ -1,16 +1,22 @@
 <?php
 
-namespace Spectacular\Core\Actions;
+namespace Spectacular\Core\Actions\Requirements;
 
+use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\RequirementResource;
 use Spectacular\Core\Models\Requirement;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
 
-class RequirementStore
+class AddRequirement
 {
     use AsAction;
+
+    public static function routes(Router $router): void
+    {
+        $router->post('requirements/add', static::class);
+    }
 
     public function rules(): array
     {
