@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Models\Requirement;
 
-class CompleteTaksForRequirement
+class CompleteTasksForRequirement
 {
     use AsAction;
 
