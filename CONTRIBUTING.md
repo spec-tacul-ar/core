@@ -1,12 +1,22 @@
 # Contributing
 
-*This file is still **Work In Progress** and may refer to conventions that haven't even been implemented yet.*
+> [!NOTE]
+> *This file is still **Work In Progress** and may refer to many conventions that haven't even been implemented yet.*
 
 Thank you for considering contributing to Spectacular!
 
 Please open an issue or discussion before embarking on major changes or new features to see if they align with the goals of the project.
 
 Contributors will be asked to sign our Fiduciary License Agreement. This ensures that development is sustainable while guaranteeing that your contributions remain open forever. 
+
+## Code of Conduct
+
+The Spectacular code of conduct is derived from the Laravel code of conduct. Any violations of the code of conduct may be reported to Matthew White (matt@matthewwhite.me.uk):
+
+* Participants will be tolerant of opposing views.
+* Participants must ensure that their language and actions are free of personal attacks and disparaging personal remarks.
+* When interpreting the words and actions of others, participants should always assume good intentions.
+* Behavior that can be reasonably considered harassment will not be tolerated.
 
 ## Code style
 

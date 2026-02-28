@@ -19,6 +19,9 @@ Spectacular is a free open-source functional specification manager.
 
 ## Installation
 
+> [!TIP]
+> Skip setup, updates, and backups with [Spectacular Cloud](https://spec.tacul.ar) - the hosted version of Spectacular for teams that want to start writing specs immediately.
+
 Spectacular installs like any other Laravel application.
 
 ```bash
@@ -32,7 +35,7 @@ To upgrade, simply grab the latest code and run `composer setup` again.
 
 ### Docker
 
-If you don't have PHP available, you can run the app locally with Docker. You'll find it running at [http://localhost:8000](http://localhost:8000).
+If you don't have PHP available, you can run the app with Docker. Once ready, you'll find Spectacular running at [http://localhost:8000](http://localhost:8000).
 
 ```bash
 git pull
@@ -41,22 +44,36 @@ docker compose up --build
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
 
-### Spectacular Cloud
+## Extending
 
-For a zero-configuration hosted solution with extra collaboration feaures, use [Spectacular Cloud](https://spec.tacul.ar) (coming soon!).
+Spectacular is designed to be forked and extended for your purposes. Of couse, if you've made something cool that other might use, please consider contributing it back to the project.
+
+### Laravel
+
+API endpoints are registered as actions in `app/Actions`. You can either use the service container to [change the binding](https://laravel.com/docs/12.x/container#binding-interfaces-to-implementations) to your own custom implementation or by defining your own routes in `routes/api.php`.
+
+### Vue
+
+To override Vue templates, there are a number of global components that you can override simply by adding them to `resources/js/app.js`. They will be merged with the defaults.
+
+
+```js
+import ProjectToolbar from 'path/to/my/ProjectToolbar.vue';
+import UserMenu from 'path/to/my/UserMenu.vue';
+
+const app = createApp(App)
+    .use(api)
+    .use(components, {
+        ProjectToolbar,
+        UserMenu,
+    }
+```
+
+Need more extension hooks? Open a pull request.
 
 ## Contributing
 
 Thank you for considering contributing to Spectacular! Please see CONTRIBUTING.md for more information.
-
-## Code of Conduct
-
-The Spectacular code of conduct is derived from the Laravel code of conduct. Any violations of the code of conduct may be reported to Matthew White (matt@matthewwhite.me.uk):
-
-* Participants will be tolerant of opposing views.
-* Participants must ensure that their language and actions are free of personal attacks and disparaging personal remarks.
-* When interpreting the words and actions of others, participants should always assume good intentions.
-* Behavior that can be reasonably considered harassment will not be tolerated.
 
 ## Security
 
@@ -67,15 +84,8 @@ If you discover a security vulnerability within Spectacular, please send an e-ma
 Spectacular - an open-source functional specification manager\
 Copyright (C) 2026 Matthew White
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
