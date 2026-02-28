@@ -69,6 +69,27 @@ class RequirementsTest extends TestCase
         $response->assertJsonPath('data.assignments.0.user_id', $user->id);
     }
 
+    public function test_requirements_add_endpoint_rejects_user_ids_from_different_project_than_feature(): void
+    {
+        $featureProject = Project::factory()->create();
+        $otherProject = Project::factory()->create();
+
+        $feature = Feature::factory()->for($featureProject)->create();
+        $otherProjectUser = User::factory()->for($otherProject)->create();
+
+        $response = $this->postJson('/api/requirements/add', [
+            'feature_id' => $feature->id,
+            'name' => 'cross project assignment',
+            'user_ids' => [$otherProjectUser->id],
+            'unknowns' => [],
+            'tasks' => [],
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors(['user_ids.0']);
+        $this->assertDatabaseCount('requirements', 0);
+    }
+
     public function test_requirements_edit_endpoint_updates_requirement_and_syncs_relations(): void
     {
         $project = Project::factory()->create();
@@ -137,6 +158,24 @@ class RequirementsTest extends TestCase
             'estimate' => 4,
             'weight' => 7,
         ]);
+    }
+
+    public function test_requirements_edit_endpoint_rejects_user_ids_from_different_project_than_requirement_feature(): void
+    {
+        $featureProject = Project::factory()->create();
+        $otherProject = Project::factory()->create();
+
+        $feature = Feature::factory()->for($featureProject)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+        $otherProjectUser = User::factory()->for($otherProject)->create();
+
+        $response = $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+            'name' => 'still valid name',
+            'user_ids' => [$otherProjectUser->id],
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors(['user_ids.0']);
     }
 
     public function test_requirements_delete_endpoint_soft_deletes_requirement(): void

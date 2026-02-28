@@ -7,7 +7,9 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\RequirementResource;
 use Spectacular\Core\Models\Requirement;
+use Spectacular\Core\Models\User;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
+use Spectacular\Core\Rules\SharesRelation;
 
 class EditRequirement
 {
@@ -29,7 +31,7 @@ class EditRequirement
             'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['sometimes', 'array'],
-            'user_ids.*' => ['integer'],
+            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project')],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
@@ -41,9 +43,15 @@ class EditRequirement
         ];
     }
 
+    public function prepareForValidation(ActionRequest $request): void
+    {
+        if (!$request->has('feature_id')) {
+            $request->merge(['feature_id' => $request->route('requirement')->feature_id]);
+        }
+    }
+
     public function handle(Requirement $requirement, array $validated): Requirement
     {
-        // TODO: Make sure the user_id is within the same project as the feature_id
         $requirement->update($validated);
 
         if (array_key_exists('user_ids', $validated)) {

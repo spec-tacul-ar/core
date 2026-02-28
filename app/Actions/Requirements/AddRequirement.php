@@ -7,7 +7,9 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\RequirementResource;
 use Spectacular\Core\Models\Requirement;
+use Spectacular\Core\Models\User;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
+use Spectacular\Core\Rules\SharesRelation;
 
 class AddRequirement
 {
@@ -28,7 +30,7 @@ class AddRequirement
             'unknowns' => ['nullable', 'array'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['array'],
-            'user_ids.*' => ['integer'],
+            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project')],
             'source' => ['nullable', 'string', 'max:255'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
@@ -41,11 +43,19 @@ class AddRequirement
 
     public function handle(array $validated): Requirement
     {
-        // TODO: Make sure the user_id is within the same project as the feature_id
         $requirement = Requirement::create($validated);
-        $requirement->assignments()->createMany(array_map(fn ($userId) => ['user_id' => $userId], $validated['user_ids']));
-        $requirement->unknowns()->createMany($validated['unknowns']);
-        $requirement->tasks()->createMany($validated['tasks']);
+
+        if (!empty($validated['user_ids'])) {
+            $requirement->assignments()->createMany(array_map(fn ($userId) => ['user_id' => $userId], $validated['user_ids']));
+        }
+
+        if (!empty($validated['unknowns'])) {
+            $requirement->unknowns()->createMany($validated['unknowns']);
+        }
+
+        if (!empty($validated['tasks'])) {
+            $requirement->tasks()->createMany($validated['tasks']);
+        }
 
         // We have to fetch a new copy because the reference is set after create.
         return $requirement->fresh(['assignments', 'unknowns', 'tasks']);
