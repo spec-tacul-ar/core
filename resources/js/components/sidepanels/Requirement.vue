@@ -379,7 +379,6 @@ export default {
                     useAlertsStore().push('Requirement saved.');
 
                     if (this.add_another) {
-                        this.form.user_ids = [];
                         this.form.blocked_reason = '';
                         this.form.description = '';
                         this.form.is_blocked = false;
