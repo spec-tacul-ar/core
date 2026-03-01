@@ -31,7 +31,7 @@ class EditRequirement
             'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['sometimes', 'array'],
-            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project')],
+            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features')],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],

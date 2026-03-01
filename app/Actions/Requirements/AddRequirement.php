@@ -30,7 +30,7 @@ class AddRequirement
             'unknowns' => ['nullable', 'array'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['array'],
-            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project')],
+            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features')],
             'source' => ['nullable', 'string', 'max:255'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
