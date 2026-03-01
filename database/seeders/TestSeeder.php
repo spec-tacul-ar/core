@@ -19,8 +19,6 @@ class TestSeeder extends Seeder
 
     public function run()
     {
-        $this->callSilent(DatabaseSeeder::class);
-
         $project = Project::factory()
             ->state(['name' => 'My Project'])
             ->hasUsers($this->faker->numberBetween(3, 4))

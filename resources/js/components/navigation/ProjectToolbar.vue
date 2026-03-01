@@ -13,6 +13,7 @@
 
         <DropdownMenuItem :href="'/export/' + project.id + '/html'" icon="html-file" download>HTML</DropdownMenuItem>
         <DropdownMenuItem :href="'/export/' + project.id + '/markdown'" icon="markdown-file" download>Markdown</DropdownMenuItem>
+        <DropdownMenuItem :href="'/export/' + project.id + '/json'" icon="json-file" download>JSON</DropdownMenuItem>
     </DropdownMenu>
 
     <slot name="after" />
