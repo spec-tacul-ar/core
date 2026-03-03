@@ -1,7 +1,6 @@
 <template>
     <DefaultLayout>
         <template v-slot:menu>
-            
             <RouterLink :to="{ name: 'projects.index' }" class="link flex items-center gap-2 mr-auto">
                 <IconSet name="chevron-left" />
 

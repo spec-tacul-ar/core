@@ -18,10 +18,19 @@ export default {
     components: {
         IconSet,
     },
-    props: [
-        'disabled',
-        'icon',
-        'loading'
-    ]
+    props: {
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+        icon: {
+            type: String,
+            default: null,
+        },
+        loading: {
+            type: Boolean,
+            default: false,
+        },
+    }
 };
 </script>
