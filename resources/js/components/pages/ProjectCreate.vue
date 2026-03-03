@@ -1,5 +1,14 @@
 <template>
     <DefaultLayout>
+        <template v-slot:menu>
+            
+            <RouterLink :to="{ name: 'projects.index' }" class="link flex items-center gap-2 mr-auto">
+                <IconSet name="chevron-left" />
+
+                Back to projects
+            </RouterLink>
+        </template>
+
         <form @submit.prevent="submit" class="max-w-xl mx-auto">
             <h1 class="font-display font-semibold text-4xl mb-4">Create project</h1>
 

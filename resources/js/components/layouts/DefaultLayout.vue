@@ -17,7 +17,7 @@
             <slot name="toggles" v-bind="{ openSidebar, closeSidebar, toggleSidebar, show_sidebar }"></slot>
         </div>
 
-        <div class="flex w-full items-center justify-end gap-2 pr-4">
+        <div class="flex w-full items-center justify-end gap-2 px-4">
             <slot name="menu"></slot>
             
             <UserMenu />
