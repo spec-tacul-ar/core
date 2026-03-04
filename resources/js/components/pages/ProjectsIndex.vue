@@ -1,5 +1,7 @@
 <template>
     <DefaultLayout>
+        <Announcements />
+
         <section>
             <div class="flex justify-between flex-wrap items-end gap-4 mb-4 sm:pl-4">
                 <h1 class="font-display font-semibold text-4xl">Projects</h1>
