@@ -58,13 +58,13 @@ To override Vue templates, there are a number of global components that you can 
 
 
 ```js
-import ProjectToolbar from 'path/to/my/ProjectToolbar.vue';
+import ProjectShowMenu from 'path/to/my/ProjectShowMenu.vue';
 import UserMenu from 'path/to/my/UserMenu.vue';
 
 const app = createApp(App)
     .use(api)
     .use(components, {
-        ProjectToolbar,
+        ProjectShowMenu,
         UserMenu,
     }
 ```

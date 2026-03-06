@@ -6,7 +6,7 @@
             <div class="flex justify-between flex-wrap items-end gap-4 mb-4 sm:pl-4">
                 <h1 class="font-display font-semibold text-4xl">Projects</h1>
                 
-                <RouterLink v-if="!is_loading_projects && projects.isNotEmpty()" :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
+                <ProjectsIndexActions v-if="!is_loading_projects && projects.isNotEmpty()" />
             </div>
 
             <LoadingSpinner label="Loading projects" v-if="is_loading_projects" />
@@ -21,7 +21,7 @@
 
                 <p>Get started by creating your first project</p>
 
-                <RouterLink :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
+                <ProjectsIndexActions />
             </div>
 
             <Card v-if="projects.isNotEmpty()" class="divide-y divide-gray-300">

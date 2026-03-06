@@ -5,7 +5,7 @@
         </template>
 
         <template #menu>
-            <ProjectToolbar :project />
+            <ProjectShowMenu :project />
         </template>
 
         <template #sidebar="{ navigate }">

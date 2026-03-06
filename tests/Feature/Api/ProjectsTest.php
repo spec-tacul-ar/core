@@ -42,14 +42,14 @@ class ProjectsTest extends TestCase
         $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
         $response->assertJsonPath('meta.current_page', 1);
-        $response->assertJsonPath('meta.per_page', 50);
+        $response->assertJsonPath('meta.per_page', 100);
         $response->assertJsonPath('meta.total', 2);
     }
 
     public function test_projects_browse_endpoint_supports_page_query_parameter_with_fixed_page_size(): void
     {
         Project::factory()
-            ->count(51)
+            ->count(101)
             ->sequence(fn ($sequence) => ['name' => sprintf('Project %03d', $sequence->index + 1)])
             ->create();
 
@@ -58,8 +58,8 @@ class ProjectsTest extends TestCase
         $response->assertOk();
         $response->assertJsonCount(1, 'data');
         $response->assertJsonPath('meta.current_page', 2);
-        $response->assertJsonPath('meta.per_page', 50);
-        $response->assertJsonPath('meta.total', 51);
+        $response->assertJsonPath('meta.per_page', 100);
+        $response->assertJsonPath('meta.total', 101);
         $response->assertJsonPath('meta.last_page', 2);
     }
 
