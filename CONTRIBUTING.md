@@ -1,13 +1,10 @@
 # Contributing
 
-> [!NOTE]
-> *This file is still **Work In Progress** and may refer to many conventions that haven't even been implemented yet.*
-
 Thank you for considering contributing to Spectacular!
 
-Please open an issue or discussion before embarking on major changes or new features to see if they align with the goals of the project.
+Please open an issue or discussion before embarking on major changes or new features to see if they align with the the project's long-term vision.
 
-Contributors will be asked to sign our Fiduciary License Agreement. This ensures that development is sustainable while guaranteeing that your contributions remain open forever. 
+Contributors will be asked to sign our Fiduciary License Agreement. This will guarantee that your contributions remain open forever while making maintenance of the project sustainable.
 
 ## Code of Conduct
 
@@ -40,8 +37,8 @@ These are guidelines. Please conform to them where you can but don't sweat it.
 
 ## Other notes
 * IDs are never zero.
-* Summary fields are short plain text. Description is rich text.
-* Regarding the Revisionable feature: Release = a snapshot of the specification, Revision = individual changes, Version = a moment in time
+* A summary field is plain text. A description field is rich text.
+* Terminology regarding the Revisionable feature: Release = a snapshot of the specification, Revision = individual changes, Version = a moment in time
 
 ## API
 
@@ -50,23 +47,16 @@ The API keeps things simple. From the client's perspective:
 * It only uses two HTTP methods:
     * **GET** Tell me something
     * **POST** Do something
-* It only uses two HTTP error codes:
-    * **400** You did something wrong
-    * **500** Something went wrong our end
 * It follows BREAD naming:
     * **Browse** List the resource
     * **Read** Fetch a resource
     * **Edit** Change the resource
     * **Add** Create a new resource
     * **Delete** Delete a resource
-* It always returns an error code:
-    * **0** Everything worked
-    * **1** Unknown problem
-    * **2** Validation error
 
 ## Endpoints
 
-Most endpoints are [Cruddy by Design](https://www.youtube.com/watch?v=MF0jFKvS4SI). Or in our case, *bready* because it includes a verb for the index endpoint. One difference is that we avoid using nested relations unless absolutely necessary (see exception below).
+Most endpoints are [Cruddy by Design](https://www.youtube.com/watch?v=MF0jFKvS4SI). Or in our case, *Bready* because it includes a verb for the index endpoint. One difference is that we avoid using nested relations unless absolutely necessary (see exception below).
 
 When not addressing a single entity, the first part of the endpoint defines the type of entitiy we want to retrieve or manipulate. The second is a verb describing what we want to do.
 
@@ -83,45 +73,3 @@ When we are dealing with a specific entity, we specify it after the entity type.
 Sometimes we have to break convention when bulk actions would be inefficient, owing to the number of requests that would otherwise be needed. In the example below, we mark all tasks belonging to requirement 345 as complete.
 
 `requirements/345/tasks/complete`
-
-## Example responses
-
-```
-{
-    "code": 0,
-    "message": "OK",
-    "payload": {
-        ...
-    }
-}
-
-```
-The payload can be an object, array or null - depending on the nature of the request. Successful resource creation and modification operations will typically return the new resource as the payload.
-
-Something akin to an HTTP 204 _No Content_ would look like this:
-
-```
-{
-    "code": 0,
-    "message": "Resource deleted.",
-    "payload": null
-}
-```
-
-Some errors can put further information into the payload.
-
-```
-{
-    "code": 2,
-    "message": "A validation error occured.",
-    "payload": {
-        "name": [
-            "The name field must be at least two characters in length.",
-            "The name field must not contain non-ASCII characters."
-        ],
-        "email": [
-            "An email address is required."
-        ]
-    }
-}
-```
