@@ -41,6 +41,26 @@ class ProjectsTest extends TestCase
         $response->assertJsonPath('data.0.tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
+        $response->assertJsonPath('meta.current_page', 1);
+        $response->assertJsonPath('meta.per_page', 50);
+        $response->assertJsonPath('meta.total', 2);
+    }
+
+    public function test_projects_browse_endpoint_supports_page_query_parameter_with_fixed_page_size(): void
+    {
+        Project::factory()
+            ->count(51)
+            ->sequence(fn ($sequence) => ['name' => sprintf('Project %03d', $sequence->index + 1)])
+            ->create();
+
+        $response = $this->getJson('/api/projects/browse?page=2');
+
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonPath('meta.current_page', 2);
+        $response->assertJsonPath('meta.per_page', 50);
+        $response->assertJsonPath('meta.total', 51);
+        $response->assertJsonPath('meta.last_page', 2);
     }
 
     public function test_projects_add_endpoint_creates_project_with_users_and_features(): void

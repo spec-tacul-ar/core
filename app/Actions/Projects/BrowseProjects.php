@@ -2,9 +2,9 @@
 
 namespace Spectacular\Core\Actions\Projects;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Router;
-use Illuminate\Database\Eloquent\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spectacular\Core\Http\Resources\ProjectResource;
 use Spectacular\Core\Models\Project;
@@ -18,7 +18,7 @@ class BrowseProjects
         $router->get('projects/browse', static::class);
     }
 
-    public function handle(): Collection
+    public function handle(): LengthAwarePaginator
     {
         return Project::query()
             ->withCount([
@@ -32,7 +32,8 @@ class BrowseProjects
                     ->whereDoesntHave('tasks', fn ($query) => $query->where('is_complete', false)),
             ])
             ->orderBy('name', 'asc')
-            ->get();
+            ->paginate(100)
+            ->withQueryString();
     }
 
     public function asController(): ResourceCollection
