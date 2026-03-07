@@ -37,7 +37,6 @@ import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
 import IconSet from '@core/components/IconSet.vue';
 import LoadingSpinner from '@core/components/LoadingSpinner.vue';
 import ProjectItem from '@core/components/items/ProjectItem.vue';
-import { formatDistance } from 'date-fns';
 import Project from '@core/stores/models/Project';
 
 export default {

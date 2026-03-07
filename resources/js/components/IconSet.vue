@@ -290,5 +290,5 @@ export default {
     },
     inheritAttrs: false,
     props: ['name'],
-}
+};
 </script>

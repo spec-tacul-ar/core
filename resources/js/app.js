@@ -7,7 +7,7 @@ import router from '@core/router';
 import stores from '@core/stores';
 import { createApp } from 'vue';
 
-const app = createApp(App)
+createApp(App)
     .use(api)
     .use(components)
     .use(router)

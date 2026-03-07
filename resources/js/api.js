@@ -19,7 +19,7 @@ export class Api {
 
                 return response;
             })
-            .catch(error => this.handleError(error, 'get'));
+            .catch(error => this.handleError(error));
     }
 
     async post(url, data, options) {
@@ -28,7 +28,7 @@ export class Api {
             headers: { 'X-XSRF-TOKEN': await this.getCsrfToken() }
         })
             .post(url, data, options)
-            .catch(error => this.handleError(error, 'post'));
+            .catch(error => this.handleError(error));
     }
 
     async getCsrfToken() {
@@ -50,7 +50,7 @@ export class Api {
         return csrf_cookie.substring(name.length);
     }
 
-    handleError(error, method) {
+    handleError(error) {
         const http_status_code = error.response.status;
 
         if (http_status_code === 422) {
@@ -76,7 +76,7 @@ export class Api {
 }
 
 export default {
-  install(app, base) {
-    app.provide('api', new Api(base));
-  },
+    install(app, base) {
+        app.provide('api', new Api(base));
+    },
 };

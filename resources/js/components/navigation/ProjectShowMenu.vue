@@ -21,7 +21,6 @@
 
 <script>
 import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuDivider from '@core/components/DropdownMenuDivider.vue';
 import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
 import IconSet from '@core/components/IconSet.vue';
 import NavbarButton from '@core/components/NavbarButton.vue';
@@ -30,7 +29,6 @@ import Tooltip from '@core/components/Tooltip.vue';
 export default {
     components: {
         DropdownMenu,
-        DropdownMenuDivider,
         DropdownMenuItem,
         IconSet,
         NavbarButton,

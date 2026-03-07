@@ -57,8 +57,8 @@ export default {
             this.is_waiting_for_complete = true;
 
             this.api.post('tasks/' + this.task.id + '/edit', {
-                    'is_complete': !this.task.is_complete
-                })
+                'is_complete': !this.task.is_complete
+            })
                 .then((result) => {
                     Task.repository().save(result.data);
 
@@ -72,7 +72,7 @@ export default {
             this.is_waiting_for_remove = true;
 
             this.api.post('tasks/' + this.task.id + '/delete')
-                .then((result) => {
+                .then(() => {
                     this.$nextTick(function () {
                         Task.repository().delete(this.task.id);
                     });

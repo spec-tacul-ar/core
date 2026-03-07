@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import FormInput from '@core/components/forms/FormInput.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import ModalLayout from '@core/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';

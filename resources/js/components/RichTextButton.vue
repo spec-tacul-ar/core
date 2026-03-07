@@ -14,7 +14,7 @@ import IconSet from '@core/components/IconSet.vue';
 
 export default {
     components: {
-      IconSet,
+        IconSet,
     },
     computed: {
         title() {
@@ -32,5 +32,5 @@ export default {
         label: String,
         name: String,
     },
-}
+};
 </script>

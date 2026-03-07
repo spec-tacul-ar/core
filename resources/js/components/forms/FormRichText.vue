@@ -31,20 +31,18 @@
 
 <script>
 import InfoPopover from '@core/components/InfoPopover.vue';
-import IconSet from '@core/components/IconSet.vue';
 import RichTextButton from '@core/components/RichTextButton.vue';
 import StarterKit from '@tiptap/starter-kit';
 import { Editor, EditorContent } from '@tiptap/vue-3';
 
 export default {
     beforeUnmount() {
-      this.editor.destroy();
+        this.editor.destroy();
     },
     components: {
-      EditorContent,
-      IconSet,
-      InfoPopover,
-      RichTextButton,
+        EditorContent,
+        InfoPopover,
+        RichTextButton,
     },
     computed: {
         has_help_slot() {
@@ -52,9 +50,9 @@ export default {
         },
     },
     data() {
-      return {
-        editor: null,
-      }
+        return {
+            editor: null,
+        };
     },
     emits: ['update:modelValue'],
     methods: {
@@ -119,5 +117,5 @@ export default {
             }
         },
     },
-}
+};
 </script>

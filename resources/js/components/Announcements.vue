@@ -1,1 +1,3 @@
-<template />
+<template>
+    <slot />
+</template>

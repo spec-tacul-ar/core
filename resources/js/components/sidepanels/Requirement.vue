@@ -280,17 +280,6 @@ export default {
         sources() {
             // TODO Fix this
             return [];
-
-
-            const options = this.project.features
-                .map(feature => feature.requirements.pluck('source'))
-                .flatten()
-                .filter()
-                .unique()
-                .sort()
-                .all();
-
-            return options;
         }
     },
     data() {

@@ -60,7 +60,6 @@ import FormInput from '@core/components/forms/FormInput.vue';
 import IconSet from '@core/components/IconSet.vue';
 import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
 import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
-import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@core/components/SpinnerButton.vue';
 import TrackDirty from '@core/mixins/TrackDirty';
 import UniqueId from '@core/mixins/UniqueId';
@@ -77,7 +76,6 @@ export default {
         FormInput,
         IconSet,
         DefaultLayout,
-        SidepanelLayout,
         SpinnerButton
     },
     data() {

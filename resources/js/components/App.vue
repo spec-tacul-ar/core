@@ -37,7 +37,7 @@ import Alert from '@core/components/Alert.vue';
 import ErrorMessage from '@core/components/ErrorMessage.vue';
 import LoadingSpinner from '@core/components/LoadingSpinner.vue';
 import ModalManager from '@core/components/ModalManager.vue';
-import { useAlertsStore, useModalStore } from '@core/stores';
+import { useAlertsStore } from '@core/stores';
 
 export default {
     components: {

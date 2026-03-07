@@ -1,4 +1,3 @@
-import { isPlainObject } from '@core/helpers';
 import { reactive, watch } from 'vue';
 
 export default class Filters {
@@ -16,7 +15,7 @@ export default class Filters {
             // TODO Validate schema so dodgy localStorage values can't break the site.
 
             Object.assign(this, stored);
-        } catch (exception) {
+        } catch {
             localStorage.removeItem(key);
         }
 
