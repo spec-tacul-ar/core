@@ -50,7 +50,7 @@ class ProjectsTest extends TestCase
     {
         Project::factory()
             ->count(101)
-            ->sequence(fn ($sequence) => ['name' => sprintf('Project %03d', $sequence->index + 1)])
+            ->sequence(fn($sequence) => ['name' => sprintf('Project %03d', $sequence->index + 1)])
             ->create();
 
         $response = $this->getJson('/api/projects/browse?page=2');

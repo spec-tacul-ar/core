@@ -28,7 +28,7 @@ class StringsServiceProvider extends ServiceProvider
         Str::macro('escapeMarkdown', function (string $string) {
             $characters = ['\\', '`', '*', '_', '{', '}', '[', ']', '(', ')', '#', '+', '!', '>', '|', '~', '^'];
 
-            $replacements = array_map(fn ($character) => '\\' . $character, $characters);
+            $replacements = array_map(fn($character) => '\\' . $character, $characters);
 
             return str_replace($characters, $replacements, $string);
         });
@@ -36,6 +36,6 @@ class StringsServiceProvider extends ServiceProvider
         /* Convert HTML to Markdown */
         $converter = new HtmlConverter(['strip_tags' => true]);
 
-        Str::macro('htmlToMarkdown', fn (string $html) => $converter->convert($html));
+        Str::macro('htmlToMarkdown', fn(string $html) => $converter->convert($html));
     }
 }

@@ -36,8 +36,8 @@ class TestSeeder extends Seeder
                                 foreach ($users as $user) {
                                     $requirement->assignments()->make()->user()->associate($user)->save();
                                 }
-                            })
-                    )
+                            }),
+                    ),
             )
             ->create();
 

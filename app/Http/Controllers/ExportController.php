@@ -34,7 +34,7 @@ class ExportController extends Controller
                 ->sortBy('id')
                 ->sortBy('weight')
                 ->values()
-                ->map(fn ($user) => [
+                ->map(fn($user) => [
                     'id' => (int) $user->id,
                     'name' => $user->name,
                     'summary' => $user->summary,
@@ -66,7 +66,7 @@ class ExportController extends Controller
                                         ->sortBy('id')
                                         ->sortBy('weight')
                                         ->values()
-                                        ->map(fn ($task) => [
+                                        ->map(fn($task) => [
                                             'name' => $task->name,
                                             'estimate' => $task->estimate,
                                             'is_complete' => (bool) $task->is_complete,
@@ -76,7 +76,7 @@ class ExportController extends Controller
                                     'unknowns' => $requirement->unknowns
                                         ->sortBy('id')
                                         ->values()
-                                        ->map(fn ($unknown) => [
+                                        ->map(fn($unknown) => [
                                             'name' => $unknown->name,
                                         ])
                                         ->all(),

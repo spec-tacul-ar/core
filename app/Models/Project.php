@@ -9,15 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Validator as ValidatorContract;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Illuminate\Support\Str;
 use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
-use Spectacular\Core\Models\Feature;
-use Spectacular\Core\Models\Requirement;
-use Spectacular\Core\Models\Task;
-use Spectacular\Core\Models\Unknown;
 
 class Project extends Model
 {
@@ -87,12 +82,12 @@ class Project extends Model
 
     public function featuresEstimate(): Attribute
     {
-        return new Attribute(fn () => $this->features->sum('requirements_estimate'));
+        return new Attribute(fn() => $this->features->sum('requirements_estimate'));
     }
 
     public function totalEstimate(): Attribute
     {
-        return new Attribute(fn () => $this->features_estimate);
+        return new Attribute(fn() => $this->features_estimate);
     }
 
     public static function import(array $data): static
@@ -155,7 +150,7 @@ class Project extends Model
 
         $users = collect($validated['users'])
             ->keyBy('id')
-            ->map(fn ($user) => $project->users()->create([
+            ->map(fn($user) => $project->users()->create([
                 'name' => $user['name'],
                 'summary' => $user['summary'] ?? null,
                 'weight' => $user['weight'] ?? null,

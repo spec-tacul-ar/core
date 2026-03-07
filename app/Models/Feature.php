@@ -53,6 +53,6 @@ class Feature extends Model
 
     public function requirementsEstimate(): Attribute
     {
-        return new Attribute(fn () => $this->requirements->sum('tasks_estimate'));
+        return new Attribute(fn() => $this->requirements->sum('tasks_estimate'));
     }
 }

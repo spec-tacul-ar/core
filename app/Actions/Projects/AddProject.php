@@ -34,13 +34,13 @@ class AddProject
         $project = Project::create($validated);
 
         if (array_key_exists('users', $validated)) {
-            $users = array_map(fn ($item) => ['name' => $item], $validated['users']);
+            $users = array_map(fn($item) => ['name' => $item], $validated['users']);
 
             $project->users()->createMany($users);
         }
 
         if (array_key_exists('features', $validated)) {
-            $features = array_map(fn ($item) => ['name' => $item], $validated['features']);
+            $features = array_map(fn($item) => ['name' => $item], $validated['features']);
 
             $project->features()->createMany($features);
         }

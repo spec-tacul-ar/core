@@ -11,7 +11,7 @@ class SharesRelation implements DataAwareRule, ValidationRule
     public function __construct(
         protected string $class,
         protected string $other_field,
-        protected string $relation
+        protected string $relation,
     ) {
         //
     }
@@ -29,7 +29,7 @@ class SharesRelation implements DataAwareRule, ValidationRule
     {
         $related = $this->class::query()
             ->whereKey($value)
-            ->whereHas($this->relation, fn ($query) => $query->whereKey($this->data[$this->other_field]))
+            ->whereHas($this->relation, fn($query) => $query->whereKey($this->data[$this->other_field]))
             ->exists();
 
         if (!$related) {

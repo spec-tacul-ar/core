@@ -29,7 +29,7 @@ class ReadProject
     public function asController(ActionRequest $request, Project $project): ProjectResource
     {
         return new ProjectResource(
-            $this->handle($project, $request->has('hydrated') && $request->input('hydrated', true))
+            $this->handle($project, $request->has('hydrated') && $request->input('hydrated', true)),
         );
     }
 }

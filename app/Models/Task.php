@@ -46,8 +46,8 @@ class Task extends Model
     protected function estimate(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $value === null ? null : $value * 0.25,
-            set: fn ($value) => $value === null ? null : $value / 0.25,
+            get: fn($value) => $value === null ? null : $value * 0.25,
+            set: fn($value) => $value === null ? null : $value / 0.25,
         );
     }
 }

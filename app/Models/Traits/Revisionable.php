@@ -3,7 +3,6 @@
 namespace Spectacular\Core\Models\Traits;
 
 use DateTime;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Spectacular\Core\Casts\CompressedCollection;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use LogicException;
@@ -28,7 +27,7 @@ trait Revisionable
         });
 
         // Laravel thinks we're calling the method trashed() if we don't use registerModelEvent()
-        static::registerModelEvent('trashed', fn ($model) => $model->saveRevision(['deleted_at' => null]));
+        static::registerModelEvent('trashed', fn($model) => $model->saveRevision(['deleted_at' => null]));
     }
 
     /* Helpers */
@@ -54,7 +53,7 @@ trait Revisionable
         $this->history
             ->where('timestamp', '>', $timestamp->toISOString())
             ->sortByDesc('timestamp')
-            ->each(fn ($revision) => $this->forceFill($revision['data']));
+            ->each(fn($revision) => $this->forceFill($revision['data']));
 
         foreach ($with as $relation) {
             $this->load([
@@ -65,11 +64,11 @@ trait Revisionable
 
                     return $query
                         ->withTrashed()
-                        ->afterQuery(fn ($models) => $models
+                        ->afterQuery(fn($models) => $models
                             ->where('created_at', '<', $timestamp->toDateTimeString())
                             ->each->rollBack($timestamp)
                             ->whereNull('deleted_at'));
-                }
+                },
             ]);
         }
     }

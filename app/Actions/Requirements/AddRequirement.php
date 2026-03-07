@@ -46,7 +46,7 @@ class AddRequirement
         $requirement = Requirement::create($validated);
 
         if (!empty($validated['user_ids'])) {
-            $requirement->assignments()->createMany(array_map(fn ($userId) => ['user_id' => $userId], $validated['user_ids']));
+            $requirement->assignments()->createMany(array_map(fn($userId) => ['user_id' => $userId], $validated['user_ids']));
         }
 
         if (!empty($validated['unknowns'])) {

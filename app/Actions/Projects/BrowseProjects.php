@@ -23,13 +23,13 @@ class BrowseProjects
         return Project::query()
             ->withCount([
                 'requirements',
-                'requirements as blocked_requirements_count' => fn ($query) => $query->whereNotNull('blocked_reason'),
+                'requirements as blocked_requirements_count' => fn($query) => $query->whereNotNull('blocked_reason'),
                 'unknowns',
                 'tasks',
-                'requirements as requirements_with_tasks_count' => fn ($query) => $query->whereHas('tasks'),
-                'requirements as requirements_all_tasks_complete_count' => fn ($query) => $query
+                'requirements as requirements_with_tasks_count' => fn($query) => $query->whereHas('tasks'),
+                'requirements as requirements_all_tasks_complete_count' => fn($query) => $query
                     ->whereHas('tasks')
-                    ->whereDoesntHave('tasks', fn ($query) => $query->where('is_complete', false)),
+                    ->whereDoesntHave('tasks', fn($query) => $query->where('is_complete', false)),
             ])
             ->orderBy('name', 'asc')
             ->paginate(100)

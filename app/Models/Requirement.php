@@ -91,17 +91,17 @@ class Requirement extends Model
 
     public function isBlocked(): Attribute
     {
-        return new Attribute(fn () => !!$this->blocked_reason);
+        return new Attribute(fn() => !!$this->blocked_reason);
     }
 
     public function isComplete(): Attribute
     {
-        return new Attribute(fn () => $this->tasks->isNotEmpty() && $this->tasks->every(fn ($task) => $task->is_complete));
+        return new Attribute(fn() => $this->tasks->isNotEmpty() && $this->tasks->every(fn($task) => $task->is_complete));
     }
 
     public function name(): Attribute
     {
-        return new Attribute(set: fn ($value) => rtrim($value, '.?!'));
+        return new Attribute(set: fn($value) => rtrim($value, '.?!'));
     }
 
     public function title(): Attribute
@@ -117,6 +117,6 @@ class Requirement extends Model
 
     public function tasksEstimate(): Attribute
     {
-        return new Attribute(fn () => $this->tasks->sum('estimate'));
+        return new Attribute(fn() => $this->tasks->sum('estimate'));
     }
 }
