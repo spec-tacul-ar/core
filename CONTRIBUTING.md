@@ -15,17 +15,14 @@ The Spectacular code of conduct is derived from the Laravel code of conduct. Any
 * When interpreting the words and actions of others, participants should always assume good intentions.
 * Behavior that can be reasonably considered harassment will not be tolerated.
 
-### For Javascript
-* End statements with a semi colon.
-* When listing HTML attributes vertically, the last line has the closing bracket. Use a line break to signal the start of the content. No `>` on their own lines.
-* HTML attribute order: element-specific (`type="text"`, `href="#top"`), id, class, booleans, Vue. The exception being `v-if`, `v-elseif` and `v-else` which must go first.
-
-### Conventions
+## Conventions
 * Use alphabetical sorting where another doesn't make sense.
 * snake_case for variables, camelCase for functions (unless a dependency demands otherwise).
 * IDs are never zero.
 * A summary field is plain text. A description field is rich text.
 * Terminology regarding the Revisionable feature: Release = a snapshot of the specification, Revision = individual changes, Version = a moment in time
+* When listing HTML attributes vertically, the last line has the closing bracket. Use a line break to signal the start of the content. No `>` on their own lines.
+* HTML attribute order: element-specific (`type="text"`, `href="#top"`), id, class, booleans, Vue. The exception being `v-if`, `v-elseif` and `v-else` which must go first.
 
 ## API
 
