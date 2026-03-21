@@ -4,6 +4,8 @@
 
 Spectacular is a free open-source functional specification manager.
 
+Turn messy project scope into build-ready specifications with explicit blockers, estimates, and exportable handoff docs.
+
 * Build detailed specfications
 * Maintain them as requirements change
 * Estimate effort and track progress
