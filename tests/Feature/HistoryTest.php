@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use Spectacular\Core\Models\Feature;
-use Spectacular\Core\Models\Project;
-use Spectacular\Core\Models\Requirement;
+use App\Models\Feature;
+use App\Models\Project;
+use App\Models\Requirement;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use LogicException;

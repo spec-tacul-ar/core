@@ -1,17 +1,22 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace App\Actions\Projects;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Models\Project;
+use App\Models\Project;
 
 class OrganiseProject
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('update', $request->route('project'));
+    }
 
     public static function routes(Router $router): void
     {

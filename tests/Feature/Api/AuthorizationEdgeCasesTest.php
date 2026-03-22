@@ -1,0 +1,242 @@
+<?php
+
+namespace Tests\Feature\Api;
+
+use App\Enums\Role;
+use App\Models\Account;
+use App\Models\Comment;
+use App\Models\Feature;
+use App\Models\Invitation;
+use App\Models\Project;
+use App\Models\Requirement;
+use App\Models\Task;
+use App\Models\Unknown;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
+use Tests\Concerns\BuildsApiFixtures;
+use Tests\TestCase;
+
+class AuthorizationEdgeCasesTest extends TestCase
+{
+    use BuildsApiFixtures;
+    use RefreshDatabase;
+
+    public function test_features_cannot_be_reassigned_to_a_project_the_actor_cannot_edit(): void
+    {
+        $sourceProject = Project::factory()->create();
+        $targetProject = Project::factory()->create();
+        $feature = Feature::factory()->for($sourceProject)->create();
+
+        $editor = Account::factory()->create();
+        $this->attachContributor($editor, $sourceProject, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/features/' . $feature->id . '/edit', [
+            'name' => 'Moved feature',
+            'project_id' => $targetProject->id,
+        ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
+
+        $this->assertDatabaseHas('features', [
+            'id' => $feature->id,
+            'project_id' => $sourceProject->id,
+        ]);
+    }
+
+    public function test_requirements_cannot_be_reassigned_to_a_feature_in_another_project(): void
+    {
+        $sourceProject = Project::factory()->create();
+        $targetProject = Project::factory()->create();
+        $sourceFeature = Feature::factory()->for($sourceProject)->create();
+        $targetFeature = Feature::factory()->for($targetProject)->create();
+        $requirement = Requirement::factory()->for($sourceFeature)->create();
+
+        $editor = Account::factory()->create();
+        $this->attachContributor($editor, $sourceProject, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+            'feature_id' => $targetFeature->id,
+            'name' => 'Moved requirement',
+        ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
+
+        $this->assertDatabaseHas('requirements', [
+            'id' => $requirement->id,
+            'feature_id' => $sourceFeature->id,
+        ]);
+    }
+
+    public function test_requirement_edit_rejects_task_ids_from_another_project(): void
+    {
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->for($project)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+
+        $otherProject = Project::factory()->create();
+        $otherFeature = Feature::factory()->for($otherProject)->create();
+        $otherRequirement = Requirement::factory()->for($otherFeature)->create();
+        $foreignTask = Task::factory()->for($otherRequirement)->create(['name' => 'Foreign task']);
+
+        $editor = Account::factory()->create();
+        $this->attachContributor($editor, $project, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+            'name' => 'Updated requirement',
+            'tasks' => [
+                [
+                    'id' => $foreignTask->id,
+                    'name' => 'Hijacked task',
+                    'is_complete' => true,
+                ],
+            ],
+        ])->assertUnprocessable()->assertJsonValidationErrors('tasks.0.id');
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $foreignTask->id,
+            'requirement_id' => $otherRequirement->id,
+            'name' => 'Foreign task',
+        ]);
+    }
+
+    public function test_requirement_edit_rejects_unknown_ids_from_another_project(): void
+    {
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->for($project)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+
+        $otherProject = Project::factory()->create();
+        $otherFeature = Feature::factory()->for($otherProject)->create();
+        $otherRequirement = Requirement::factory()->for($otherFeature)->create();
+        $foreignUnknown = Unknown::factory()->for($otherRequirement)->create(['name' => 'Foreign unknown?']);
+
+        $editor = Account::factory()->create();
+        $this->attachContributor($editor, $project, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+            'name' => 'Updated requirement',
+            'unknowns' => [
+                [
+                    'id' => $foreignUnknown->id,
+                    'name' => 'Hijacked unknown?',
+                ],
+            ],
+        ])->assertUnprocessable()->assertJsonValidationErrors('unknowns.0.id');
+
+        $this->assertDatabaseHas('unknowns', [
+            'id' => $foreignUnknown->id,
+            'requirement_id' => $otherRequirement->id,
+            'name' => 'Foreign unknown?',
+        ]);
+    }
+
+    public function test_browse_projects_does_not_leak_non_member_projects(): void
+    {
+        $visibleProject = Project::factory()->create(['name' => 'Visible']);
+        $hiddenProject = Project::factory()->create(['name' => 'Hidden']);
+        $account = Account::factory()->create();
+
+        $this->attachContributor($account, $visibleProject, Role::VIEWER);
+        Feature::factory()->for($hiddenProject)->create();
+
+        $this->actingAsAccount($account);
+
+        $response = $this->getJson('/api/projects/browse');
+
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonPath('data.0.name', 'Visible');
+    }
+
+    public function test_promoting_a_contributor_to_owner_fails_when_their_project_limit_is_reached(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+        $promotedAccount = Account::factory()->create();
+        $contributor = $this->attachContributor($promotedAccount, $project, Role::EDITOR);
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        foreach (range(1, 5) as $index) {
+            $ownedProject = Project::factory()->create(['name' => 'Owned ' . $index]);
+            $this->attachContributor($promotedAccount, $ownedProject, Role::OWNER);
+        }
+
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/contributors/' . $contributor->id . '/edit', [
+            'role' => Role::OWNER->value,
+        ])->assertForbidden();
+
+        $this->assertDatabaseHas('contributors', [
+            'id' => $contributor->id,
+            'role' => Role::EDITOR->value,
+        ]);
+    }
+
+    public function test_soft_deleted_nested_resources_cannot_be_modified_through_api_routes(): void
+    {
+        $featureFixture = $this->createProjectFixture(Role::EDITOR);
+        $taskFixture = $this->createProjectFixture(Role::EDITOR);
+
+        $this->actingAsAccount($featureFixture['account']);
+        $this->postJson('/api/features/' . $featureFixture['feature']->id . '/delete')->assertNoContent();
+        $this->postJson('/api/features/' . $featureFixture['feature']->id . '/edit', [
+            'name' => 'Should not work',
+        ])->assertNotFound();
+
+        $this->actingAsAccount($taskFixture['account']);
+        $this->postJson('/api/tasks/' . $taskFixture['task']->id . '/delete')->assertNoContent();
+        $this->postJson('/api/tasks/' . $taskFixture['task']->id . '/edit', [
+            'name' => 'Should not work',
+        ])->assertNotFound();
+    }
+
+    public function test_account_delete_cleans_up_comments_invitations_readmarks_and_shared_contributors(): void
+    {
+        $ownedProject = Project::factory()->create();
+        $sharedProject = Project::factory()->create();
+
+        $account = Account::factory()->create();
+        $otherOwner = Account::factory()->create();
+        $feature = Feature::factory()->for($sharedProject)->create();
+
+        $this->attachContributor($account, $ownedProject, Role::OWNER);
+        $sharedContributor = $this->attachContributor($account, $sharedProject, Role::VIEWER);
+        $this->attachContributor($otherOwner, $sharedProject, Role::OWNER);
+
+        $comment = Comment::factory()
+            ->for($account, 'account')
+            ->for($sharedProject)
+            ->create([
+                'commentable_id' => $feature->id,
+                'commentable_type' => 'feature',
+            ]);
+
+        $invitation = Invitation::factory()
+            ->for($account, 'account')
+            ->for($sharedProject)
+            ->create();
+
+        $account->markAsRead($sharedProject);
+
+        $this->actingAsAccount($account);
+
+        $this->postJson('/api/account/delete', [
+            'confirmation' => true,
+        ])->assertNoContent();
+
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+        $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
+        $this->assertDatabaseMissing('readmarks', [
+            'account_id' => $account->id,
+            'project_id' => $sharedProject->id,
+        ]);
+        $this->assertDatabaseMissing('contributors', ['id' => $sharedContributor->id]);
+        $this->assertDatabaseHas('projects', ['id' => $sharedProject->id]);
+    }
+}

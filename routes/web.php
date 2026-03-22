@@ -1,7 +1,7 @@
 <?php
 
-use Spectacular\Core\Http\Controllers\ExportController;
-use Spectacular\Core\Http\Middleware\TidyHtml;
+use App\Http\Controllers\ExportController;
+use App\Http\Middleware\TidyHtml;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(ExportController::class)->group(function () {

@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import FeatureDelete from '@core/components/modals/FeatureDelete.vue';
-import IconSet from '@core/components/IconSet.vue';
-import { useModalStore } from '@core/stores';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import FeatureDelete from '@/components/modals/FeatureDelete.vue';
+import IconSet from '@/components/IconSet.vue';
+import { useModalStore } from '@/stores';
 
 export default {
     components: {

@@ -19,11 +19,13 @@
 </template>
 
 <script>
-import RichText from '@core/components/RichText.vue';
-import RequirementItem from '@core/components/items/RequirementItem.vue';
+import FeatureToolbar from '@/components/navigation/FeatureToolbar.vue';
+import RichText from '@/components/RichText.vue';
+import RequirementItem from '@/components/items/RequirementItem.vue';
 
 export default {
     components: {
+        FeatureToolbar,
         RichText,
         RequirementItem
     },

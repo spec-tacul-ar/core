@@ -71,14 +71,16 @@
 </template>
 
 <script>
-import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
-import FeatureItem from '@core/components/items/FeatureItem.vue';
-import IconSet from '@core/components/IconSet.vue';
-import RichText from '@core/components/RichText.vue';
-import ProjectFilters from '@core/components/sidebars/ProjectFilters.vue';
-import ProjectOutline from '@core/components/sidebars/ProjectOutline.vue';
-import Project from '@core/stores/models/Project';
-import UserItem from '@core/components/items/UserItem.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
+import FeatureItem from '@/components/items/FeatureItem.vue';
+import IconSet from '@/components/IconSet.vue';
+import RichText from '@/components/RichText.vue';
+import ProjectFilters from '@/components/sidebars/ProjectFilters.vue';
+import ProjectOutline from '@/components/sidebars/ProjectOutline.vue';
+import ProjectShowMenu from "@/components/navigation/ProjectShowMenu.vue";
+import Project from '@/stores/models/Project';
+import SidebarSwitches from "@/components/navigation/SidebarSwitches.vue";
+import UserItem from '@/components/items/UserItem.vue';
 import { inject } from 'vue';
 
 export default {
@@ -86,9 +88,11 @@ export default {
         DefaultLayout,
         FeatureItem,
         IconSet,
-        RichText,
         ProjectFilters,
         ProjectOutline,
+        ProjectShowMenu,
+        RichText,
+        SidebarSwitches,
         UserItem,
     },
     computed: {

@@ -1,15 +1,13 @@
 import '../css/app.css';
 
-import api from '@core/api';
-import App from '@core/components/App.vue';
-import components from '@core/components';
-import router from '@core/router';
-import stores from '@core/stores';
+import api from '@/api';
+import App from '@/components/App.vue';
+import router from '@/router';
+import stores from '@/stores';
 import { createApp } from 'vue';
 
 createApp(App)
     .use(api)
-    .use(components)
     .use(router)
     .use(stores)
     .mount('#app');

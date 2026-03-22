@@ -121,8 +121,8 @@
 </template>
 
 <script>
-import FilterSwitch from '@core/components/FilterSwitch.vue';
-import IconSet from '@core/components/IconSet.vue';
+import FilterSwitch from '@/components/FilterSwitch.vue';
+import IconSet from '@/components/IconSet.vue';
 
 export default {
     components: {

@@ -1,5 +1,7 @@
 <template>    
     <div class="flex items-center gap-2 text-sm">
+        <slot name="after" />
+
         <Tooltip text="Outline">
             <button
                 type="button"
@@ -29,8 +31,8 @@
 </template>
 
 <script>
-import IconSet from '@core/components/IconSet.vue';
-import Tooltip from '@core/components/Tooltip.vue';
+import IconSet from '@/components/IconSet.vue';
+import Tooltip from '@/components/Tooltip.vue';
 
 export default {
     components: {

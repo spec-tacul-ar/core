@@ -1,19 +1,26 @@
 <?php
 
-namespace Spectacular\Core\Actions\Requirements;
+namespace App\Actions\Requirements;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\RequirementResource;
-use Spectacular\Core\Models\Requirement;
-use Spectacular\Core\Models\User;
-use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
-use Spectacular\Core\Rules\SharesRelation;
+use App\Http\Resources\RequirementResource;
+use App\Models\Feature;
+use App\Models\Requirement;
+use App\Models\User;
+use App\Rules\QuarterHour as QuarterHourRule;
+use App\Rules\SharesRelation;
+use Spatie\ValidationRules\Rules\Authorized;
 
 class AddRequirement
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('create', Requirement::class);
+    }
 
     public static function routes(Router $router): void
     {
@@ -25,12 +32,12 @@ class AddRequirement
         return [
             'blocked_reason' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'feature_id' => ['required', 'integer'],
+            'feature_id' => ['required', 'integer', new Authorized('update', Feature::class)],
             'name' => ['required', 'string', 'max:255'],
             'unknowns' => ['nullable', 'array'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['array'],
-            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features')],
+            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features'), new Authorized('update', User::class)],
             'source' => ['nullable', 'string', 'max:255'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],

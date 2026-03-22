@@ -46,18 +46,18 @@
 </template>
 
 <script>
-import FormInput from '@core/components/forms/FormInput.vue';
-import FormRichText from '@core/components/forms/FormRichText.vue';
-import IconSet from '@core/components/IconSet.vue';
-import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
-import ProjectDelete from '@core/components/modals/ProjectDelete.vue';
-import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
-import SpinnerButton from '@core/components/SpinnerButton.vue';
-import Tooltip from '@core/components/Tooltip.vue';
-import TrackDirty from '@core/mixins/TrackDirty';
-import UniqueId from '@core/mixins/UniqueId';
-import Project from '@core/stores/models/Project';
-import { useAlertsStore, useModalStore } from '@core/stores';
+import FormInput from '@/components/forms/FormInput.vue';
+import FormRichText from '@/components/forms/FormRichText.vue';
+import IconSet from '@/components/IconSet.vue';
+import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import ProjectDelete from '@/components/modals/ProjectDelete.vue';
+import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
+import SpinnerButton from '@/components/SpinnerButton.vue';
+import Tooltip from '@/components/Tooltip.vue';
+import TrackDirty from '@/mixins/TrackDirty';
+import UniqueId from '@/mixins/UniqueId';
+import Project from '@/stores/models/Project';
+import { useAlertsStore, useModalStore } from '@/stores';
 
 export default {
     inject: ['api'],

@@ -1,5 +1,5 @@
 import { mande } from 'mande';
-import { useAlertsStore } from '@core/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 import { isBefore, subMinutes } from 'date-fns';
 
 // TODO Switch to getting CSRF on demand and replaying requests if necessary.
@@ -19,7 +19,7 @@ export class Api {
 
                 return response;
             })
-            .catch(error => this.handleError(error));
+            .catch(error => this.handleError(error, 'get'));
     }
 
     async post(url, data, options) {
@@ -28,7 +28,7 @@ export class Api {
             headers: { 'X-XSRF-TOKEN': await this.getCsrfToken() }
         })
             .post(url, data, options)
-            .catch(error => this.handleError(error));
+            .catch(error => this.handleError(error, 'post'));
     }
 
     async getCsrfToken() {
@@ -50,13 +50,20 @@ export class Api {
         return csrf_cookie.substring(name.length);
     }
 
-    handleError(error) {
+    handleError(error, method = 'get') {
         const http_status_code = error.response.status;
 
-        if (http_status_code === 422) {
-            useAlertsStore().push('A validation error occured.', 'danger');
+        if (http_status_code === 401) {
+            useAlertsStore().push('You are not logged in.', 'warning');
+
+            const auth_store = useAuthStore();
+
+            auth_store.is_logged_in = false;
+            auth_store.resume_session = method === 'post';
         } else if (http_status_code === 419) {
             this.getCsrfToken();
+        } else if (http_status_code === 422) {
+            useAlertsStore().push('A validation error occured.', 'danger');
         } else if (http_status_code === 429) {
             useAlertsStore().push('Too many requests. Try again soon.', 'warning');
         } else if (http_status_code === 403) {

@@ -33,11 +33,12 @@
 </template>
 
 <script>
-import Alert from '@core/components/Alert.vue';
-import ErrorMessage from '@core/components/ErrorMessage.vue';
-import LoadingSpinner from '@core/components/LoadingSpinner.vue';
-import ModalManager from '@core/components/ModalManager.vue';
-import { useAlertsStore } from '@core/stores';
+import Alert from '@/components/Alert.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import ModalManager from '@/components/ModalManager.vue';
+import ResumeSession from '@/components/modals/ResumeSession.vue';
+import { useAlertsStore, useAuthStore, useModalStore } from '@/stores';
 
 export default {
     components: {
@@ -49,6 +50,9 @@ export default {
     computed: {
         alerts() {
             return useAlertsStore().alerts;
+        },
+        is_logged_in() {
+            return useAuthStore().is_logged_in;
         },
         route_key() {
             if (this.$route.matched.length < 1) {
@@ -94,6 +98,16 @@ export default {
 
                 this.error = null;
             },
+        },
+        is_logged_in(is_logged_in) {
+            if (!is_logged_in && this.$route.meta?.auth !== 'guest') {
+                if (useAuthStore().resume_session) {
+                    useModalStore().open(ResumeSession);
+                    return;
+                }
+
+                this.$router.push({ name: 'auth.login' });
+            }
         },
     },
 };

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Casts;
+namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;

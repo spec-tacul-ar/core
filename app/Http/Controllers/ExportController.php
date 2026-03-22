@@ -1,8 +1,8 @@
 <?php
 
-namespace Spectacular\Core\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Spectacular\Core\Models\Project;
+use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 

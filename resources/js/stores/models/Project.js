@@ -1,5 +1,6 @@
 import Filters from '../Filters';
 import Model from '../Model';
+import { useAuthStore } from '@/stores';
 
 export default class Project extends Model {
     static repository_name = 'projects';
@@ -8,6 +9,20 @@ export default class Project extends Model {
         super(data);
 
         this.filters = new Filters(this.id);
+    }
+
+    get comments() {
+        return this.constructor.repository('comments').collection.where('project_id', this.id);
+    }
+    set comments(comments) {
+        this.constructor.repository('comments').saveMany(comments);
+    }
+
+    get contributors() {
+        return this.constructor.repository('contributors').collection.where('project_id', this.id);
+    }
+    set contributors(contributors) {
+        this.constructor.repository('contributors').saveMany(contributors);
     }
 
     get features() {
@@ -19,6 +34,26 @@ export default class Project extends Model {
 
     get features_estimate() {
         return this.features.sum('requirements_estimate');
+    }
+
+    get invitations() {
+        return this.constructor.repository('invitations').collection.where('project_id', this.id);
+    }
+    set invitations(invitations) {
+        this.constructor.repository('invitations').saveMany(invitations);
+    }
+
+    get my_role() {
+        const account = useAuthStore().account;
+
+        return this.contributors.firstWhere('account_id', account.id)?.role;
+    }
+    get my_role_name() {
+        return {
+            owner: 'Owner',
+            editor: 'Editor',
+            viewer: 'Viewer'
+        }[this.my_role] ?? null;
     }
     
     get total_estimate() {

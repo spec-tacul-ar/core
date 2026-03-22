@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import IconSet from '@core/components/IconSet.vue';
+import IconSet from '@/components/IconSet.vue';
 import { formatDistance } from 'date-fns';
 
 export default {

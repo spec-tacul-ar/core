@@ -1,6 +1,7 @@
 <?php
 
 return [
-    Spectacular\Core\Providers\AppServiceProvider::class,
-    Spectacular\Core\Providers\StringsServiceProvider::class,
+    App\Providers\AppServiceProvider::class,
+    App\Providers\FortifyServiceProvider::class,
+    App\Providers\StringsServiceProvider::class,
 ];

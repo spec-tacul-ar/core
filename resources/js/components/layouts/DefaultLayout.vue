@@ -92,9 +92,13 @@
 </template>
 
 <script>
-import { useModalStore } from '@core/stores';
+import UserMenu from '@/components/navigation/UserMenu.vue';
+import { useModalStore } from '@/stores';
 
 export default {
+    components: {
+        UserMenu,
+    },
     computed: {
         allow_sidebar() {
             if (!this.has_sidebar) {

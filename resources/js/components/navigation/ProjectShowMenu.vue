@@ -1,6 +1,10 @@
 <template>
+    <slot name="before" />
+
     <NavbarButton :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex" />
     <NavbarButton :to="{ name: 'projects.organise' }" icon="organise" tooltip="Organise" class="hidden sm:flex" />
+    <NavbarButton :to="{ name: 'projects.people' }" icon="people" tooltip="People" class="hidden sm:flex" />
+    <NavbarButton :to="{ name: 'projects.feedback' }" icon="feedback" tooltip="Feedback" class="hidden sm:flex" />
 
     <DropdownMenu class="hidden sm:flex">
         <template #trigger="{ toggle }">
@@ -20,11 +24,11 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import IconSet from '@core/components/IconSet.vue';
-import NavbarButton from '@core/components/NavbarButton.vue';
-import Tooltip from '@core/components/Tooltip.vue';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import IconSet from '@/components/IconSet.vue';
+import NavbarButton from '@/components/NavbarButton.vue';
+import Tooltip from '@/components/Tooltip.vue';
 
 export default {
     components: {

@@ -1,15 +1,28 @@
-import FeatureForm from '@core/components/sidepanels/Feature.vue';
-import NotFound from '@core/components/pages/NotFound.vue';
-import ProjectCreate from '@core/components/pages/ProjectCreate.vue';
-import ProjectEdit from '@core/components/sidepanels/ProjectEdit.vue';
-import ProjectOrganise from '@core/components/sidepanels/ProjectOrganise.vue';
-import ProjectShow from '@core/components/pages/ProjectShow.vue';
-import ProjectsIndex from '@core/components/pages/ProjectsIndex.vue';
-import RequirementForm from '@core/components/sidepanels/Requirement.vue';
-import UserForm from '@core/components/sidepanels/User.vue';
+import AccountDelete from '@/components/pages/AccountDelete.vue';
+import AccountSettings from '@/components/pages/AccountSettings.vue';
+import FeatureForm from '@/components/sidepanels/Feature.vue';
+import Login from '@/components/pages/Login.vue';
+import Model from '@/stores/Model';
+import NotFound from '@/components/pages/NotFound.vue';
+import PasswordRequest from '@/components/pages/PasswordRequest.vue';
+import PasswordReset from '@/components/pages/PasswordReset.vue';
+import ProjectCreate from '@/components/pages/ProjectCreate.vue';
+import ProjectEdit from '@/components/sidepanels/ProjectEdit.vue';
+import ProjectFeedback from '@/components/sidepanels/ProjectFeedback.vue';
+import ProjectOrganise from '@/components/sidepanels/ProjectOrganise.vue';
+import ProjectPeople from '@/components/sidepanels/ProjectPeople.vue';
+import ProjectShow from '@/components/pages/ProjectShow.vue';
+import ProjectsIndex from '@/components/pages/ProjectsIndex.vue';
+import Register from '@/components/pages/Register.vue';
+import RequirementForm from '@/components/sidepanels/Requirement.vue';
+import UserForm from '@/components/sidepanels/User.vue';
+import { Api } from '@/api';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores';
 
 function buildRouter(base) {
+    const api = new Api();
+
     // If we haven't been given a base path, look in the environment or just use root
     if (!base) {
         base = import.meta.env.VITE_ROUTER_BASE || '/';
@@ -43,6 +56,41 @@ function buildRouter(base) {
             return { top: 0, behavior: 'instant' };
         },
         routes: [
+            // Auth
+            {
+                name: 'auth.login',
+                path: '/login',
+                component: Login,
+                meta: { auth: 'guest', title: 'Log in' },
+            }, {
+                name: 'auth.register',
+                path: '/register',
+                component: Register,
+                meta: { auth: 'guest', title: 'Register' },
+            }, {
+                name: 'auth.password.request',
+                path: '/password/request',
+                component: PasswordRequest,
+                meta: { auth: 'guest', title: 'Request password reset' },
+            }, {
+                name: 'auth.password.reset',
+                path: '/password/reset/:token',
+                component: PasswordReset,
+                meta: { auth: 'guest', title: 'Reset password reset' },
+                props: true,
+            }, {
+                name: 'account.settings',
+                path: '/account/settings',
+                component: AccountSettings,
+                meta: { title: 'Account settings' },
+            }, {
+                name: 'account.delete',
+                path: '/account/delete',
+                component: AccountDelete,
+                meta: { title: 'Delete account' },
+            },
+
+            // Projects
             {
                 name: 'home',
                 path: '/',
@@ -76,7 +124,19 @@ function buildRouter(base) {
                         meta: { title: 'Organise project' },
                         components: { sidepanel: ProjectOrganise },
                         props: true,
-                    }, 
+                    }, {
+                        name: 'projects.feedback',
+                        path: 'feedback',
+                        meta: { title: 'Feedback' },
+                        components: { sidepanel: ProjectFeedback },
+                        props: true,
+                    }, {
+                        name: 'projects.people',
+                        path: 'people',
+                        meta: { title: 'People' },
+                        components: { sidepanel: ProjectPeople },
+                        props: true,
+                    },
 
                     // Users
                     {
@@ -129,7 +189,10 @@ function buildRouter(base) {
                         props: true,
                     },
                 ],
-            }, {
+            },
+
+            // Miscellaneous
+            {
                 name: '404',
                 path: '/:pathMatch(.*)*',
                 component: NotFound,
@@ -152,6 +215,52 @@ function buildRouter(base) {
             if (param.endsWith('_id')) {
                 to.params[param] = parseInt(to.params[param]);
             }
+        }
+    });
+
+    // Add some auth middleware
+    router.beforeEach(async (to) => {
+        if (to.meta.auth === 'public') {
+            return;
+        }
+
+        const auth_store = useAuthStore();
+        const was_logged_in = auth_store.is_logged_in;
+
+        // See if we can load the user's account
+        if (!auth_store.account) {
+            await api.get('auth/account')
+                .then(response => {
+                    auth_store.setAccount(response.data);
+
+                    if (!was_logged_in && auth_store.is_logged_in) {
+                        Model.resetRepositories();
+                    }
+                })
+                .catch((error) => {
+                    if (error.response.status !== 401) {
+                        throw error;
+                    }
+                });
+        }
+
+        // Redirect authenticated users
+        if (auth_store.is_logged_in && to.meta.auth === 'guest') {
+            return {'name': 'projects.index'};
+        }
+
+        // Redirect guests
+        if (!to.meta.auth && !auth_store.is_logged_in) {
+            return {'name': 'auth.login'};
+        }
+    });
+
+    // Clear the account if we're not logged in
+    router.afterEach(() => {
+        const auth_store = useAuthStore();
+
+        if (!auth_store.is_logged_in) {
+            auth_store.account = null;
         }
     });
 

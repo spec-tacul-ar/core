@@ -1,9 +1,9 @@
 <?php
 
-namespace Spectacular\Core\Models\Traits;
+namespace App\Models\Traits;
 
 use DateTime;
-use Spectacular\Core\Casts\CompressedCollection;
+use App\Casts\CompressedCollection;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use LogicException;
 

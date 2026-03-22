@@ -1,16 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions\Unknowns;
+namespace App\Actions\Unknowns;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\UnknownResource;
-use Spectacular\Core\Models\Unknown;
+use App\Http\Resources\UnknownResource;
+use App\Models\Unknown;
 
 class EditUnknown
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('update', $request->route('unknown'));
+    }
 
     public static function routes(Router $router): void
     {

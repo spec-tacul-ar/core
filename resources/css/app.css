@@ -4,7 +4,6 @@
 @source "../views/app.blade.php";
 @source "../**/*.vue";
 
-
 @theme {
     --sidebar-width: 320px;
     --main-width: 896px;

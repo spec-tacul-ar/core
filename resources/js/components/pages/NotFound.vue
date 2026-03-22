@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import ErrorMessage from '@core/components/ErrorMessage.vue';
-import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 
 export default {
     components: {

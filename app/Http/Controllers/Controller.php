@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Http\Controllers;
+namespace App\Http\Controllers;
 
 abstract class Controller
 {

@@ -9,6 +9,13 @@ export default class Requirement extends Model {
     set assignments(assignments) {
         this.constructor.repository('assignments').saveMany(assignments);
     }
+    
+    get comments() {
+        return this.constructor.repository('comments').collection.where('commentable_type', 'requirement').where('commentable_id', this.id);
+    }
+    set comments(comments) {
+        this.constructor.repository('comments').saveMany(comments);
+    }
 
     get feature() {
         return this.constructor.repository('features').find(this.feature_id);
@@ -96,5 +103,11 @@ export default class Requirement extends Model {
         }
 
         return false;
+    }
+
+    onDelete() {
+        const comment_ids = this.comments.pluck('id').toArray();
+
+        this.constructor.repository('comments').deleteMany(comment_ids);
     }
 }

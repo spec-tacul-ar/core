@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import IconSet from '@core/components/IconSet.vue';
-import Tooltip from '@core/components/Tooltip.vue';
+import IconSet from '@/components/IconSet.vue';
+import Tooltip from '@/components/Tooltip.vue';
 
 export default {
     components: {

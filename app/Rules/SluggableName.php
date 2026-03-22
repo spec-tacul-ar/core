@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Rules;
+namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Str;

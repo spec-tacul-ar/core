@@ -1,16 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace App\Actions\Projects;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\ProjectResource;
-use Spectacular\Core\Models\Project;
+use App\Http\Resources\ProjectResource;
+use App\Models\Project;
 
 class ReadProject
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('view', $request->route('project'));
+    }
 
     public static function routes(Router $router): void
     {

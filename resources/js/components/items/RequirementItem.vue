@@ -52,16 +52,18 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import RichText from '@core/components/RichText.vue';
-import UnknownItem from '@core/components/items/UnknownItem.vue';
-import TaskItem from '@core/components/items/TaskItem.vue';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import RequirementToolbar from '@/components/navigation/RequirementToolbar.vue';
+import RichText from '@/components/RichText.vue';
+import UnknownItem from '@/components/items/UnknownItem.vue';
+import TaskItem from '@/components/items/TaskItem.vue';
 
 export default {
     components: {
         DropdownMenu,
         DropdownMenuItem,
+        RequirementToolbar,
         RichText,
         UnknownItem,
         TaskItem

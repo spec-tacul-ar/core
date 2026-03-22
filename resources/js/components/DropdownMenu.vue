@@ -27,7 +27,7 @@
 
 <script>
 import { createFocusTrap } from 'focus-trap';
-import IconSet from '@core/components/IconSet.vue';
+import IconSet from '@/components/IconSet.vue';
 
 export default {
     beforeUnmount() {

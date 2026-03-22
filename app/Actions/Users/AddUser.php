@@ -1,16 +1,23 @@
 <?php
 
-namespace Spectacular\Core\Actions\Users;
+namespace App\Actions\Users;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\UserResource;
-use Spectacular\Core\Models\User;
+use App\Http\Resources\UserResource;
+use App\Models\Project;
+use App\Models\User;
+use Spatie\ValidationRules\Rules\Authorized;
 
 class AddUser
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('create', User::class);
+    }
 
     public static function routes(Router $router): void
     {
@@ -20,7 +27,7 @@ class AddUser
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer'],
+            'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
             'summary' => ['nullable', 'string'],
             'name' => ['required', 'string', 'max:255'],
             'weight' => ['nullable', 'integer', 'between:0,255'],

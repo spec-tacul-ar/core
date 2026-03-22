@@ -1,17 +1,23 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace App\Actions\Projects;
 
+use App\Enums\Role;
+use App\Http\Resources\ProjectResource;
+use App\Models\Project;
+use App\Rules\SluggableName as SluggableNameRule;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\ProjectResource;
-use Spectacular\Core\Models\Project;
-use Spectacular\Core\Rules\SluggableName as SluggableNameRule;
 
 class AddProject
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('create', Project::class);
+    }
 
     public static function routes(Router $router): void
     {
@@ -44,6 +50,8 @@ class AddProject
 
             $project->features()->createMany($features);
         }
+
+        auth()->user()->projects()->attach($project, ['role' => Role::OWNER]);
 
         return $project;
     }

@@ -82,15 +82,15 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
-import SpinnerButton from '@core/components/SpinnerButton.vue';
-import TrackDirty from '@core/mixins/TrackDirty';
-import IconSet from '@core/components/IconSet.vue';
-import Feature from '@core/stores/models/Feature';
-import Project from '@core/stores/models/Project';
-import Requirement from '@core/stores/models/Requirement';
-import User from '@core/stores/models/User';
-import { useAlertsStore } from '@core/stores';
+import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
+import SpinnerButton from '@/components/SpinnerButton.vue';
+import TrackDirty from '@/mixins/TrackDirty';
+import IconSet from '@/components/IconSet.vue';
+import Feature from '@/stores/models/Feature';
+import Project from '@/stores/models/Project';
+import Requirement from '@/stores/models/Requirement';
+import User from '@/stores/models/User';
+import { useAlertsStore } from '@/stores';
 
 export default {
     inject: ['api'],

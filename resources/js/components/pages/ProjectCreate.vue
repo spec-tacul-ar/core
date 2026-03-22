@@ -55,16 +55,16 @@
 </template>
 
 <script>
-import Card from '@core/components/Card.vue';
-import FormInput from '@core/components/forms/FormInput.vue';
-import IconSet from '@core/components/IconSet.vue';
-import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
-import DefaultLayout from '@core/components/layouts/DefaultLayout.vue';
-import SpinnerButton from '@core/components/SpinnerButton.vue';
-import TrackDirty from '@core/mixins/TrackDirty';
-import UniqueId from '@core/mixins/UniqueId';
-import Project from '@core/stores/models/Project';
-import { useAlertsStore } from '@core/stores';
+import Card from '@/components/Card.vue';
+import FormInput from '@/components/forms/FormInput.vue';
+import IconSet from '@/components/IconSet.vue';
+import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
+import SpinnerButton from '@/components/SpinnerButton.vue';
+import TrackDirty from '@/mixins/TrackDirty';
+import UniqueId from '@/mixins/UniqueId';
+import Project from '@/stores/models/Project';
+import { useAlertsStore } from '@/stores';
 
 export default {
     inject: ['api'],

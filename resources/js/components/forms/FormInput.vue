@@ -60,8 +60,8 @@
 </template>
 
 <script>
-import InfoPopover from '@core/components/InfoPopover.vue';
-import FormLabel from '@core/components/forms/FormLabel.vue';
+import InfoPopover from '@/components/InfoPopover.vue';
+import FormLabel from '@/components/forms/FormLabel.vue';
 
 export default {
     components: {

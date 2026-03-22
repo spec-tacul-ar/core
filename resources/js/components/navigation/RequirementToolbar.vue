@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import RequirementDelete from '@core/components/modals/RequirementDelete.vue';
-import IconSet from '@core/components/IconSet.vue';
-import Requirement from '@core/stores/models/Requirement';
-import Task from '@core/stores/models/Task';
-import { useAlertsStore, useModalStore } from '@core/stores';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import RequirementDelete from '@/components/modals/RequirementDelete.vue';
+import IconSet from '@/components/IconSet.vue';
+import Requirement from '@/stores/models/Requirement';
+import Task from '@/stores/models/Task';
+import { useAlertsStore, useModalStore } from '@/stores';
 
 export default {
     inject: ['api'],

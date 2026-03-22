@@ -1,0 +1,82 @@
+<?php
+
+namespace Tests\Concerns;
+
+use App\Enums\Role;
+use App\Models\Account;
+use App\Models\Contributor;
+use App\Models\Feature;
+use App\Models\Project;
+use App\Models\Requirement;
+use App\Models\Task;
+use App\Models\Unknown;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+
+trait BuildsApiFixtures
+{
+    protected function actingAsAccount(?Account $account = null): Account
+    {
+        $account ??= Account::factory()->create();
+
+        Sanctum::actingAs($account);
+
+        return $account;
+    }
+
+    protected function attachContributor(Account $account, Project $project, Role $role = Role::OWNER): Contributor
+    {
+        return Contributor::factory()
+            ->for($account)
+            ->for($project)
+            ->create(['role' => $role]);
+    }
+
+    protected function createProjectFixture(Role $role = Role::OWNER, ?Account $account = null): array
+    {
+        $account ??= Account::factory()->create();
+
+        $project = Project::factory()->create();
+        $contributor = $this->attachContributor($account, $project, $role);
+        $projectUser = User::factory()->for($project)->create();
+        $feature = Feature::factory()->for($project)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+        $assignment = $requirement->assignments()->create(['user_id' => $projectUser->id]);
+        $task = Task::factory()->for($requirement)->create(['is_complete' => false]);
+        $unknown = Unknown::factory()->for($requirement)->create();
+
+        return compact(
+            'account',
+            'assignment',
+            'contributor',
+            'feature',
+            'project',
+            'projectUser',
+            'requirement',
+            'task',
+            'unknown',
+        );
+    }
+
+    protected function interpolatePlaceholders(mixed $value, array $bindings): mixed
+    {
+        if (is_array($value)) {
+            return array_map(
+                fn (mixed $item) => $this->interpolatePlaceholders($item, $bindings),
+                $value,
+            );
+        }
+
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $replacements = [];
+
+        foreach ($bindings as $key => $binding) {
+            $replacements['{' . $key . '}'] = (string) $binding;
+        }
+
+        return strtr($value, $replacements);
+    }
+}

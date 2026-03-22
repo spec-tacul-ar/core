@@ -47,16 +47,16 @@
 </template>
 
 <script>
-import FormInput from '@core/components/forms/FormInput.vue';
-import FormRichText from '@core/components/forms/FormRichText.vue';
-import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
-import SidepanelLayout from '@core/components/layouts/SidepanelLayout.vue';
-import SpinnerButton from '@core/components/SpinnerButton.vue';
-import TrackDirty from '@core/mixins/TrackDirty';
-import UniqueId from '@core/mixins/UniqueId';
-import ValidationMessages from '@core/components/ValidationMessages.vue';
-import Feature from '@core/stores/models/Feature';
-import { useAlertsStore } from '@core/stores';
+import FormInput from '@/components/forms/FormInput.vue';
+import FormRichText from '@/components/forms/FormRichText.vue';
+import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
+import SpinnerButton from '@/components/SpinnerButton.vue';
+import TrackDirty from '@/mixins/TrackDirty';
+import UniqueId from '@/mixins/UniqueId';
+import ValidationMessages from '@/components/ValidationMessages.vue';
+import Feature from '@/stores/models/Feature';
+import { useAlertsStore } from '@/stores';
 import { inject } from 'vue';
 
 export default {

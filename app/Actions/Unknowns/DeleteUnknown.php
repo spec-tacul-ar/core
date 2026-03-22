@@ -1,15 +1,21 @@
 <?php
 
-namespace Spectacular\Core\Actions\Unknowns;
+namespace App\Actions\Unknowns;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
+use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Models\Unknown;
+use App\Models\Unknown;
 
 class DeleteUnknown
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('delete', $request->route('unknown'));
+    }
 
     public static function routes(Router $router): void
     {

@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import UnknownResolve from '@core/components/modals/UnknownResolve.vue';
-import { useModalStore } from '@core/stores';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import UnknownResolve from '@/components/modals/UnknownResolve.vue';
+import { useModalStore } from '@/stores';
 
 export default {
     components: {

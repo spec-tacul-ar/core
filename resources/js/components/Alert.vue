@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { useAlertsStore } from '@core/stores';
-import IconSet from '@core/components/IconSet.vue';
+import { useAlertsStore } from '@/stores';
+import IconSet from '@/components/IconSet.vue';
 
 export default {
     components: {

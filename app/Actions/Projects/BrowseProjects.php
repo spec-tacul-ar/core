@@ -1,13 +1,13 @@
 <?php
 
-namespace Spectacular\Core\Actions\Projects;
+namespace App\Actions\Projects;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\ProjectResource;
-use Spectacular\Core\Models\Project;
+use App\Http\Resources\ProjectResource;
+use App\Models\Project;
 
 class BrowseProjects
 {
@@ -20,7 +20,7 @@ class BrowseProjects
 
     public function handle(): LengthAwarePaginator
     {
-        return Project::query()
+        return auth()->user()->projects()
             ->withCount([
                 'requirements',
                 'requirements as blocked_requirements_count' => fn($query) => $query->whereNotNull('blocked_reason'),

@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "spectacular/core",
+    "name": "spectacular/spectacular",
     "type": "project",
     "description": "Spectacular is an open-source functional specification manager.",
     "keywords": [
@@ -9,12 +9,17 @@
     "license": "AGPL-3.0-or-later",
     "require": {
         "php": "^8.2",
+        "laravel/fortify": "^1.25",
         "laravel/framework": "^12.0",
+        "laravel/nightwatch": "^1.24",
         "laravel/sanctum": "^4.3",
+        "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.10.1",
         "league/html-to-markdown": "^5.1",
         "lorisleiva/laravel-actions": "^2.9",
         "mews/purifier": "^3.4",
+        "resend/resend-php": "^1.1",
+        "spatie/laravel-validation-rules": "^3.4",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {
@@ -28,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Spectacular\\Core\\": "app/",
+            "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -43,7 +48,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate --seed --force",
+            "@php artisan migrate --force",
             "npm install",
             "npm run build"
         ],

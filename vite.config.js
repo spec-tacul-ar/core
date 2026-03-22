@@ -42,7 +42,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@core': path.resolve('resources/js'),
+            '@': path.resolve('resources/js'),
         },
     },
     server: {

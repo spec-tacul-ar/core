@@ -1,16 +1,23 @@
 <?php
 
-namespace Spectacular\Core\Actions\Features;
+namespace App\Actions\Features;
 
+use App\Http\Resources\FeatureResource;
+use App\Models\Feature;
+use App\Models\Project;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\FeatureResource;
-use Spectacular\Core\Models\Feature;
+use Spatie\ValidationRules\Rules\Authorized;
 
 class EditFeature
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('update', $request->route('feature'));
+    }
 
     public static function routes(Router $router): void
     {
@@ -22,6 +29,7 @@ class EditFeature
         return [
             'description' => ['nullable', 'string'],
             'name' => ['required', 'string', 'max:255'],
+            'project_id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Project::class)],
             'weight' => ['nullable', 'integer', 'between:0,255'],
         ];
     }

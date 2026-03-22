@@ -1,17 +1,24 @@
 <?php
 
-namespace Spectacular\Core\Actions\Tasks;
+namespace App\Actions\Tasks;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\TaskResource;
-use Spectacular\Core\Models\Task;
-use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
+use App\Http\Resources\TaskResource;
+use App\Models\Requirement;
+use App\Models\Task;
+use App\Rules\QuarterHour as QuarterHourRule;
+use Spatie\ValidationRules\Rules\Authorized;
 
 class AddTask
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('create', Task::class);
+    }
 
     public static function routes(Router $router): void
     {
@@ -21,7 +28,7 @@ class AddTask
     public function rules(): array
     {
         return [
-            'requirement_id' => ['required', 'integer'],
+            'requirement_id' => ['required', 'integer', new Authorized('update', Requirement::class)],
             'name' => ['required', 'string', 'max:255'],
             'estimate' => ['nullable', 'numeric', new QuarterHourRule()],
             'is_complete' => ['required', 'boolean'],

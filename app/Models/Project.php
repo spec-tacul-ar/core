@@ -1,6 +1,6 @@
 <?php
 
-namespace Spectacular\Core\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Illuminate\Support\Str;
-use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
+use App\Rules\QuarterHour as QuarterHourRule;
 
 class Project extends Model
 {
@@ -34,16 +34,52 @@ class Project extends Model
         });
 
         static::deleting(function ($project) {
+            $project->comments->each->delete();
+            $project->contributors->each->delete();
             $project->features()->withTrashed()->get()->each->forceDelete();
+            $project->invitations->each->delete();
             $project->users()->withTrashed()->get()->each->forceDelete();
         });
     }
 
     /* Relations */
 
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'contributors');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function contributors()
+    {
+        return $this->hasMany(Contributor::class);
+    }
+
     public function features(): HasMany
     {
         return $this->hasMany(Feature::class);
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
+    public function me()
+    {
+        return $this->hasOne(Contributor::class)->ofMany(
+            ['id' => 'min'],
+            fn ($query) => $query->where('account_id', auth()->id())
+        );
+    }
+
+    public function readmark()
+    {
+        return $this->hasOne(Readmark::class)->where('account_id', auth()->id());
     }
 
     public function requirements(): HasManyThrough
@@ -66,16 +102,27 @@ class Project extends Model
         return $this->hasMany(User::class);
     }
 
+    /* Scopes */
+
+    public function scopeWithMe($query)
+    {
+        $query->with(['contributors' => function ($query) {
+            $query->where('account_id', auth()->id());
+        }]);
+    }
+
     /* Helpers */
 
     public function loadAll(): static
     {
         return $this->load([
+            'contributors.account',
             'features',
             'features.requirements',
             'features.requirements.assignments.user',
-            'features.requirements.unknowns',
             'features.requirements.tasks',
+            'features.requirements.unknowns',
+            'readmark',
             'users',
         ]);
     }

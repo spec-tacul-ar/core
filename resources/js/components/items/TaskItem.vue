@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import DropdownMenu from '@core/components/DropdownMenu.vue';
-import DropdownMenuItem from '@core/components/DropdownMenuItem.vue';
-import { useAlertsStore } from '@core/stores';
-import IconSet from '@core/components/IconSet.vue';
-import Task from '@core/stores/models/Task';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import { useAlertsStore } from '@/stores';
+import IconSet from '@/components/IconSet.vue';
+import Task from '@/stores/models/Task';
 
 export default {
     inject: ['api'],

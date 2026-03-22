@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import InfoPopover from '@core/components/InfoPopover.vue';
+import InfoPopover from '@/components/InfoPopover.vue';
 
 export default {
     components: {

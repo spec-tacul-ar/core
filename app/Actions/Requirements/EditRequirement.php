@@ -1,19 +1,28 @@
 <?php
 
-namespace Spectacular\Core\Actions\Requirements;
+namespace App\Actions\Requirements;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spectacular\Core\Http\Resources\RequirementResource;
-use Spectacular\Core\Models\Requirement;
-use Spectacular\Core\Models\User;
-use Spectacular\Core\Rules\QuarterHour as QuarterHourRule;
-use Spectacular\Core\Rules\SharesRelation;
+use App\Http\Resources\RequirementResource;
+use App\Models\Feature;
+use App\Models\Requirement;
+use App\Models\Task;
+use App\Models\Unknown;
+use App\Models\User;
+use App\Rules\QuarterHour as QuarterHourRule;
+use App\Rules\SharesRelation;
+use Spatie\ValidationRules\Rules\Authorized;
 
 class EditRequirement
 {
     use AsAction;
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('update', $request->route('requirement'));
+    }
 
     public static function routes(Router $router): void
     {
@@ -25,15 +34,15 @@ class EditRequirement
         return [
             'blocked_reason' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
-            'feature_id' => ['sometimes', 'bail', 'required', 'integer'],
+            'feature_id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Feature::class)],
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'unknowns' => ['sometimes', 'array'],
-            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer'],
+            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Unknown::class)],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
             'user_ids' => ['sometimes', 'array'],
             'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features')],
             'tasks' => ['sometimes', 'array'],
-            'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer'],
+            'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Task::class)],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:255'],

@@ -15,13 +15,13 @@
 </template>
 
 <script>
-import FormInput from '@core/components/forms/FormInput.vue';
-import KeyboardShortcuts from '@core/mixins/KeyboardShortcuts';
-import ModalLayout from '@core/components/layouts/ModalLayout.vue';
-import SpinnerButton from '@core/components/SpinnerButton.vue';
-import UniqueId from '@core/mixins/UniqueId';
-import Project from '@core/stores/models/Project';
-import { useAlertsStore } from '@core/stores';
+import FormInput from '@/components/forms/FormInput.vue';
+import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import ModalLayout from '@/components/layouts/ModalLayout.vue';
+import SpinnerButton from '@/components/SpinnerButton.vue';
+import UniqueId from '@/mixins/UniqueId';
+import Project from '@/stores/models/Project';
+import { useAlertsStore } from '@/stores';
 
 export default {
     inject: ['api'],
