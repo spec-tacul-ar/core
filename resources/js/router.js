@@ -18,7 +18,7 @@ import RequirementForm from '@/components/sidepanels/Requirement.vue';
 import UserForm from '@/components/sidepanels/User.vue';
 import { Api } from '@/api';
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 
 function buildRouter(base) {
     const api = new Api();
@@ -82,12 +82,12 @@ function buildRouter(base) {
                 name: 'account.settings',
                 path: '/account/settings',
                 component: AccountSettings,
-                meta: { title: 'Account settings' },
+                meta: { team: true, title: 'Account settings' },
             }, {
                 name: 'account.delete',
                 path: '/account/delete',
                 component: AccountDelete,
-                meta: { title: 'Delete account' },
+                meta: { team: true, title: 'Delete account' },
             },
 
             // Projects
@@ -127,13 +127,13 @@ function buildRouter(base) {
                     }, {
                         name: 'projects.feedback',
                         path: 'feedback',
-                        meta: { title: 'Feedback' },
+                        meta: { team: true, title: 'Feedback' },
                         components: { sidepanel: ProjectFeedback },
                         props: true,
                     }, {
                         name: 'projects.people',
                         path: 'people',
-                        meta: { title: 'People' },
+                        meta: { team: true, title: 'People' },
                         components: { sidepanel: ProjectPeople },
                         props: true,
                     },
@@ -246,6 +246,12 @@ function buildRouter(base) {
 
         // Redirect authenticated users
         if (auth_store.is_logged_in && to.meta.auth === 'guest') {
+        }
+
+        // Redirect team pages when in solo mode
+        if (auth_store.is_solo && to.meta.team) {
+            useAlertsStore().push('This is not available in solo mode.', 'warning');
+            
             return {'name': 'projects.index'};
         }
 

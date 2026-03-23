@@ -20,7 +20,9 @@ class BrowseProjects
 
     public function handle(): LengthAwarePaginator
     {
-        return auth()->user()->projects()
+        $query = auth()->user()->exists ? auth()->user()->projects() : Project::query();
+
+        return $query
             ->withCount([
                 'requirements',
                 'requirements as blocked_requirements_count' => fn($query) => $query->whereNotNull('blocked_reason'),

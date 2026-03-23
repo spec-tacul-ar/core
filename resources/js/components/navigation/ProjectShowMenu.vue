@@ -3,8 +3,8 @@
 
     <NavbarButton :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex" />
     <NavbarButton :to="{ name: 'projects.organise' }" icon="organise" tooltip="Organise" class="hidden sm:flex" />
-    <NavbarButton :to="{ name: 'projects.people' }" icon="people" tooltip="People" class="hidden sm:flex" />
-    <NavbarButton :to="{ name: 'projects.feedback' }" icon="feedback" tooltip="Feedback" class="hidden sm:flex" />
+    <NavbarButton v-if="!is_solo" :to="{ name: 'projects.people' }" icon="people" tooltip="People" class="hidden sm:flex" />
+    <NavbarButton v-if="!is_solo" :to="{ name: 'projects.feedback' }" icon="feedback" tooltip="Feedback" class="hidden sm:flex" />
 
     <DropdownMenu class="hidden sm:flex">
         <template #trigger="{ toggle }">
@@ -29,6 +29,7 @@ import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import IconSet from '@/components/IconSet.vue';
 import NavbarButton from '@/components/NavbarButton.vue';
 import Tooltip from '@/components/Tooltip.vue';
+import { useAuthStore } from '@/stores';
 
 export default {
     components: {
@@ -37,6 +38,11 @@ export default {
         IconSet,
         NavbarButton,
         Tooltip,
+    },
+    computed: {
+        is_solo() {
+            return useAuthStore().is_solo;
+        },
     },
     props: ['project'],
 };

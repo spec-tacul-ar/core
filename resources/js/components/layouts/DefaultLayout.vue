@@ -20,7 +20,7 @@
         <div class="flex w-full items-center justify-end gap-2 px-4">
             <slot name="menu"></slot>
             
-            <UserMenu />
+            <UserMenu v-if="!is_solo" />
         </div>
     </nav>
 
@@ -93,7 +93,7 @@
 
 <script>
 import UserMenu from '@/components/navigation/UserMenu.vue';
-import { useModalStore } from '@/stores';
+import { useAuthStore, useModalStore } from '@/stores';
 
 export default {
     components: {
@@ -155,7 +155,10 @@ export default {
         },
         route_key() {
             return this.$route.path + '?' + new URLSearchParams(this.$route.query).toString();
-        }
+        },
+        is_solo() {
+            return useAuthStore().is_solo;
+        },
     },
     data() {
         return {

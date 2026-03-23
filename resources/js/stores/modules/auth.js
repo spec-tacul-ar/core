@@ -14,5 +14,8 @@ export default {
         clearAccount() {
             this.setAccount(null);
         },
-    }
+    },
+    getters: {
+        is_solo: (state) => state.is_logged_in && !state.account.id,
+    },
 };
