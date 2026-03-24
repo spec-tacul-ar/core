@@ -82,12 +82,12 @@ function buildRouter(base) {
                 name: 'account.settings',
                 path: '/account/settings',
                 component: AccountSettings,
-                meta: { team: true, title: 'Account settings' },
+                meta: { title: 'Account settings' },
             }, {
                 name: 'account.delete',
                 path: '/account/delete',
                 component: AccountDelete,
-                meta: { team: true, title: 'Delete account' },
+                meta: { title: 'Delete account' },
             },
 
             // Projects
@@ -127,13 +127,13 @@ function buildRouter(base) {
                     }, {
                         name: 'projects.feedback',
                         path: 'feedback',
-                        meta: { team: true, title: 'Feedback' },
+                        meta: { title: 'Feedback' },
                         components: { sidepanel: ProjectFeedback },
                         props: true,
                     }, {
                         name: 'projects.people',
                         path: 'people',
-                        meta: { team: true, title: 'People' },
+                        meta: { title: 'People' },
                         components: { sidepanel: ProjectPeople },
                         props: true,
                     },
@@ -246,12 +246,6 @@ function buildRouter(base) {
 
         // Redirect authenticated users
         if (auth_store.is_logged_in && to.meta.auth === 'guest') {
-        }
-
-        // Redirect team pages when in solo mode
-        if (auth_store.is_solo && to.meta.team) {
-            useAlertsStore().push('This is not available in solo mode.', 'warning');
-            
             return {'name': 'projects.index'};
         }
 

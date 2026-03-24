@@ -2,26 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Laravel\Socialite\Exceptions\DriverMissingConfigurationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
-use App\Models\Account;
 
 class AuthController extends Controller
 {
     public function redirect(string $provider)
     {
-        return Socialite::driver($provider)->redirect();
+        try {
+            return Socialite::driver($provider)->redirect();
+        } catch (DriverMissingConfigurationException $exception) {
+            abort(404);
+        }
     }
 
     public function callback(Request $request, string $provider)
     {
         try {
             $social = Socialite::driver($provider)->user();
+        } catch (DriverMissingConfigurationException $exception) {
+            abort(404);
         } catch (InvalidStateException $exception) {
             report($exception);
 

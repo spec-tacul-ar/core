@@ -20,26 +20,6 @@
                         <spinner-button type="submit" class="btn btn-primary w-full" :loading="is_waiting">Log in</spinner-button>
                     </div>
                 </form>
-
-                <div v-if="socials.length" class="mt-4">
-                    <div class="flex items-center gap-3 text-xs uppercase text-gray-500">
-                        <span class="h-px flex-1 bg-gray-200"></span>
-                        <span>Or</span>
-                        <span class="h-px flex-1 bg-gray-200"></span>
-                    </div>
-
-                    <div class="mt-3 grid gap-2">
-                        <a v-if="socials.includes('google')" href="/auth/google/redirect" class="btn btn-primary-outline w-full normal-case">
-                            <IconSet name="google" /> Continue with Google
-                        </a>
-                        <a v-if="socials.includes('github')" href="/auth/github/redirect" class="btn btn-primary-outline w-full normal-case">
-                            <IconSet name="github" /> Continue with GitHub
-                        </a>
-                        <a v-if="socials.includes('linkedin')" href="/auth/linkedin/redirect" class="btn btn-primary-outline w-full normal-case">
-                            <IconSet name="linkedin" /> Continue with LinkedIn
-                        </a>
-                    </div>
-                </div>
             </Card>
             
             <p class="text-center mt-4">Don't have an account yet? <router-link :to="{ name: 'auth.register' }" class="link">Register</router-link></p>
@@ -65,11 +45,6 @@ export default {
         GuestLayout,
         IconSet,
         SpinnerButton,
-    },
-    computed: {
-        socials() {
-            return Spectacular.auth_providers;
-        },
     },
     data() {
         return {

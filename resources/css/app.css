@@ -23,7 +23,7 @@
 }
 
 .btn {
-    @apply flex font-display justify-center items-center gap-2 uppercase text-sm rounded-xl text-lg text-center hover:ring-2 transition duration-500 disabled:opacity-50 disabled:cursor-not-allowed p-2 px-4 print:hidden;
+    @apply flex font-display justify-center items-center gap-2 uppercase text-sm rounded-xl text-lg text-center hover:ring-2 disabled:hover:ring-0 transition duration-500 disabled:opacity-50 disabled:cursor-not-allowed p-2 px-4 print:hidden;
 }
 
 .btn.btn-sm {

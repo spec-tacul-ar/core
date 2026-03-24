@@ -6,13 +6,6 @@
         <title>{{ config('app.name') }}</title>
         @vite(['resources/js/app.js'])
 
-        <script>
-            window.Spectacular = {{ Js::from([
-                'mode' => config('spectacular.mode'),
-                'auth_providers' => auth_providers(),
-            ]) }};
-        </script>
-
         <style>
             @font-face {
               font-family: 'Funnel Sans';

@@ -12,8 +12,8 @@ Route::controller(ExportController::class)->group(function () {
 });
 
 Route::controller(AuthController::class)->middleware('guest')->group(function () {
-    Route::get('auth/{provider}/redirect', 'redirect')->whereIn('provider', auth_providers());
-    Route::get('auth/{provider}/callback', 'callback')->whereIn('provider', auth_providers());
+    Route::get('auth/{provider}/redirect', 'redirect');
+    Route::get('auth/{provider}/callback', 'callback');
 });
 
 Route::view('/{any?}', 'app')->where('any', '.*');

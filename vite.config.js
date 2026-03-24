@@ -27,7 +27,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/css/export.css',
-                'resources/js/app.js'],
+                'resources/js/app.js',
+            ],
             refresh: true,
         }),
         tailwindcss(),
