@@ -119,67 +119,6 @@ class Account extends Authenticatable
         return $readmark;
     }
 
-    public function getLimits(?string $type = null)
-    {
-        $limits = [
-            'projects' => 5,
-            'features' => 100,
-            'users' => 25,
-            'requirements' => 250,
-            'tasks' => 1000,
-            'unknowns' => 1000,
-        ];
-
-        if ($type) {
-            return $limits[$type];
-        }
-
-        return $limits;
-    }
-
-    public function getUsage(?string $type = null)
-    {
-        $usage = [
-            'projects' => fn () => $this->ownedProjects()->count(),
-            'features' => fn () => $this->hasManyDeepFromRelationsWithConstraints(
-                [$this, 'ownedProjects'],
-                [new Project(), 'features'],
-            )->count(),
-            'users' => fn () => $this->hasManyDeepFromRelationsWithConstraints(
-                [$this, 'ownedProjects'],
-                [new Project(), 'users'],
-            )->count(),
-            'requirements' => fn () => $this->hasManyDeepFromRelationsWithConstraints(
-                [$this, 'ownedProjects'],
-                [new Project(), 'features'],
-                [new Feature(), 'requirements'],
-            )->count(),
-            'tasks' => fn () => $this->hasManyDeepFromRelationsWithConstraints(
-                [$this, 'ownedProjects'],
-                [new Project(), 'features'],
-                [new Feature(), 'requirements'],
-                [new Requirement(), 'tasks'],
-            )->count(),
-            'unknowns' => fn () => $this->hasManyDeepFromRelationsWithConstraints(
-                [$this, 'ownedProjects'],
-                [new Project(), 'features'],
-                [new Feature(), 'requirements'],
-                [new Requirement(), 'unknowns'],
-            )->count(),
-        ];
-
-        if ($type) {
-            return $usage[$type]();
-        }
-
-        return array_map(fn ($resolver) => $resolver(), $usage);
-    }
-
-    public function hasReachedLimit(string $type): bool
-    {
-        return $this->getUsage($type) >= $this->getLimits($type);
-    }
-
     public function canView(Model $model, ?string $via = null)
     {
         if ($model instanceof Project) {
