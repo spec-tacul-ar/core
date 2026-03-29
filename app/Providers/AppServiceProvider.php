@@ -7,6 +7,7 @@ use App\Models\Feature;
 use App\Models\Requirement;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceHttps(app()->environment(['production', 'staging']));
+
         Relation::enforceMorphMap([
             'account' => Account::class,
             'feature' => Feature::class,
