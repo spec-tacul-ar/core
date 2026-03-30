@@ -300,7 +300,7 @@ export default {
         const router = buildRouter(base);
 
         if (callback) {
-            callback(router);
+            callback(router, app);
         }
 
         app.use(router);
