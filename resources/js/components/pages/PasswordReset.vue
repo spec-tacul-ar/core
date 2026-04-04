@@ -56,7 +56,7 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            this.api.post('auth/password/request', {...this.form, token: this.token })
+            this.api.post('auth/password/reset', {...this.form, token: this.token })
                 .then(() => {
                     useAlertsStore().push('Password reset.');
 
