@@ -2,15 +2,14 @@
 
 ## About Spectacular
 
-Spectacular is a free open-source functional specification manager.
+Spectacular is a free open-source functional specification builder.
 
-Turn messy project scope into build-ready specifications with explicit blockers, estimates, and exportable handoff docs.
+Turn messy project scope into a build-ready single source of truth everyone can understand.
 
-* Build detailed specfications
-* Maintain them as requirements change
+* Maintain the specification as change requests come in
 * Estimate effort and track progress
 * Document ambiguities and highlight blockers
-* Export to Markdown and HTML effortlessly
+* Effortlessly export to Markdown and HTML
 
 ### Features in the works...
 * More export formats
@@ -22,15 +21,15 @@ Turn messy project scope into build-ready specifications with explicit blockers,
 ## Installation
 
 > [!TIP]
-> Skip setup, updates, and backups with [Spectacular Cloud](https://spec.tacul.ar) - the hosted version of Spectacular for teams that want to start writing specs immediately.
+> Skip setup, updates, and backups with [Spectacular Cloud](https://spec.tacul.ar).
 
-Spectacular installs like any other Laravel application.
+Spectacular is installed and configured like any other Laravel application.
 
 ```bash
 git clone https://github.com/syntheticminds/spectacular.git
 cd spectacular
 composer setup
-# Set your APP_URL in the .env file
+php artisan serve
 ```
 
 To upgrade, simply grab the latest code and run `composer setup` again.
@@ -46,36 +45,9 @@ docker compose up --build
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
 
-## Extending
-
-Spectacular is designed to be forked and extended for your purposes. Of couse, if you've made something cool that other might use, please consider contributing it back to the project.
-
-### Laravel
-
-API endpoints are registered as actions in `app/Actions`. You can either use the service container to [change the binding](https://laravel.com/docs/12.x/container#binding-interfaces-to-implementations) to your own custom implementation or by defining your own routes in `routes/api.php`.
-
-### Vue
-
-To override Vue templates, there are a number of global components that you can override simply by adding them to `resources/js/app.js`. They will be merged with the defaults.
-
-
-```js
-import ProjectShowMenu from 'path/to/my/ProjectShowMenu.vue';
-import UserMenu from 'path/to/my/UserMenu.vue';
-
-const app = createApp(App)
-    .use(api)
-    .use(components, {
-        ProjectShowMenu,
-        UserMenu,
-    }
-```
-
-Need more extension hooks? Open a pull request.
-
 ## Contributing
 
-Thank you for considering contributing to Spectacular! Please see CONTRIBUTING.md for more information.
+Thank you for considering contributing to Spectacular! Please see [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
 
 ## Security
 

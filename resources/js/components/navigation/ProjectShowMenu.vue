@@ -29,6 +29,7 @@ import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import IconSet from '@/components/IconSet.vue';
 import NavbarButton from '@/components/NavbarButton.vue';
 import Tooltip from '@/components/Tooltip.vue';
+import { useAuthStore } from '@/stores';
 
 export default {
     components: {

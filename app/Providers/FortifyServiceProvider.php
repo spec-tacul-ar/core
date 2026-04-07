@@ -28,7 +28,7 @@ class FortifyServiceProvider extends ServiceProvider
         // Fortify::updateUserPasswordsUsing(UpdateAccountPassword::class);
         Fortify::resetUserPasswordsUsing(ResetAccountPassword::class);
 
-        ResetPassword::createUrlUsing(fn ($notifiable, $token) => url('app/password/reset', $token));
+        ResetPassword::createUrlUsing(fn ($notifiable, $token) => url('password/reset', $token));
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());

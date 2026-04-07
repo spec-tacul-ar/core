@@ -51,7 +51,9 @@ class AddProject
             $project->features()->createMany($features);
         }
 
-        auth()->user()->projects()->attach($project, ['role' => Role::OWNER]);
+        if (auth()->user()->exists) {
+            auth()->user()->projects()->attach($project, ['role' => Role::OWNER]);
+        }
 
         return $project;
     }

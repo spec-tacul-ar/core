@@ -18,7 +18,7 @@ import RequirementForm from '@/components/sidepanels/Requirement.vue';
 import UserForm from '@/components/sidepanels/User.vue';
 import { Api } from '@/api';
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 
 function buildRouter(base) {
     const api = new Api();
@@ -300,7 +300,7 @@ export default {
         const router = buildRouter(base);
 
         if (callback) {
-            callback(router);
+            callback(router, app);
         }
 
         app.use(router);

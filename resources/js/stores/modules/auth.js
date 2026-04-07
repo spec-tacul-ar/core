@@ -14,5 +14,5 @@ export default {
         clearAccount() {
             this.setAccount(null);
         },
-    }
+    },
 };

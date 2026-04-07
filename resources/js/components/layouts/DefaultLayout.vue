@@ -93,7 +93,7 @@
 
 <script>
 import UserMenu from '@/components/navigation/UserMenu.vue';
-import { useModalStore } from '@/stores';
+import { useAuthStore, useModalStore } from '@/stores';
 
 export default {
     components: {
@@ -155,7 +155,7 @@ export default {
         },
         route_key() {
             return this.$route.path + '?' + new URLSearchParams(this.$route.query).toString();
-        }
+        },
     },
     data() {
         return {
