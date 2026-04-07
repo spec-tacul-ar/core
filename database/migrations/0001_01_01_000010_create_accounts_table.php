@@ -11,18 +11,14 @@ return new class () extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password')->nullable();
+            $table->string('password');
             $table->string('timezone')->default('UTC');
             $table->text('two_factor_secret')->nullable();
             $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamp('two_factor_confirmed_at')->nullable();
-            $table->string('socialite_provider')->nullable();
-            $table->string('socialite_provider_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->timestamp('email_verified_at')->nullable();
-
-            $table->unique(['socialite_provider', 'socialite_provider_id']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
