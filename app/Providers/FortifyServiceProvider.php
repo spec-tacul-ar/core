@@ -24,8 +24,6 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Fortify::createUsersUsing(CreateNewAccount::class);
-        // Fortify::updateUserProfileInformationUsing(UpdateAccountProfileInformation::class);
-        // Fortify::updateUserPasswordsUsing(UpdateAccountPassword::class);
         Fortify::resetUserPasswordsUsing(ResetAccountPassword::class);
 
         ResetPassword::createUrlUsing(fn ($notifiable, $token) => url('password/reset', $token));
