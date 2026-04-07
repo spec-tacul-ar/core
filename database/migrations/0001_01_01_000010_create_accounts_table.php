@@ -41,7 +41,7 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('account');
+        Schema::dropIfExists('accounts');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('personal_access_tokens');
     }
