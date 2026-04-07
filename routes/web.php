@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExportController;
 use App\Http\Middleware\TidyHtml;
 use Illuminate\Support\Facades\Route;

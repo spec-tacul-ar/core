@@ -11,12 +11,14 @@ Turn messy project scope into a build-ready single source of truth everyone can 
 * Document ambiguities and highlight blockers
 * Effortlessly export to Markdown and HTML
 
-### Features in the works...
+### Roadmap
 * More export formats
 * Dark mode for working late
 * Browsable changelog (changes are already being stored!)
 * Versioning, including a comparison tool
+* Presence indicators and live updates
 * Obligatory AI integration
+* Desktop app
 
 ## Installation
 
