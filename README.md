@@ -48,6 +48,12 @@ docker compose up --build
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
 
+### Enable collaboration
+
+Spectacular defaults to a standalone *solo* mode so you can get started immediately. To enable the collaboration features, you'll need to create an account using the following command:
+
+`php artisan spectacular:account:create`
+
 ## Contributing
 
 Thank you for considering contributing to Spectacular!

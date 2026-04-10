@@ -35,14 +35,15 @@ class AppServiceProvider extends ServiceProvider
             'requirement' => Requirement::class,
         ]);
 
-        Gate::before(function (Account $account, string $ability) {
+        Gate::before(function (Account $account) {
+            // Allow solo users to bypass policies
             if (!$account->exists) {
                 return true;
             }
         });
 
         Auth::viaRequest('solo', function (Request $request) {
-            // Do not provide the solo user if there are any accounts.
+            // The solo account is only available when there are no real accounts in the database.
             if (Account::exists()) {
                 return null;
             }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
+use App\Rules\QuarterHour as QuarterHourRule;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,10 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
-use Illuminate\Support\Str;
-use App\Rules\QuarterHour as QuarterHourRule;
 
 class Project extends Model
 {
@@ -135,6 +136,13 @@ class Project extends Model
     public function totalEstimate(): Attribute
     {
         return new Attribute(fn() => $this->features_estimate);
+    }
+
+    public function addContributor(Account $account, Role $role): static
+    {
+        $this->contributors()->make(['role' => $role])->account()->associate($account)->save();
+
+        return $this;
     }
 
     public static function import(array $data): static
