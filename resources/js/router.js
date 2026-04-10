@@ -61,33 +61,33 @@ function buildRouter(base) {
                 name: 'auth.login',
                 path: '/login',
                 component: Login,
-                meta: { auth: 'guest', title: 'Log in' },
+                meta: { solo: false, auth: 'guest', title: 'Log in' },
             }, {
                 name: 'auth.register',
                 path: '/register',
                 component: Register,
-                meta: { auth: 'guest', title: 'Register' },
+                meta: { solo: false, auth: 'guest', title: 'Register' },
             }, {
                 name: 'auth.password.request',
                 path: '/password/request',
                 component: PasswordRequest,
-                meta: { auth: 'guest', title: 'Request password reset' },
+                meta: { solo: false, auth: 'guest', title: 'Request password reset' },
             }, {
                 name: 'auth.password.reset',
                 path: '/password/reset/:token',
                 component: PasswordReset,
-                meta: { auth: 'guest', title: 'Reset password reset' },
+                meta: { solo: false, auth: 'guest', title: 'Reset password reset' },
                 props: true,
             }, {
                 name: 'account.settings',
                 path: '/account/settings',
                 component: AccountSettings,
-                meta: { title: 'Account settings' },
+                meta: { solo: false, title: 'Account settings' },
             }, {
                 name: 'account.delete',
                 path: '/account/delete',
                 component: AccountDelete,
-                meta: { title: 'Delete account' },
+                meta: { solo: false, title: 'Delete account' },
             },
 
             // Projects
@@ -127,13 +127,13 @@ function buildRouter(base) {
                     }, {
                         name: 'projects.feedback',
                         path: 'feedback',
-                        meta: { title: 'Feedback' },
+                        meta: { solo: false, title: 'Feedback' },
                         components: { sidepanel: ProjectFeedback },
                         props: true,
                     }, {
                         name: 'projects.people',
                         path: 'people',
-                        meta: { title: 'People' },
+                        meta: { solo: false, title: 'People' },
                         components: { sidepanel: ProjectPeople },
                         props: true,
                     },
@@ -220,10 +220,6 @@ function buildRouter(base) {
 
     // Add some auth middleware
     router.beforeEach(async (to) => {
-        if (to.meta.auth === 'public') {
-            return;
-        }
-
         const auth_store = useAuthStore();
         const was_logged_in = auth_store.is_logged_in;
 
@@ -252,6 +248,13 @@ function buildRouter(base) {
         // Redirect guests
         if (!to.meta.auth && !auth_store.is_logged_in) {
             return {'name': 'auth.login'};
+        }
+
+        // Disable authentication and collaboration routes for solo users
+        if (auth_store.is_logged_in && auth_store.account.is_solo && to.meta.solo === false) {
+            useAlertsStore().push('Not available in solo mode.', 'warning');
+
+            return { name: 'home' }
         }
     });
 

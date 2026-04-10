@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
 
             return new Account([
                 'id' => 0,
-                'name' => 'Default',
+                'name' => 'Solo User',
                 'email' => 'solo@spectacular',
             ]);
         });
