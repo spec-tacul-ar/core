@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Enums\Role;
+use App\Models\Account;
 use App\Models\Comment;
 use App\Models\Invitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -67,6 +68,24 @@ class AuthenticationTest extends TestCase
         $response->assertJsonPath('data.id', $account->id);
         $response->assertJsonPath('data.name', $account->name);
         $response->assertJsonPath('data.email', $account->email);
+        $response->assertJsonMissingPath('data.is_solo');
+    }
+
+    public function test_auth_account_endpoint_does_not_activate_solo_mode_when_accounts_exist(): void
+    {
+        Account::factory()->create();
+
+        $this->getJson('/api/auth/account')->assertUnauthorized();
+    }
+
+    public function test_auth_account_endpoint_returns_the_solo_account_when_there_are_no_accounts(): void
+    {
+        $response = $this->getJson('/api/auth/account');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.name', 'Solo User');
+        $response->assertJsonPath('data.email', 'solo@spectacular');
+        $response->assertJsonPath('data.is_solo', true);
     }
 
     public static function protectedRouteProvider(): array

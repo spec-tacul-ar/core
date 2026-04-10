@@ -59,14 +59,6 @@ class Account extends Authenticatable
         return static::firstWhere('email', $email);
     }
 
-    public static function findBySocial(string $provider, string $provider_id)
-    {
-        return static::firstWhere([
-            'socialite_provider' => $provider,
-            'socialite_provider_id' => $provider_id,
-        ]);
-    }
-
     /* Relations */
 
     public function comments()

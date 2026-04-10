@@ -4,19 +4,22 @@
 
 Spectacular is a free open-source functional specification builder.
 
-Turn messy project scope into a build-ready single source of truth everyone can understand.
+Spectacular puts the functional specification back at the center of software development. It replaces tickets and conversations with a single, living source of truth that is clear enough for humans and structured enough for AI. Even after launch, changes are integrated into the specification ready for the code to follow.
 
+### Features
 * Maintain the specification as change requests come in
 * Estimate effort and track progress
 * Document ambiguities and highlight blockers
 * Effortlessly export to Markdown and HTML
 
-### Features in the works...
+### Roadmap
 * More export formats
 * Dark mode for working late
 * Browsable changelog (changes are already being stored!)
 * Versioning, including a comparison tool
+* Presence indicators and live updates
 * Obligatory AI integration
+* Desktop app
 
 ## Installation
 
@@ -45,9 +48,19 @@ docker compose up --build
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
 
+### Enable collaboration
+
+Spectacular defaults to a standalone *solo* mode so you can get started immediately. To enable the collaboration features, you'll need to create an account using the following command:
+
+`php artisan spectacular:account:create`
+
 ## Contributing
 
-Thank you for considering contributing to Spectacular! Please see [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
+Thank you for considering contributing to Spectacular!
+
+Spectacular has been designed with simplicity in mind so you can customise it for your own needs. If you've made something you think everyone could benefit from, please consider sharing it back.
+
+See [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
 
 ## Security
 

@@ -9,4 +9,3 @@
         </div>
     </main>
 </x-layout>
-    

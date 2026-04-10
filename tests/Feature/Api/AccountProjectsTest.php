@@ -11,6 +11,7 @@ use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -103,6 +104,46 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('meta.total', 2);
     }
 
+    public function test_projects_browse_endpoint_does_not_include_solo_projects_for_real_accounts(): void
+    {
+        $account = Account::factory()->create();
+
+        $owned = Project::factory()->create(['name' => 'Owned']);
+        $solo = Project::factory()->create(['name' => 'Solo']);
+
+        $this->attachContributor($account, $owned, Role::OWNER);
+
+        $this->actingAsAccount($account);
+
+        $response = $this->getJson('/api/projects/browse');
+
+        $response->assertOk();
+        $response->assertJsonPath('meta.total', 1);
+        $response->assertJsonPath('data.0.name', 'Owned');
+        $response->assertJsonMissing(['name' => 'Solo']);
+    }
+
+    public function test_projects_browse_endpoint_does_not_include_contributor_projects_in_solo_mode(): void
+    {
+        $solo = Project::factory()->create(['name' => 'Solo']);
+        $owned = Project::factory()->create(['name' => 'Owned']);
+
+        $this->attachContributor(Account::factory()->create(), $owned, Role::OWNER);
+
+        Sanctum::actingAs(new Account([
+            'id' => 0,
+            'name' => 'Default',
+            'email' => 'solo@spectacular',
+        ]));
+
+        $response = $this->getJson('/api/projects/browse');
+
+        $response->assertOk();
+        $response->assertJsonPath('meta.total', 1);
+        $response->assertJsonPath('data.0.name', $solo->name);
+        $response->assertJsonMissing(['name' => $owned->name]);
+    }
+
     public function test_projects_add_endpoint_creates_a_project_and_attaches_the_authenticated_account_as_owner(): void
     {
         $account = $this->actingAsAccount();
@@ -131,6 +172,24 @@ class AccountProjectsTest extends TestCase
             'name' => 'Authentication',
             'project_id' => $project->id,
         ]);
+    }
+
+    public function test_projects_demo_endpoint_leaves_demo_projects_unclaimed_in_solo_mode(): void
+    {
+        Sanctum::actingAs(new Account([
+            'id' => 0,
+            'name' => 'Default',
+            'email' => 'solo@spectacular',
+        ]));
+
+        $response = $this->postJson('/api/projects/demo');
+
+        $response->assertCreated();
+
+        $projectId = $response->json('data.id');
+
+        $this->assertDatabaseHas('projects', ['id' => $projectId]);
+        $this->assertDatabaseMissing('contributors', ['project_id' => $projectId]);
     }
 
     public function test_projects_read_endpoint_returns_hydrated_data_to_contributors_and_forbids_outsiders(): void
