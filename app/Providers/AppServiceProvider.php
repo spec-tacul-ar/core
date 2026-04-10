@@ -27,8 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        URL::forceHttps(app()->environment(['production', 'staging']));
-
         Relation::enforceMorphMap([
             'account' => Account::class,
             'feature' => Feature::class,
