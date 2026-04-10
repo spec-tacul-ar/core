@@ -6,6 +6,8 @@ Spectacular is a free open-source functional specification builder.
 
 Spectacular puts the functional specification back at the center of software development. It replaces tickets and conversations with a single, living source of truth that is clear enough for humans and structured enough for AI. Even after launch, changes are integrated into the specification ready for the code to follow.
 
+[DEMO](https://spec.tacul.ar)
+
 ### Features
 * Maintain the specification as change requests come in
 * Estimate effort and track progress
