@@ -76,7 +76,9 @@ class AccountCreate extends Command
         }
 
         // If this is the first account, attach any solo projects to them.
-        if ($account = Account::sole()) {
+        if (Account::count() === 1) {
+            $account = Account::first();
+
             Project::each(fn ($project) => $project->addContributor($account, Role::OWNER));
         }
 
