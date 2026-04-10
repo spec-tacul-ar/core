@@ -17,6 +17,7 @@ Spectacular puts the functional specification back at the center of software dev
 ### Roadmap
 * More export formats
 * Dark mode for working late
+* External documentation
 * Browsable changelog (changes are already being stored!)
 * Versioning, including a comparison tool
 * Presence indicators and live updates
@@ -44,15 +45,14 @@ To upgrade, simply grab the latest code and run `composer setup` again.
 If you don't have PHP available, you can run the app with Docker. Once ready, you'll find Spectacular running at [http://localhost:8000](http://localhost:8000).
 
 ```bash
-git pull
 docker compose up --build
 ```
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
 
-### Enable collaboration
+### Self-hosting
 
-Spectacular defaults to a standalone *solo* mode so you can get started immediately. To enable the collaboration features, you'll need to create an account using the following command:
+Spectacular defaults to a standalone *solo* mode so you can get started immediately. If you're self hosting, you probably want to enable the authentication and collaboration features. To do this, simply create the first account using the following command:
 
 `php artisan spectacular:account:create`
 
