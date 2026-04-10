@@ -83,7 +83,7 @@ class AuthenticationTest extends TestCase
         $response = $this->getJson('/api/auth/account');
 
         $response->assertOk();
-        $response->assertJsonPath('data.name', 'Default');
+        $response->assertJsonPath('data.name', 'Solo User');
         $response->assertJsonPath('data.email', 'solo@spectacular');
         $response->assertJsonPath('data.is_solo', true);
     }
