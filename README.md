@@ -4,8 +4,9 @@
 
 Spectacular is a free open-source functional specification builder.
 
-Turn messy project scope into a build-ready single source of truth everyone can understand.
+Spectacular puts the functional specification back at the center of software development. It replaces tickets and conversations with a single, living source of truth that is clear enough for humans and structured enough for AI. Even after launch, changes are integrated into the specification ready for the code to follow.
 
+### Features
 * Maintain the specification as change requests come in
 * Estimate effort and track progress
 * Document ambiguities and highlight blockers
@@ -49,7 +50,11 @@ Upgrades are simple too - just grab the latest code and rebuild the container. T
 
 ## Contributing
 
-Thank you for considering contributing to Spectacular! Please see [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
+Thank you for considering contributing to Spectacular!
+
+Spectacular has been designed with simplicity in mind so you can customise it for your own needs. If you've made something you think everyone could benefit from, please consider sharing it back.
+
+See [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
 
 ## Security
 
