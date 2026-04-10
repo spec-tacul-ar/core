@@ -13,6 +13,7 @@ class AccountResource extends JsonResource
             'name' => $this->name,
             'email' => $this->when($request->user()->is($this->resource), $this->email),
             'role' => $this->whenLoaded('contributor', fn () => $this->contributor->role),
+            'is_solo' => $this->when(!$request->user()->exists, true),
         ];
     }
 }

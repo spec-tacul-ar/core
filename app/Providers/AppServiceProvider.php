@@ -6,6 +6,8 @@ use App\Models\Account;
 use App\Models\Feature;
 use App\Models\Requirement;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +39,19 @@ class AppServiceProvider extends ServiceProvider
             if (!$account->exists) {
                 return true;
             }
+        });
+
+        Auth::viaRequest('solo', function (Request $request) {
+            // Do not provide the solo user if there are any accounts.
+            if (Account::exists()) {
+                return null;
+            }
+
+            return new Account([
+                'id' => 0,
+                'name' => 'Default',
+                'email' => 'solo@spectacular',
+            ]);
         });
     }
 }
