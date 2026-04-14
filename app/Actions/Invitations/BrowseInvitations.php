@@ -2,13 +2,14 @@
 
 namespace App\Actions\Invitations;
 
+use App\Http\Resources\InvitationResource;
+use App\Models\Invitation;
+use App\Models\Project;
+use App\Rules\IsMe;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Http\Resources\InvitationResource;
-use App\Models\Invitation;
-use App\Models\Project;
 use Spatie\ValidationRules\Rules\Authorized;
 
 class BrowseInvitations
@@ -34,7 +35,7 @@ class BrowseInvitations
                     ->with('account'),
                 fn ($query) => $query
                     ->where('email', $request->user()->email)
-                    ->with('project', 'account'),
+                    ->with('project'),
             )
             ->get();
 

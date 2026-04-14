@@ -27,10 +27,6 @@ class AcceptInvitation
 
     public function handle(Request $request, Invitation $invitation): void
     {
-        if ($invitation->role === Role::OWNER) {
-            abort(403);
-        }
-
         $contributor = $invitation->project->contributors()
             ->make(['role' => $invitation->role])
             ->account()->associate($request->user());
