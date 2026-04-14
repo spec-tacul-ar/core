@@ -4,6 +4,7 @@
         
         <DropdownMenu>
             <DropdownMenuItem :to="{ name: 'projects.features.edit', params: { feature_id: feature.id }}" icon="edit">Edit</DropdownMenuItem>
+            <DropdownMenuItem :to="{ name: 'projects.features.feedback', params: { feature_id: feature.id }}" icon="feedback">Feedback</DropdownMenuItem>
 
             <slot name="menu" />
 

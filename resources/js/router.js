@@ -172,6 +172,12 @@ function buildRouter(base) {
                         meta: { title: 'Create requirement' },
                         components: { sidepanel: RequirementForm },
                         props: true,
+                    }, {
+                        name: 'projects.features.feedback',
+                        path: 'features/:feature_id/feedback',
+                        meta: { title: 'Feedback' },
+                        components: { sidepanel: ProjectFeedback },
+                        props: true,
                     },
 
                     // Requirements
@@ -186,6 +192,12 @@ function buildRouter(base) {
                         path: 'requirements/:requirement_id/edit',
                         meta: { title: 'Edit requirement' },
                         components: { sidepanel: RequirementForm },
+                        props: true,
+                    }, {
+                        name: 'projects.requirements.feedback',
+                        path: 'requirements/:requirement_id/feedback',
+                        meta: { title: 'Feedback' },
+                        components: { sidepanel: ProjectFeedback },
                         props: true,
                     },
                 ],
