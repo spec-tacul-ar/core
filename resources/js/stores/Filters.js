@@ -4,7 +4,7 @@ export default class Filters {
     exclude_features = false;
     features = [];
     statuses = {};
-    users = {};
+    actors = {};
 
     constructor(project_id) {
         const key = 'filters.' + project_id;
@@ -25,7 +25,7 @@ export default class Filters {
             if (
                 this.features.length === 0
                 && Object.keys(this.statuses).length === 0
-                && Object.keys(this.users).length === 0
+                && Object.keys(this.actors).length === 0
             ) {
                 localStorage.removeItem(key);
                 return;
@@ -75,14 +75,14 @@ export default class Filters {
         this.statuses = {};
     }
 
-    clearUsers() {
-        this.users = {};
+    clearActors() {
+        this.actors = {};
     }
 
     clearAll() {
         this.clearFeatures();
         this.clearStatuses();
-        this.clearUsers();
+        this.clearActors();
     }
 
     get has_features() {
@@ -93,11 +93,11 @@ export default class Filters {
         return Object.keys(this.statuses).length > 0;
     }
 
-    get has_users() {
-        return Object.keys(this.users).length > 0;
+    get has_actors() {
+        return Object.keys(this.actors).length > 0;
     }
 
     get has_filters() {
-        return this.has_features || this.has_statuses || this.has_users;
+        return this.has_features || this.has_statuses || this.has_actors;
     }
 }

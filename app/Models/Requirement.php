@@ -18,7 +18,7 @@ class Requirement extends Model
     use Traits\Revisionable;
 
     protected $casts = [
-        'user_id' => 'integer',
+        'actor_id' => 'integer',
     ];
 
     protected $fillable = [
@@ -27,7 +27,7 @@ class Requirement extends Model
         'name',
         'feature_id',
         'source',
-        'user_id',
+        'actor_id',
         'weight',
     ];
 
@@ -82,9 +82,9 @@ class Requirement extends Model
         return $this->hasMany(Unknown::class);
     }
 
-    public function users(): BelongsToMany
+    public function actors(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, Assignment::class);
+        return $this->belongsToMany(Actor::class, Assignment::class);
     }
 
     /* Accessors and mutators */
@@ -107,11 +107,11 @@ class Requirement extends Model
     public function title(): Attribute
     {
         return new Attribute(function () {
-            $users = $this->users->isNotEmpty() ? $this->users->pluck('name') : collect(['Users']);
+            $actors = $this->actors->isNotEmpty() ? $this->actors->pluck('name') : collect(['Users']);
 
-            $last_user = $users->pop();
+            $last_actor = $actors->pop();
 
-            return (!$users->isEmpty() ? $users->implode(', ') . ' and ' : '') . $last_user . ' can ' . $this->name;
+            return (!$actors->isEmpty() ? $actors->implode(', ') . ' and ' : '') . $last_actor . ' can ' . $this->name;
         });
     }
 

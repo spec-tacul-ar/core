@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Actions\Actors;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\ActorResource;
 use App\Models\Project;
-use App\Models\User;
+use App\Models\Actor;
 use Spatie\ValidationRules\Rules\Authorized;
 
-class AddUser
+class AddActor
 {
     use AsAction;
 
     public function authorize(ActionRequest $request): bool
     {
-        return $request->user()->can('create', User::class);
+        return $request->user()->can('create', Actor::class);
     }
 
     public static function routes(Router $router): void
     {
-        $router->post('users/add', static::class);
+        $router->post('actors/add', static::class);
     }
 
     public function rules(): array
@@ -34,13 +34,13 @@ class AddUser
         ];
     }
 
-    public function handle(array $validated): User
+    public function handle(array $validated): Actor
     {
-        return User::create($validated);
+        return Actor::create($validated);
     }
 
-    public function asController(ActionRequest $request): UserResource
+    public function asController(ActionRequest $request): ActorResource
     {
-        return new UserResource($this->handle($request->validated()));
+        return new ActorResource($this->handle($request->validated()));
     }
 }

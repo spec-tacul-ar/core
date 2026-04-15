@@ -47,8 +47,8 @@
                     </InfoPopover>
                 </div>
 
-                <div v-if="users.length > 0" class="mb-2">
-                    <FormOptions type="checkbox" :id="elementId('user_ids')" v-model="form.user_ids" :options="users" :error="errors.user_ids" inline />
+                <div v-if="actors.length > 0" class="mb-2">
+                    <FormOptions type="checkbox" :id="elementId('actor_ids')" v-model="form.actor_ids" :options="actors" :error="errors.actor_ids" inline />
                 </div>
 
                 <label class="flex items-stretch rounded focus-within:ring" :class="{ 'ring-red-400': errors.name }">
@@ -56,7 +56,7 @@
                         class="whitespace-nowrap border rounded-sm rounded-r-none border-r-0 place-content-center pl-2"
                         :class="errors.name ? 'border-red-400' : 'border-gray-300'">
 
-                        {{ users.length > 0 ? '…can' : 'Users can' }}
+                        {{ actors.length > 0 ? '…can' : 'Users can' }}
                     </div>
 
                     <input type="text"
@@ -264,18 +264,18 @@ export default {
             return !this.requirement_id;
         },
         name_prefix() {
-            const users = this.users.filter(user => this.form.user_ids.includes(user.id)).map(user => user.name);
+            const actors = this.actors.filter(actor => this.form.actor_ids.includes(actor.id)).map(actor => actor.name);
 
-            if (users.isEmpty()) {
+            if (actors.isEmpty()) {
                 return;
             }
 
-            const last_user = users.pop();
+            const last_actor = actors.pop();
 
-            return (users.isNotEmpty() ? users.join(', ') + ' and ' : ' ') + last_user + ' can...';
+            return (actors.isNotEmpty() ? actors.join(', ') + ' and ' : ' ') + last_actor + ' can...';
         },
-        users() {
-            return this.project.users.sortBy('weight').all();
+        actors() {
+            return this.project.actors.sortBy('weight').all();
         },
         sources() {
             // TODO Fix this
@@ -286,7 +286,7 @@ export default {
         const data = {
             add_another: false,
             form: {
-                user_ids: this.requirement ? this.requirement.assignments.all().map(assignment => assignment.user_id) : [],
+                actor_ids: this.requirement ? this.requirement.assignments.all().map(assignment => assignment.actor_id) : [],
                 blocked_reason: this.requirement?.blocked_reason,
                 description: this.requirement?.description,
                 feature_id: this.requirement?.feature_id ?? this.feature_id ?? null,
@@ -302,8 +302,8 @@ export default {
             is_waiting: false
         };
 
-        if (!this.requirement && this.project.users.count() === 1) {
-            data.form.user_ids.push(this.project.users.first().id);
+        if (!this.requirement && this.project.actors.count() === 1) {
+            data.form.actor_ids.push(this.project.actors.first().id);
         }
 
         return data;
@@ -360,8 +360,8 @@ export default {
                         Unknown.repository().deleteMany(this.deleted_unknown_id);
                         Task.repository().deleteMany(this.deleted_task_ids);
 
-                        const user_ids = requirement.assignments.map(assignment => assignment.user_id);
-                        const deleted_assignments = this.requirement.assignments.whereNotIn('user_id', user_ids).pluck('id').all();
+                        const actor_ids = requirement.assignments.map(assignment => assignment.actor_id);
+                        const deleted_assignments = this.requirement.assignments.whereNotIn('actor_id', actor_ids).pluck('id').all();
                         Assignment.repository().deleteMany(deleted_assignments);
                     }
 

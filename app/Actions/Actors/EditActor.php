@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Actions\Actors;
 
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Resources\ActorResource;
+use App\Models\Actor;
 
-class EditUser
+class EditActor
 {
     use AsAction;
 
     public function authorize(ActionRequest $request): bool
     {
-        return $request->user()->can('update', $request->route('user'));
+        return $request->user()->can('update', $request->route('actor'));
     }
 
     public static function routes(Router $router): void
     {
-        $router->post('users/{user}/edit', static::class);
+        $router->post('actors/{actor}/edit', static::class);
     }
 
     public function rules(): array
@@ -31,15 +31,15 @@ class EditUser
         ];
     }
 
-    public function handle(User $user, array $validated): User
+    public function handle(Actor $actor, array $validated): Actor
     {
-        $user->update($validated);
+        $actor->update($validated);
 
-        return $user;
+        return $actor;
     }
 
-    public function asController(ActionRequest $request, User $user): UserResource
+    public function asController(ActionRequest $request, Actor $actor): ActorResource
     {
-        return new UserResource($this->handle($user, $request->validated()));
+        return new ActorResource($this->handle($actor, $request->validated()));
     }
 }

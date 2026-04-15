@@ -12,7 +12,7 @@ class AssignmentResource extends JsonResource
         return [
             'id' => $this->id,
             'requirement_id' => (int) $this->requirement_id,
-            'user_id' => $this->user_id,
+            'actor_id' => $this->actor_id,
         ];
     }
 }

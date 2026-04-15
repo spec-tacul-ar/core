@@ -50,7 +50,7 @@ import SpinnerButton from '@/components/SpinnerButton.vue';
 import TrackDirty from '@/mixins/TrackDirty';
 import UniqueId from '@/mixins/UniqueId';
 import ValidationMessages from '@/components/ValidationMessages.vue';
-import User from '@/stores/models/User';
+import Actor from '@/stores/models/Actor';
 import { useAlertsStore } from '@/stores';
 import { inject } from 'vue';
 
@@ -67,15 +67,15 @@ export default {
     },
     computed: {
         is_creating() {
-            return !this.user_id;
+            return !this.actor_id;
         },
     },
     data() {
         return {
             'add_another': false,
             'form': {
-                name: this.user?.name,
-                summary: this.user?.summary,
+                name: this.actor?.name,
+                summary: this.actor?.summary,
             },
             'errors': {},
             'is_waiting': false,
@@ -86,14 +86,14 @@ export default {
             this.errors = {};
             this.is_waiting = true;
 
-            const endpoint = this.is_creating ? 'users/add' : 'users/' + this.user_id + '/edit';
+            const endpoint = this.is_creating ? 'actors/add' : 'actors/' + this.actor_id + '/edit';
             const data = this.is_creating ? {...this.form, 'project_id': this.project_id} : this.form;
 
             this.api.post(endpoint, data)
                 .then((result) => {
-                    const user = result.data;
+                    const actor = result.data;
                     
-                    User.repository().save(user);
+                    Actor.repository().save(actor);
 
                     useAlertsStore().push('User saved.');
 
@@ -105,7 +105,7 @@ export default {
                     this.setCleanForm();
 
                     if (!this.add_another) {
-                        this.$router.push({ name: 'projects.show', params: { project_id: user.project_id } });
+                        this.$router.push({ name: 'projects.show', params: { project_id: actor.project_id } });
                     }
                 })
                 .catch(error => this.errors = error.body.errors ?? {})
@@ -122,27 +122,27 @@ export default {
             'type': Number,
             'required': true,
         },
-        'user_id': {
+        'actor_id': {
             'type': Number,
             'required': false,
         },
     },
     async setup(props) {
-        if (!props.user_id) {
+        if (!props.actor_id) {
             return;
         }
 
         const api = inject('api');
-        const users = User.repository();
-        let user = users.find(props.user_id);
+        const actors = Actor.repository();
+        let actor = actors.find(props.actor_id);
 
-        if (!user) {
-            const result = await api.get('users/' + props.user_id + '/read');
-            user = User.repository().save(result.data);
+        if (!actor) {
+            const result = await api.get('actors/' + props.actor_id + '/read');
+            actor = Actor.repository().save(result.data);
         }
 
         return {
-            user,
+            actor,
         };
     },
 };

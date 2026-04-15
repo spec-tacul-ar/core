@@ -26,9 +26,9 @@ class OrganiseProject
     public function rules(): array
     {
         return [
-            'users' => ['nullable', 'array'],
-            'users.*.id' => ['required', 'integer', 'min:0'],
-            'users.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
+            'actors' => ['nullable', 'array'],
+            'actors.*.id' => ['required', 'integer', 'min:0'],
+            'actors.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
             'features' => ['nullable', 'array'],
             'features.*.id' => ['required', 'integer', 'min:0'],
             'features.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
@@ -41,11 +41,11 @@ class OrganiseProject
 
     public function handle(Project $project, array $validated): array
     {
-        $project->load(['users', 'features', 'requirements']);
+        $project->load(['actors', 'features', 'requirements']);
 
         return DB::transaction(function () use ($project, $validated) {
-            foreach ($validated['users'] as $user) {
-                $project->users->find($user['id'])->update($user);
+            foreach ($validated['actors'] as $actor) {
+                $project->actors->find($actor['id'])->update($actor);
             }
 
             foreach ($validated['features'] as $feature) {
@@ -59,7 +59,7 @@ class OrganiseProject
             }
 
             return [
-                'users' => $project->users->map->only(['id', 'weight'])->toArray(),
+                'actors' => $project->actors->map->only(['id', 'weight'])->toArray(),
                 'features' => $project->features->map->only(['id', 'weight'])->toArray(),
                 'requirements' => $project->requirements->map->only(['id', 'feature_id', 'weight'])->toArray(),
             ];

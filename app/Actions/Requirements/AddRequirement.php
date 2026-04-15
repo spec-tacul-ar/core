@@ -8,7 +8,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\RequirementResource;
 use App\Models\Feature;
 use App\Models\Requirement;
-use App\Models\User;
+use App\Models\Actor;
 use App\Rules\QuarterHour as QuarterHourRule;
 use App\Rules\SharesRelation;
 use Spatie\ValidationRules\Rules\Authorized;
@@ -36,8 +36,8 @@ class AddRequirement
             'name' => ['required', 'string', 'max:255'],
             'unknowns' => ['nullable', 'array'],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
-            'user_ids' => ['array'],
-            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features'), new Authorized('update', User::class)],
+            'actor_ids' => ['array'],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorized('update', Actor::class)],
             'source' => ['nullable', 'string', 'max:255'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
@@ -52,8 +52,8 @@ class AddRequirement
     {
         $requirement = Requirement::create($validated);
 
-        if (!empty($validated['user_ids'])) {
-            $requirement->assignments()->createMany(array_map(fn($userId) => ['user_id' => $userId], $validated['user_ids']));
+        if (!empty($validated['actor_ids'])) {
+            $requirement->assignments()->createMany(array_map(fn($actorId) => ['actor_id' => $actorId], $validated['actor_ids']));
         }
 
         if (!empty($validated['unknowns'])) {

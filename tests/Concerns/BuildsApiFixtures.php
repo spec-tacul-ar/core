@@ -10,7 +10,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
-use App\Models\User;
+use App\Models\Actor;
 use Laravel\Sanctum\Sanctum;
 
 trait BuildsApiFixtures
@@ -38,10 +38,10 @@ trait BuildsApiFixtures
 
         $project = Project::factory()->create();
         $contributor = $this->attachContributor($account, $project, $role);
-        $projectUser = User::factory()->for($project)->create();
+        $projectActor = Actor::factory()->for($project)->create();
         $feature = Feature::factory()->for($project)->create();
         $requirement = Requirement::factory()->for($feature)->create();
-        $assignment = $requirement->assignments()->create(['user_id' => $projectUser->id]);
+        $assignment = $requirement->assignments()->create(['actor_id' => $projectActor->id]);
         $task = Task::factory()->for($requirement)->create(['is_complete' => false]);
         $unknown = Unknown::factory()->for($requirement)->create();
 
@@ -51,7 +51,7 @@ trait BuildsApiFixtures
             'contributor',
             'feature',
             'project',
-            'projectUser',
+            'projectActor',
             'requirement',
             'task',
             'unknown',

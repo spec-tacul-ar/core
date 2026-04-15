@@ -14,8 +14,8 @@ return new class extends Migration {
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('actor_id')->constrained();
             $table->foreignId('requirement_id')->constrained();
-            $table->foreignId('user_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
             $table->binary('history')->nullable();

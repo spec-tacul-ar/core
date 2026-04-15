@@ -13,7 +13,7 @@ import Repository from './Repository';
 import Requirement from './models/Requirement';
 import Task from './models/Task';
 import Unknown from './models/Unknown';
-import User from './models/User';
+import Actor from './models/Actor';
 import { createPinia, defineStore } from 'pinia';
 
 const pinia = createPinia();
@@ -33,7 +33,7 @@ Model.repositories = {
     requirements: defineStore('requirements', Repository(Requirement)),
     tasks: defineStore('tasks', Repository(Task)),
     unknowns: defineStore('unknowns', Repository(Unknown)),
-    users: defineStore('users', Repository(User)),
+    actors: defineStore('actors', Repository(Actor)),
 };
 
 export default pinia;

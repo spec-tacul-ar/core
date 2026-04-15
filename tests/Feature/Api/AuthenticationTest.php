@@ -46,7 +46,7 @@ class AuthenticationTest extends TestCase
             'requirement' => $fixture['requirement']->id,
             'task' => $fixture['task']->id,
             'unknown' => $fixture['unknown']->id,
-            'user' => $fixture['projectUser']->id,
+            'actor' => $fixture['projectActor']->id,
         ];
 
         $response = $this->json(
@@ -83,7 +83,7 @@ class AuthenticationTest extends TestCase
         $response = $this->getJson('/api/auth/account');
 
         $response->assertOk();
-        $response->assertJsonPath('data.name', 'Default');
+        $response->assertJsonPath('data.name', 'Solo User');
         $response->assertJsonPath('data.email', 'solo@spectacular');
         $response->assertJsonPath('data.is_solo', true);
     }
@@ -125,7 +125,7 @@ class AuthenticationTest extends TestCase
             'projects.organise' => ['POST', '/api/projects/{project}/organise', [
                 'features' => [],
                 'requirements' => [],
-                'users' => [],
+                'actors' => [],
             ]],
             'projects.read' => ['GET', '/api/projects/{project}/read'],
             'projects.readmark' => ['POST', '/api/projects/{project}/readmark'],
@@ -134,7 +134,7 @@ class AuthenticationTest extends TestCase
                 'name' => 'deliver notifications',
                 'tasks' => [],
                 'unknowns' => [],
-                'user_ids' => [],
+                'actor_ids' => [],
             ]],
             'requirements.edit' => ['POST', '/api/requirements/{requirement}/edit', ['name' => 'deliver updated notifications']],
             'requirements.delete' => ['POST', '/api/requirements/{requirement}/delete'],
@@ -152,12 +152,12 @@ class AuthenticationTest extends TestCase
             ]],
             'unknowns.edit' => ['POST', '/api/unknowns/{unknown}/edit', ['name' => 'Who approves now?']],
             'unknowns.delete' => ['POST', '/api/unknowns/{unknown}/delete'],
-            'users.add' => ['POST', '/api/users/add', [
+            'actors.add' => ['POST', '/api/actors/add', [
                 'name' => 'Operators',
                 'project_id' => '{project}',
             ]],
-            'users.edit' => ['POST', '/api/users/{user}/edit', ['name' => 'Operators Updated']],
-            'users.delete' => ['POST', '/api/users/{user}/delete'],
+            'actors.edit' => ['POST', '/api/actors/{actor}/edit', ['name' => 'Operators Updated']],
+            'actors.delete' => ['POST', '/api/actors/{actor}/delete'],
         ];
     }
 }

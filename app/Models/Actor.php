@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Actor extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -23,12 +23,12 @@ class User extends Model
 
     protected static function booted(): void
     {
-        static::deleting(function ($user) {
-            $user->assignments->each->delete();
+        static::deleting(function ($actor) {
+            $actor->assignments->each->delete();
         });
 
-        static::forceDeleting(function ($user) {
-            $user->assignments()->withTrashed()->forceDelete();
+        static::forceDeleting(function ($actor) {
+            $actor->assignments()->withTrashed()->forceDelete();
         });
     }
 

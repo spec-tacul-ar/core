@@ -11,7 +11,7 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'users' => UserResource::collection($this->whenLoaded('users')),
+            'actors' => ActorResource::collection($this->whenLoaded('actors')),
             'features' => FeatureResource::collection($this->whenLoaded('features')),
             'description' => $this->description,
             'name' => $this->name,

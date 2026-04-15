@@ -29,11 +29,11 @@
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
                 <h2 class="text-3xl"><a href="#users">Users</a></h2>
 
-                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.users.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
+                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.actors.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
             </div>
 
             <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4">
-                <UserItem :user="user" v-for="user in users" :key="user.id" />
+                <ActorItem :actor="actor" v-for="actor in actors" :key="actor.id" />
             </div>
         </section>
 
@@ -80,7 +80,7 @@ import ProjectOutline from '@/components/sidebars/ProjectOutline.vue';
 import ProjectShowMenu from "@/components/navigation/ProjectShowMenu.vue";
 import Project from '@/stores/models/Project';
 import SidebarSwitches from "@/components/navigation/SidebarSwitches.vue";
-import UserItem from '@/components/items/UserItem.vue';
+import ActorItem from '@/components/items/ActorItem.vue';
 import { inject } from 'vue';
 
 export default {
@@ -93,7 +93,7 @@ export default {
         ProjectShowMenu,
         RichText,
         SidebarSwitches,
-        UserItem,
+        ActorItem,
     },
     computed: {
         features() {
@@ -102,8 +102,8 @@ export default {
         project() {
             return Project.repository().find(this.project_id);
         },
-        users() {
-            return this.project.users.sortBy('id').sortBy('weight');
+        actors() {
+            return this.project.actors.sortBy('id').sortBy('weight');
         },
     },
     data() {

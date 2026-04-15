@@ -30,15 +30,15 @@ class ExportController extends Controller
             'uuid' => $project->uuid,
             'name' => $project->name,
             'description' => $project->description,
-            'users' => $project->users
+            'actors' => $project->actors
                 ->sortBy('id')
                 ->sortBy('weight')
                 ->values()
-                ->map(fn($user) => [
-                    'id' => (int) $user->id,
-                    'name' => $user->name,
-                    'summary' => $user->summary,
-                    'weight' => $user->weight,
+                ->map(fn($actor) => [
+                    'id' => (int) $actor->id,
+                    'name' => $actor->name,
+                    'summary' => $actor->summary,
+                    'weight' => $actor->weight,
                 ])
                 ->all(),
             'features' => $project->features
@@ -80,7 +80,7 @@ class ExportController extends Controller
                                             'name' => $unknown->name,
                                         ])
                                         ->all(),
-                                    'user_ids' => $requirement->users->pluck('id'),
+                                    'actor_ids' => $requirement->actors->pluck('id'),
                                 ];
                             })
                             ->all(),

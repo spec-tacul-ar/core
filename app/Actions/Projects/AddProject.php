@@ -27,8 +27,8 @@ class AddProject
     public function rules(): array
     {
         return [
-            'users' => ['array', 'max:25'],
-            'users.*' => ['string'],
+            'actors' => ['array', 'max:25'],
+            'actors.*' => ['string'],
             'features' => ['array', 'max:25'],
             'features.*' => ['string'],
             'name' => ['required', 'string', 'max:255', new SluggableNameRule()],
@@ -39,10 +39,10 @@ class AddProject
     {
         $project = Project::create($validated);
 
-        if (array_key_exists('users', $validated)) {
-            $users = array_map(fn($item) => ['name' => $item], $validated['users']);
+        if (array_key_exists('actors', $validated)) {
+            $actors = array_map(fn($item) => ['name' => $item], $validated['actors']);
 
-            $project->users()->createMany($users);
+            $project->actors()->createMany($actors);
         }
 
         if (array_key_exists('features', $validated)) {

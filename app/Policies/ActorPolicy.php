@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\Account;
-use App\Models\User;
+use App\Models\Actor;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class ActorPolicy
 {
     use HandlesAuthorization;
 
@@ -19,35 +19,35 @@ class UserPolicy
      * Determine whether the Account can view the model.
      *
      * @param  \App\Models\Account  $account
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, User $user)
+    public function view(Account $account, Actor $actor)
     {
-        return $account->canView($user, 'users');
+        return $account->canView($actor, 'actors');
     }
 
     /**
      * Determine whether the Account can update the model.
      *
      * @param  \App\Models\Account  $account
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, User $user)
+    public function update(Account $account, Actor $actor)
     {
-        return $account->canEdit($user, 'users');
+        return $account->canEdit($actor, 'actors');
     }
 
     /**
      * Determine whether the Account can delete the model.
      *
      * @param  \App\Models\Account  $account
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, User $user)
+    public function delete(Account $account, Actor $actor)
     {
-        return $account->canEdit($user, 'users');
+        return $account->canEdit($actor, 'actors');
     }
 }

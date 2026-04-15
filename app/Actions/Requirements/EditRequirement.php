@@ -10,7 +10,7 @@ use App\Models\Feature;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
-use App\Models\User;
+use App\Models\Actor;
 use App\Rules\QuarterHour as QuarterHourRule;
 use App\Rules\SharesRelation;
 use Spatie\ValidationRules\Rules\Authorized;
@@ -39,8 +39,8 @@ class EditRequirement
             'unknowns' => ['sometimes', 'array'],
             'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Unknown::class)],
             'unknowns.*.name' => ['required', 'string', 'max:255'],
-            'user_ids' => ['sometimes', 'array'],
-            'user_ids.*' => ['integer', new SharesRelation(User::class, 'feature_id', 'project.features')],
+            'actor_ids' => ['sometimes', 'array'],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features')],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Task::class)],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
@@ -63,11 +63,11 @@ class EditRequirement
     {
         $requirement->update($validated);
 
-        if (array_key_exists('user_ids', $validated)) {
-            $requirement->assignments->whereNotIn('user_id', $validated['user_ids'])->each->delete();
+        if (array_key_exists('actor_ids', $validated)) {
+            $requirement->assignments->whereNotIn('actor_id', $validated['actor_ids'])->each->delete();
 
-            foreach ($validated['user_ids'] as $userId) {
-                $requirement->assignments()->updateOrCreate(['user_id' => $userId]);
+            foreach ($validated['actor_ids'] as $actorId) {
+                $requirement->assignments()->updateOrCreate(['actor_id' => $actorId]);
             }
 
             $requirement->load('assignments');

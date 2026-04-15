@@ -39,7 +39,7 @@ class Project extends Model
             $project->contributors->each->delete();
             $project->features()->withTrashed()->get()->each->forceDelete();
             $project->invitations->each->delete();
-            $project->users()->withTrashed()->get()->each->forceDelete();
+            $project->actors()->withTrashed()->get()->each->forceDelete();
         });
     }
 
@@ -98,9 +98,9 @@ class Project extends Model
         return $this->hasManyDeep(Task::class, [Feature::class, Requirement::class]);
     }
 
-    public function users(): HasMany
+    public function actors(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Actor::class);
     }
 
     /* Scopes */
@@ -120,11 +120,11 @@ class Project extends Model
             'contributors.account',
             'features',
             'features.requirements',
-            'features.requirements.assignments.user',
+            'features.requirements.assignments.actor',
             'features.requirements.tasks',
             'features.requirements.unknowns',
             'readmark',
-            'users',
+            'actors',
         ]);
     }
 
@@ -155,11 +155,11 @@ class Project extends Model
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
 
-            'users' => ['required', 'array'],
-            'users.*.id' => ['required', 'integer', 'distinct'],
-            'users.*.name' => ['required', 'string', 'max:255'],
-            'users.*.summary' => ['nullable', 'string'],
-            'users.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
+            'actors' => ['required', 'array'],
+            'actors.*.id' => ['required', 'integer', 'distinct'],
+            'actors.*.name' => ['required', 'string', 'max:255'],
+            'actors.*.summary' => ['nullable', 'string'],
+            'actors.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
 
             'features' => ['required', 'array'],
             'features.*.name' => ['required', 'string', 'max:255'],
@@ -183,8 +183,8 @@ class Project extends Model
             'features.*.requirements.*.unknowns' => ['nullable', 'array'],
             'features.*.requirements.*.unknowns.*.name' => ['required', 'string', 'max:255'],
 
-            'features.*.requirements.*.user_ids' => ['nullable', 'array'],
-            'features.*.requirements.*.user_ids.*' => ['required', 'integer'],
+            'features.*.requirements.*.actor_ids' => ['nullable', 'array'],
+            'features.*.requirements.*.actor_ids.*' => ['required', 'integer'],
         ])->validate();
 
         $project = Project::firstOrNew(['uuid' => $validated['uuid']]);
@@ -203,12 +203,12 @@ class Project extends Model
 
         $project->save();
 
-        $users = collect($validated['users'])
+        $actors = collect($validated['actors'])
             ->keyBy('id')
-            ->map(fn($user) => $project->users()->create([
-                'name' => $user['name'],
-                'summary' => $user['summary'] ?? null,
-                'weight' => $user['weight'] ?? null,
+            ->map(fn($actor) => $project->actors()->create([
+                'name' => $actor['name'],
+                'summary' => $actor['summary'] ?? null,
+                'weight' => $actor['weight'] ?? null,
             ]));
 
         foreach ($validated['features'] as $feature_data) {
@@ -243,8 +243,8 @@ class Project extends Model
                     ]);
                 }
 
-                foreach ($requirement_data['user_ids'] as $user_id) {
-                    $requirement_model->users()->attach($users[$user_id]);
+                foreach ($requirement_data['actor_ids'] as $actor_id) {
+                    $requirement_model->actors()->attach($actors[$actor_id]);
                 }
             }
         }

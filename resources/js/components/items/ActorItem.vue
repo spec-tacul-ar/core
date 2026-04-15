@@ -1,14 +1,14 @@
 <template>
     <div class="flex justify-between items-start">
         <div>
-            <h3 class="font-semibold text-xl mb-2">{{ user.name }}</h3>
-            <TextMultiline v-if="user.summary" :text="user.summary" />
-            <p v-if="!user.summary" class="text-gray-400">No description</p>
+            <h3 class="font-semibold text-xl mb-2">{{ actor.name }}</h3>
+            <TextMultiline v-if="actor.summary" :text="actor.summary" />
+            <p v-if="!actor.summary" class="text-gray-400">No description</p>
         </div>
 
         <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" class="d-print-none">
-            <DropdownMenuItem icon="edit" :to="{name: 'projects.users.edit', params: { user_id: user.id }}" replace>Edit</DropdownMenuItem>
-            <DropdownMenuItem icon="trash" @click="openUserDeleteModal" danger replace>Delete</DropdownMenuItem>
+            <DropdownMenuItem icon="edit" :to="{name: 'projects.actors.edit', params: { actor_id: actor.id }}" replace>Edit</DropdownMenuItem>
+            <DropdownMenuItem icon="trash" @click="openActorDeleteModal" danger replace>Delete</DropdownMenuItem>
         </DropdownMenu>
     </div>
 </template>
@@ -17,7 +17,7 @@
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import TextMultiline from '@/components/TextMultiline.vue';
-import UserDelete from '@/components/modals/UserDelete.vue';
+import ActorDelete from '@/components/modals/ActorDelete.vue';
 import { useModalStore } from '@/stores';
 
 export default {
@@ -28,12 +28,12 @@ export default {
     },
     inject: ['project'],
     methods: {
-        openUserDeleteModal() {
-            useModalStore().open(UserDelete, {user: this.user});
+        openActorDeleteModal() {
+            useModalStore().open(ActorDelete, {actor: this.actor});
         },
     },
     props: [
-        'user'
+        'actor'
     ],
 };
 </script>

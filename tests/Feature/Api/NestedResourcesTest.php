@@ -9,7 +9,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
-use App\Models\User;
+use App\Models\Actor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
@@ -73,10 +73,10 @@ class NestedResourcesTest extends TestCase
         $this->assertSoftDeleted('features', ['id' => $feature->id]);
     }
 
-    public function test_users_endpoints_require_project_edit_access(): void
+    public function test_actors_endpoints_require_project_edit_access(): void
     {
         $project = Project::factory()->create();
-        $user = User::factory()->for($project)->create(['name' => 'Initial users']);
+        $actor = Actor::factory()->for($project)->create(['name' => 'Initial users']);
 
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
@@ -85,57 +85,57 @@ class NestedResourcesTest extends TestCase
         $this->attachContributor($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/users/add', [
+        $this->postJson('/api/actors/add', [
             'name' => 'Operators',
             'project_id' => $project->id,
             'summary' => 'Platform users',
             'weight' => 6,
         ])->assertCreated();
 
-        $createdUser = User::query()->where('name', 'Operators')->firstOrFail();
-        $this->assertDatabaseHas('users', [
-            'id' => $createdUser->id,
+        $createdActor = Actor::query()->where('name', 'Operators')->firstOrFail();
+        $this->assertDatabaseHas('actors', [
+            'id' => $createdActor->id,
             'project_id' => $project->id,
             'weight' => 6,
         ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/users/add', [
+        $this->postJson('/api/actors/add', [
             'name' => 'Blocked users',
             'project_id' => $project->id,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
 
-        $this->postJson('/api/users/' . $user->id . '/edit', [
+        $this->postJson('/api/actors/' . $actor->id . '/edit', [
             'name' => 'Blocked update',
         ])->assertForbidden();
 
-        $this->postJson('/api/users/' . $user->id . '/delete')->assertForbidden();
+        $this->postJson('/api/actors/' . $actor->id . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/users/' . $user->id . '/edit', [
+        $this->postJson('/api/actors/' . $actor->id . '/edit', [
             'name' => 'Updated users',
             'summary' => 'Updated summary',
             'weight' => 11,
         ])->assertOk();
 
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
+        $this->assertDatabaseHas('actors', [
+            'id' => $actor->id,
             'name' => 'Updated users',
             'summary' => 'Updated summary',
             'weight' => 11,
         ]);
 
-        $this->postJson('/api/users/' . $user->id . '/delete')->assertNoContent();
-        $this->assertSoftDeleted('users', ['id' => $user->id]);
+        $this->postJson('/api/actors/' . $actor->id . '/delete')->assertNoContent();
+        $this->assertSoftDeleted('actors', ['id' => $actor->id]);
     }
 
-    public function test_requirements_add_and_edit_endpoints_require_project_edit_access_and_reject_cross_project_users(): void
+    public function test_requirements_add_and_edit_endpoints_require_project_edit_access_and_reject_cross_project_actors(): void
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->for($project)->create();
         $requirement = Requirement::factory()->for($feature)->create(['name' => 'Initial requirement']);
-        $projectUser = User::factory()->for($project)->create();
-        $otherProjectUser = User::factory()->for(Project::factory())->create();
+        $projectActor = Actor::factory()->for($project)->create();
+        $otherProjectActor = Actor::factory()->for(Project::factory())->create();
         $existingUnknown = Unknown::factory()->for($requirement)->create(['name' => 'Old unknown?']);
         $existingTask = Task::factory()->for($requirement)->create(['name' => 'Old task', 'is_complete' => false]);
 
@@ -155,14 +155,14 @@ class NestedResourcesTest extends TestCase
             'unknowns' => [
                 ['name' => 'Which provider?'],
             ],
-            'user_ids' => [$projectUser->id],
+            'actor_ids' => [$projectActor->id],
             'weight' => 3,
         ])->assertOk();
 
         $createdRequirement = Requirement::query()->where('name', 'deliver notifications')->firstOrFail();
         $this->assertDatabaseHas('assignments', [
             'requirement_id' => $createdRequirement->id,
-            'user_id' => $projectUser->id,
+            'actor_id' => $projectActor->id,
         ]);
         $this->assertDatabaseHas('tasks', [
             'requirement_id' => $createdRequirement->id,
@@ -179,7 +179,7 @@ class NestedResourcesTest extends TestCase
             'name' => 'blocked requirement',
             'tasks' => [],
             'unknowns' => [],
-            'user_ids' => [],
+            'actor_ids' => [],
         ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
 
         $this->actingAsAccount($editor);
@@ -188,8 +188,8 @@ class NestedResourcesTest extends TestCase
             'name' => 'cross project assignment',
             'tasks' => [],
             'unknowns' => [],
-            'user_ids' => [$otherProjectUser->id],
-        ])->assertUnprocessable()->assertJsonValidationErrors('user_ids.0');
+            'actor_ids' => [$otherProjectActor->id],
+        ])->assertUnprocessable()->assertJsonValidationErrors('actor_ids.0');
 
         $this->actingAsAccount($viewer);
         $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
@@ -207,7 +207,7 @@ class NestedResourcesTest extends TestCase
                 ['id' => $existingUnknown->id, 'name' => 'Updated unknown?'],
                 ['name' => 'Fresh unknown?'],
             ],
-            'user_ids' => [$projectUser->id],
+            'actor_ids' => [$projectActor->id],
             'weight' => 10,
         ])->assertOk();
 
@@ -228,7 +228,7 @@ class NestedResourcesTest extends TestCase
         ]);
         $this->assertDatabaseHas('assignments', [
             'requirement_id' => $requirement->id,
-            'user_id' => $projectUser->id,
+            'actor_id' => $projectActor->id,
         ]);
     }
 

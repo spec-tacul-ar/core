@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Actions\Actors;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Models\User;
+use App\Models\Actor;
 
-class DeleteUser
+class DeleteActor
 {
     use AsAction;
 
     public function authorize(ActionRequest $request): bool
     {
-        return $request->user()->can('delete', $request->route('user'));
+        return $request->user()->can('delete', $request->route('actor'));
     }
 
     public static function routes(Router $router): void
     {
-        $router->post('users/{user}/delete', static::class);
+        $router->post('actors/{actor}/delete', static::class);
     }
 
-    public function handle(User $user): void
+    public function handle(Actor $actor): void
     {
-        $user->delete();
+        $actor->delete();
     }
 
-    public function asController(User $user): Response
+    public function asController(Actor $actor): Response
     {
-        $this->handle($user);
+        $this->handle($actor);
 
         return response()->noContent();
     }

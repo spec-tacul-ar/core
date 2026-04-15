@@ -1,7 +1,7 @@
 import Model from '../Model';
 
-export default class User extends Model {
-    static repository_name = 'users';
+export default class Actor extends Model {
+    static repository_name = 'actors';
 
     get project() {
         return this.constructor.repository('projects').find(this.project_id);
@@ -9,6 +9,6 @@ export default class User extends Model {
 
     get requirements() {
         return this.constructor.repository('requirements').collection
-            .filter(requirement =>requirement.assignments.pluck('user_id').contains(this.id));
+            .filter(requirement => requirement.assignments.pluck('actor_id').contains(this.id));
     }
 }

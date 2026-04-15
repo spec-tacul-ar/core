@@ -2,7 +2,7 @@
     "uuid": "6d40b341-65f1-4bc8-9793-e900adedf335",
     "name": "Example Project",
     "description": "<p>This is the sample project to demonstrate what a  specification can look like. It roughly describes the features of Spectacular itself.</p><p>Since Spectacular is single-user, the users defined below describe expected behaviours and not role based access control.</p>",
-    "users":
+    "actors":
     [
         {
             "id": 1,
@@ -55,7 +55,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -90,7 +90,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -120,7 +120,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -143,7 +143,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -182,7 +182,7 @@
                             "name": "Can we achieve the same UX without a third-party library?"
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -224,7 +224,7 @@
                             "name": "How might we facilitate customising the HTML styles?"
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -254,7 +254,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -274,7 +274,7 @@
                             "name": "Will users realise they can use the export link in this way?"
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         3
                     ]
@@ -309,7 +309,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -351,7 +351,7 @@
                             "name": "Do we need a \"Clear All\" button too?"
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -389,7 +389,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -418,7 +418,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -445,7 +445,7 @@
                             "name": "Instead of requiring users to delete all requirements under the feature, do we give them the option to move them?"
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -476,7 +476,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -511,7 +511,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -540,7 +540,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1
                     ]
@@ -569,7 +569,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -599,7 +599,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -627,7 +627,7 @@
                             "name": "Do unknowns need to be sortable? Probably not."
                         }
                     ],
-                    "user_ids":
+                    "actor_ids":
                     [
                         1,
                         2
@@ -671,7 +671,7 @@
                     ],
                     "unknowns":
                     [],
-                    "user_ids":
+                    "actor_ids":
                     [
                         2,
                         1

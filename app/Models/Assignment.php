@@ -12,12 +12,12 @@ class Assignment extends Model
     use Traits\Revisionable;
 
     protected $fillable = [
-        'user_id',
+        'actor_id',
     ];
 
-    public function user(): BelongsTo
+    public function actor(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Actor::class);
     }
 
     public function requirement(): BelongsTo

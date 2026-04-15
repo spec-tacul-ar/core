@@ -16,14 +16,14 @@
             </div>
         @endif
 
-        @if ($project->users->isNotEmpty())
+        @if ($project->actors->isNotEmpty())
             <div id="users">
                 <h2>Users</h2>
 
-                @foreach ($project->users as $user)
+                @foreach ($project->actors as $actor)
                     <div class="user">
-                        <h3>{{ $user->name }}</h3>
-                        <p>{!! nl2br(e($user->summary)) !!}</p>
+                        <h3>{{ $actor->name }}</h3>
+                        <p>{!! nl2br(e($actor->summary)) !!}</p>
                     </div>
                 @endforeach
             </div>

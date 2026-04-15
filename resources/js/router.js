@@ -15,7 +15,7 @@ import ProjectShow from '@/components/pages/ProjectShow.vue';
 import ProjectsIndex from '@/components/pages/ProjectsIndex.vue';
 import Register from '@/components/pages/Register.vue';
 import RequirementForm from '@/components/sidepanels/Requirement.vue';
-import UserForm from '@/components/sidepanels/User.vue';
+import ActorForm from '@/components/sidepanels/Actor.vue';
 import { Api } from '@/api';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAlertsStore, useAuthStore } from '@/stores';
@@ -140,16 +140,16 @@ function buildRouter(base) {
 
                     // Users
                     {
-                        name: 'projects.users.create',
-                        path: 'users/create',
+                        name: 'projects.actors.create',
+                        path: 'actors/create',
                         meta: { title: 'Create user' },
-                        components: { sidepanel: UserForm },
+                        components: { sidepanel: ActorForm },
                         props: true,
                     }, {
-                        name: 'projects.users.edit',
-                        path: 'users/:user_id/edit',
+                        name: 'projects.actors.edit',
+                        path: 'actors/:actor_id/edit',
                         meta: { title: 'Edit user' },
-                        components: { sidepanel: UserForm },
+                        components: { sidepanel: ActorForm },
                         props: true,
                     },
 

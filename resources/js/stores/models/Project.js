@@ -60,10 +60,10 @@ export default class Project extends Model {
         return this.features_estimate;
     }
 
-    get users() {
-        return this.constructor.repository('users').collection.where('project_id', this.id);
+    get actors() {
+        return this.constructor.repository('actors').collection.where('project_id', this.id);
     }
-    set users(users) {
-        this.constructor.repository('users').saveMany(users);
+    set actors(actors) {
+        this.constructor.repository('actors').saveMany(actors);
     }
 }

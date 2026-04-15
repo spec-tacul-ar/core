@@ -14,8 +14,8 @@
             <p class="mb-4">This user cannot be deleted while it is in use. It is currently used in the following requirements:</p>
             
             <ul class="list-disc italic ml-6">
-                <li v-for="requirement in user.requirements" :key="requirement.id">
-                    <RouterLink :to="{name: 'projects.show', params: {project_id: this.user.project_id }, hash: '#requirement_' + requirement.id}">
+                <li v-for="requirement in actor.requirements" :key="requirement.id">
+                    <RouterLink :to="{name: 'projects.show', params: {project_id: this.actor.project_id }, hash: '#requirement_' + requirement.id}">
                         {{ requirement.name }}
                     </RouterLink>
                 </li>
@@ -29,7 +29,7 @@ import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
 import ModalLayout from '@/components/layouts/ModalLayout.vue';
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import UniqueId from '@/mixins/UniqueId';
-import User from '@/stores/models/User';
+import Actor from '@/stores/models/Actor';
 import { useAlertsStore } from '@/stores';
 
 export default {
@@ -40,7 +40,7 @@ export default {
     },
     computed: {
         has_requirements() {
-            return this.user.requirements.isNotEmpty();
+            return this.actor.requirements.isNotEmpty();
         },
     },
     data() {
@@ -55,11 +55,11 @@ export default {
         submit() {
             this.is_waiting = true;
 
-            this.api.post('users/' + this.user.id + '/delete')
+            this.api.post('actors/' + this.actor.id + '/delete')
                 .then(() => {
                     this.$emit('close');
 
-                    User.repository().delete(this.user.id);
+                    Actor.repository().delete(this.actor.id);
                     useAlertsStore().push('User deleted.');
                 })
                 .finally(() => this.is_waiting = false);
@@ -69,6 +69,6 @@ export default {
         KeyboardShortcuts,
         UniqueId
     ],
-    props: ['user'],
+    props: ['actor'],
 };
 </script>

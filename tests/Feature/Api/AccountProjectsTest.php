@@ -9,7 +9,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
-use App\Models\User;
+use App\Models\Actor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\Concerns\BuildsApiFixtures;
@@ -151,7 +151,7 @@ class AccountProjectsTest extends TestCase
         $response = $this->postJson('/api/projects/add', [
             'features' => ['Authentication'],
             'name' => 'Roadmap',
-            'users' => ['Operators'],
+            'actors' => ['Operators'],
         ]);
 
         $response->assertCreated();
@@ -164,7 +164,7 @@ class AccountProjectsTest extends TestCase
             'project_id' => $project->id,
             'role' => Role::OWNER->value,
         ]);
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseHas('actors', [
             'name' => 'Operators',
             'project_id' => $project->id,
         ]);
@@ -202,10 +202,10 @@ class AccountProjectsTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonPath('data.id', $fixture['project']->id);
-        $response->assertJsonPath('data.users.0.id', $fixture['projectUser']->id);
+        $response->assertJsonPath('data.actors.0.id', $fixture['projectActor']->id);
         $response->assertJsonPath('data.features.0.id', $fixture['feature']->id);
         $response->assertJsonPath('data.features.0.requirements.0.id', $fixture['requirement']->id);
-        $response->assertJsonPath('data.features.0.requirements.0.assignments.0.user_id', $fixture['projectUser']->id);
+        $response->assertJsonPath('data.features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->id);
         $response->assertJsonPath('data.features.0.requirements.0.tasks.0.id', $fixture['task']->id);
         $response->assertJsonPath('data.features.0.requirements.0.unknowns.0.id', $fixture['unknown']->id);
 
@@ -248,7 +248,7 @@ class AccountProjectsTest extends TestCase
     public function test_projects_organise_endpoint_allows_editors_and_forbids_viewers(): void
     {
         $project = Project::factory()->create();
-        $user = User::factory()->for($project)->create(['weight' => 1]);
+        $actor = Actor::factory()->for($project)->create(['weight' => 1]);
         $feature = Feature::factory()->for($project)->create(['weight' => 1]);
         $requirement = Requirement::factory()->for($feature)->create(['weight' => 1]);
 
@@ -267,12 +267,12 @@ class AccountProjectsTest extends TestCase
             'requirements' => [
                 ['id' => $requirement->id, 'feature_id' => $feature->id, 'weight' => 33],
             ],
-            'users' => [
-                ['id' => $user->id, 'weight' => 11],
+            'actors' => [
+                ['id' => $actor->id, 'weight' => 11],
             ],
         ])->assertOk();
 
-        $this->assertDatabaseHas('users', ['id' => $user->id, 'weight' => 11]);
+        $this->assertDatabaseHas('actors', ['id' => $actor->id, 'weight' => 11]);
         $this->assertDatabaseHas('features', ['id' => $feature->id, 'weight' => 22]);
         $this->assertDatabaseHas('requirements', ['id' => $requirement->id, 'weight' => 33]);
 
@@ -281,7 +281,7 @@ class AccountProjectsTest extends TestCase
         $this->postJson('/api/projects/' . $project->id . '/organise', [
             'features' => [],
             'requirements' => [],
-            'users' => [],
+            'actors' => [],
         ])->assertForbidden();
     }
 

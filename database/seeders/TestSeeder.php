@@ -42,7 +42,7 @@ class TestSeeder extends Seeder
             ->has(Invitation::factory()->state(['role' => Role::OWNER])->for($account))
             ->has(Invitation::factory()->state(['role' => Role::EDITOR])->for($account))
             ->has(Invitation::factory()->state(['role' => Role::VIEWER])->for($account))
-            ->hasUsers($this->faker->numberBetween(2, 4))
+            ->hasActors($this->faker->numberBetween(2, 4))
             ->has(
                 Feature::factory()
                     ->count($this->faker->numberBetween(2, 5))
@@ -52,10 +52,10 @@ class TestSeeder extends Seeder
                             ->hasTasks($this->faker->numberBetween(1, 3))
                             ->hasUnknowns($this->faker->numberBetween(0, 3))
                             ->afterCreating(function (Requirement $requirement) {
-                                $users = $this->faker->randomElements($requirement->feature->project->users, null);
+                                $actors = $this->faker->randomElements($requirement->feature->project->actors, null);
 
-                                foreach ($users as $user) {
-                                    $requirement->assignments()->make()->user()->associate($user)->save();
+                                foreach ($actors as $actor) {
+                                    $requirement->assignments()->make()->actor()->associate($actor)->save();
                                 }
                             })
                     )

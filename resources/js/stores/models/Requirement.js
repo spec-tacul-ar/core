@@ -56,15 +56,15 @@ export default class Requirement extends Model {
     }
 
     get title() {
-        const users = this.assignments.map(assignment => assignment.user.name);
+        const actors = this.assignments.map(assignment => assignment.actor.name);
 
-        if (users.isEmpty()) {
+        if (actors.isEmpty()) {
             return 'Users can ' + this.name;
         }
 
-        const last_user = users.pop();
+        const last_actor = actors.pop();
 
-        return (users.isNotEmpty() ? users.join(', ') + ' and ' : ' ') + last_user + ' can ' + this.name;
+        return (actors.isNotEmpty() ? actors.join(', ') + ' and ' : ' ') + last_actor + ' can ' + this.name;
     }
 
     get tasks_estimate() {
@@ -94,10 +94,10 @@ export default class Requirement extends Model {
             return true;
         }
 
-        if (filters.has_users) {
-            const user_ids = this.assignments.pluck('user_id');
+        if (filters.has_actors) {
+            const actor_ids = this.assignments.pluck('actor_id');
 
-            if (!Object.entries(filters.users).every(([id, required]) => required ? user_ids.contains(+id) : user_ids.doesntContain(+id))) {
+            if (!Object.entries(filters.actors).every(([id, required]) => required ? actor_ids.contains(+id) : actor_ids.doesntContain(+id))) {
                 return true;
             }
         }

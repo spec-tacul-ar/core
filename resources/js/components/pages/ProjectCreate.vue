@@ -24,11 +24,11 @@
                 <p class="mb-4">These are the types of users - not individuals. We've given a few examples. Feel free to change them.</p>
 
                 <div class="space-y-2">
-                    <div v-for="(user, index) in form.users" :key="user.id" class="flex mx-auto">
-                        <FormInput name="user" :id="'user_' + user.id" v-model="user.name" @keydown.enter.prevent="form.users.length === index + 1 ? addUser() : null" />
+                    <div v-for="(actor, index) in form.actors" :key="actor.id" class="flex mx-auto">
+                        <FormInput name="user" :id="'actor_' + actor.id" v-model="actor.name" @keydown.enter.prevent="form.actors.length === index + 1 ? addActor() : null" />
                     
-                        <button v-if="form.users.length === index + 1" type="button" class="p-2" @click="addUser()"><IconSet name="plus-lg" class="size-6" /></button>
-                        <button v-else @click="removeUser(index)" type="button" class="p-2 text-red-400"><IconSet name="x" class="size-6" /></button>
+                        <button v-if="form.actors.length === index + 1" type="button" class="p-2" @click="addActor()"><IconSet name="plus-lg" class="size-6" /></button>
+                        <button v-else @click="removeActor(index)" type="button" class="p-2 text-red-400"><IconSet name="x" class="size-6" /></button>
                     </div>
                 </div>
             </Card>
@@ -87,7 +87,7 @@ export default {
                     { id: 2, name: '' },
                 ],
                 name: '',
-                users: [
+                actors: [
                     { id: 0, name: 'Members' },
                     { id: 1, name: 'Staff' },
                     { id: 2, name: '' },
@@ -108,21 +108,21 @@ export default {
 
             this.$nextTick(() => document.getElementById('feature_' + next_id).focus());
         },
-        addUser() {
-            const next_id = this.form.users.reduce((carry, item) => Math.max(carry, item.id), 0) + 1;
+        addActor() {
+            const next_id = this.form.actors.reduce((carry, item) => Math.max(carry, item.id), 0) + 1;
 
-            this.form.users.push({
+            this.form.actors.push({
                 id: next_id,
                 name: '',
             });
 
-            this.$nextTick(() => document.getElementById('user_' + next_id).focus());
+            this.$nextTick(() => document.getElementById('actor_' + next_id).focus());
         },
         removeFeature(index) {
             this.form.features.splice(index, 1);
         },
-        removeUser(index) {
-            this.form.users.splice(index, 1);
+        removeActor(index) {
+            this.form.actors.splice(index, 1);
         },
         submit() {
             this.errors = {};
@@ -131,7 +131,7 @@ export default {
             const data = {
                 ...this.form,
                 features: this.form.features.map(item => item.name).map(item => item.trim()).filter(item => item.length > 0),
-                users: this.form.users.map(item => item.name).map(item => item.trim()).filter(item => item.length > 0),
+                actors: this.form.actors.map(item => item.name).map(item => item.trim()).filter(item => item.length > 0),
             };
 
             this.api.post('projects/add', data)

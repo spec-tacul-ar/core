@@ -31,7 +31,7 @@ export default {
     },
     computed: {
         project_has_users() {
-            return !!this.feature.project.users.isNotEmpty();
+            return !!this.feature.project.actors.isNotEmpty();
         },
         is_active() {
             return this.$route.params.feature_id === this.feature.id;

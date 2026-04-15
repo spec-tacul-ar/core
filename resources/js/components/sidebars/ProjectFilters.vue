@@ -57,10 +57,10 @@
                 <h4 class="uppercase font-semibold mr-auto">Users</h4>
 
                 <button
-                    v-if="filters.has_users"
+                    v-if="filters.has_actors"
                     type="button"
                     class="p-1"
-                    @click="filters.clearUsers()">
+                    @click="filters.clearActors()">
 
                     <IconSet name="x-lg" class="size-4" />
                 </button>
@@ -68,12 +68,12 @@
 
             <div class="mb-4">
                 <FilterSwitch
-                    v-for="user in project.users.sortBy('weight')"
-                    :key="user.id"
-                    :value="filters.users[user.id]"
-                    @change="filters.setFilter('users', user.id, $event)">
+                    v-for="actor in project.actors.sortBy('weight')"
+                    :key="actor.id"
+                    :value="filters.actors[actor.id]"
+                    @change="filters.setFilter('actors', actor.id, $event)">
 
-                    {{ user.name }}
+                    {{ actor.name }}
                 </FilterSwitch>
             </div>
         </div>

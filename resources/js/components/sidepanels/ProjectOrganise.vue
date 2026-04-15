@@ -13,8 +13,8 @@
                 <legend class="text-xl mb-2">Users</legend>
 
                 <Draggable 
-                    v-model="users" 
-                    group="users" 
+                    v-model="actors" 
+                    group="actors" 
                     item-key="id"
                     tag="ul"
                     handle=".handle"
@@ -89,7 +89,7 @@ import IconSet from '@/components/IconSet.vue';
 import Feature from '@/stores/models/Feature';
 import Project from '@/stores/models/Project';
 import Requirement from '@/stores/models/Requirement';
-import User from '@/stores/models/User';
+import Actor from '@/stores/models/Actor';
 import { useAlertsStore } from '@/stores';
 
 export default {
@@ -106,7 +106,7 @@ export default {
     computed: {
         form() {
             return {
-                'users': this.users.map((user, index) => ({id: user.id, weight: index})),
+                'actors': this.actors.map((actor, index) => ({id: actor.id, weight: index})),
                 'features': this.features.map((feature, index) => ({id: feature.id, weight: index})),
                 'requirements': this.features.map(feature => {
                     return feature.requirements.map((requirement, index) => ({feature_id: feature.id, id: requirement.id, weight: index}));
@@ -126,7 +126,7 @@ export default {
 
         return {
             'expanded': [],
-            'users': project.users.sortBy('id').sortBy('weight').all(),
+            'actors': project.actors.sortBy('id').sortBy('weight').all(),
             'features': features,
             'is_waiting': false,
             'original': null,
@@ -141,7 +141,7 @@ export default {
                 .then((result) => {
                     Feature.repository().saveMany(result.data.features);
                     Requirement.repository().saveMany(result.data.requirements);
-                    User.repository().saveMany(result.data.users);
+                    Actor.repository().saveMany(result.data.actors);
 
                     this.setCleanForm();
 

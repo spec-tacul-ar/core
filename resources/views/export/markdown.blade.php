@@ -4,12 +4,12 @@
 {{----}}{{ Str::htmlToMarkdown($project->description) }}
 @endif
 
-@if ($project->users->isNotEmpty())
+@if ($project->actors->isNotEmpty())
 {{----}}## Users
 
-{{----}}@foreach ($project->users as $user)
-{{----}}{{----}}### {{ Str::escapeMarkdown($user->name) }}
-{{----}}{{----}}{{ $user->summary ? Str::escapeMarkdown($user->summary) . "\n" : '' }}
+{{----}}@foreach ($project->actors as $actor)
+{{----}}{{----}}### {{ Str::escapeMarkdown($actor->name) }}
+{{----}}{{----}}{{ $actor->summary ? Str::escapeMarkdown($actor->summary) . "\n" : '' }}
 {{----}}@endforeach
 @endif
 @if ($project->features->isNotEmpty())
