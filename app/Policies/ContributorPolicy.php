@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Actions\Account\Account;
 use App\Enums\Role;
+use App\Models\Account;
 use App\Models\Contributor;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

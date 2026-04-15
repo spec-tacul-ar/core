@@ -12,7 +12,7 @@
             <LoadingSpinner label="Loading projects" v-if="is_loading_projects" />
 
             <div
-                v-if="!is_loading_projects && projects.isEmpty()"
+                v-if="!is_loading_projects && projects.where('my_role', 'owner').isEmpty()"
                 class="flex flex-col items-center gap-2 bg-white/25 border-2 border-gray-200 border-dashed rounded-2xl p-4 mb-4">
 
                 <IconSet name="create-project" class="size-16 text-gray-600" />

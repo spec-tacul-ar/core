@@ -17,7 +17,7 @@
             <div class="flex flex-wrap md:flex-nowrap items-center mb-8 sm:pl-8 print:pl-0">
                 <h1 class="font-display font-semibold text-4xl mr-auto">{{ project.name }}</h1>
 
-                <RouterLink :to="{ name: 'projects.edit' }" class="btn btn-primary"><IconSet name="edit" /> Edit project</RouterLink>
+                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.edit' }" class="btn btn-primary"><IconSet name="edit" /> Edit project</RouterLink>
             </div>
 
             <div v-if="project.description" class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none">
@@ -29,7 +29,7 @@
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
                 <h2 class="text-3xl"><a href="#users">Users</a></h2>
 
-                <RouterLink :to="{ name: 'projects.users.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
+                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.users.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
             </div>
 
             <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4">
@@ -41,7 +41,7 @@
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
                 <h2 class="text-3xl"><a href="#features">Features</a></h2>
 
-                <RouterLink :to="{ name: 'projects.features.create' }" class="btn btn-primary"><IconSet name="plus-lg" /> Add feature</RouterLink>
+                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.features.create' }" class="btn btn-primary"><IconSet name="plus-lg" /> Add feature</RouterLink>
             </div>
 
             <FeatureItem :feature="feature" v-for="feature in features" :key="feature.id" />
@@ -144,6 +144,11 @@ export default {
             'type': Number,
             'required': true
         }
+    },
+    provide() {
+        return {
+            project: this.project,
+        };
     },
     async setup(props) {
         const api = inject('api');

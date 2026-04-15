@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Account;
+use App\Models\Comment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CommentPolicy
@@ -35,7 +36,6 @@ class CommentPolicy
      */
     public function delete(Account $account, Comment $comment)
     {
-        return $account->canView($comment, 'comments')
-            && ($account->owns($comment, 'comments') || $comment->authorIs($account));
+        return $comment->authorIs($account);
     }
 }

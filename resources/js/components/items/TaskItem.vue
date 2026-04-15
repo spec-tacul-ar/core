@@ -11,7 +11,7 @@
             Complete
         </span>
 
-        <DropdownMenu ref="dropdown">
+        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" ref="dropdown">
             <DropdownMenuItem
                 :icon="!task.is_complete ? 'check-lg' : 'x-lg'"
                 :loading="is_waiting_for_complete"
@@ -40,7 +40,7 @@ import IconSet from '@/components/IconSet.vue';
 import Task from '@/stores/models/Task';
 
 export default {
-    inject: ['api'],
+    inject: ['api', 'project'],
     components: {
         IconSet,
         DropdownMenu,

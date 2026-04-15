@@ -174,9 +174,11 @@ export default {
         UniqueId
     ],
     mounted() {
-        this.api.get('invitations/browse', { query: { project_id: this.project_id } })
-            .then((result) => Invitation.repository().saveMany(result.data))
-            .finally(() => this.is_loading = false);
+        if (this.project.my_role === 'owner') {
+            this.api.get('invitations/browse', { query: { project_id: this.project_id } })
+                .then((result) => Invitation.repository().saveMany(result.data))
+                .finally(() => this.is_loading = false);
+        }
     },
     props: {
         'project_id': {

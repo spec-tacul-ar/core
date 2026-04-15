@@ -29,7 +29,7 @@ class Commentable implements ValidationRule, ValidatorAwareRule
 
         // Check authorised
 
-        if (!auth()->user()->can('update', $model)) {
+        if (!auth()->user()->can('view', $model)) {
             $fail('You are not authorized to view this :attribute.');
             return;
         }

@@ -1,14 +1,14 @@
 <template>
     <div class="flex justify-end gap-1 mb-3 -mx-4">
-        <RouterLink :to="{ name: 'projects.features.requirements.create', params: { feature_id: feature.id }}" class="btn btn-primary"><IconSet name="plus-lg" /> Add requirement</RouterLink>
+        <RouterLink v-if="['editor', 'owner'].includes(feature.project.my_role)" :to="{ name: 'projects.features.requirements.create', params: { feature_id: feature.id }}" class="btn btn-primary"><IconSet name="plus-lg" /> Add requirement</RouterLink>
         
         <DropdownMenu>
-            <DropdownMenuItem :to="{ name: 'projects.features.edit', params: { feature_id: feature.id }}" icon="edit">Edit</DropdownMenuItem>
+            <DropdownMenuItem v-if="['editor', 'owner'].includes(feature.project.my_role)" :to="{ name: 'projects.features.edit', params: { feature_id: feature.id }}" icon="edit">Edit</DropdownMenuItem>
             <DropdownMenuItem :to="{ name: 'projects.features.feedback', params: { feature_id: feature.id }}" icon="feedback">Feedback</DropdownMenuItem>
 
             <slot name="menu" />
 
-            <DropdownMenuItem @click="openFeatureDeleteModal" icon="trash" danger>Delete</DropdownMenuItem>
+            <DropdownMenuItem v-if="['editor', 'owner'].includes(project.my_role)" @click="openFeatureDeleteModal" icon="trash" danger>Delete</DropdownMenuItem>
         </DropdownMenu>
     </div>
 </template>
@@ -31,6 +31,7 @@ export default {
             return this.project.filters.has_filters;
         },
     },
+    inject: ['project'],
     methods: {
         openFeatureDeleteModal() {
             useModalStore().open(FeatureDelete, {feature: this.feature});

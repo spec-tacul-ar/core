@@ -4,7 +4,7 @@
             {{ unknown.name }}
         </p>
 
-        <DropdownMenu>
+        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)">
             <DropdownMenuItem icon="check-lg" @click="openUnknownResolveModal">Resolve</DropdownMenuItem>
         </DropdownMenu>
     </div>
@@ -21,6 +21,7 @@ export default {
         DropdownMenu,
         DropdownMenuItem,
     },
+    inject: ['project'],
     props: [
         'unknown'
     ],

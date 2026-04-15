@@ -6,7 +6,7 @@
             <p v-if="!user.summary" class="text-gray-400">No description</p>
         </div>
 
-        <DropdownMenu class="d-print-none">
+        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" class="d-print-none">
             <DropdownMenuItem icon="edit" :to="{name: 'projects.users.edit', params: { user_id: user.id }}" replace>Edit</DropdownMenuItem>
             <DropdownMenuItem icon="trash" @click="openUserDeleteModal" danger replace>Delete</DropdownMenuItem>
         </DropdownMenu>
@@ -26,6 +26,7 @@ export default {
         DropdownMenuItem,
         TextMultiline
     },
+    inject: ['project'],
     methods: {
         openUserDeleteModal() {
             useModalStore().open(UserDelete, {user: this.user});
