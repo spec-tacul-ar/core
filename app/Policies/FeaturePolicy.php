@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Account;
 use App\Models\Feature;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FeaturePolicy
 {
     use HandlesAuthorization;
 
-    public function create(mixed $account): bool
+    public function create(Account $account): bool
     {
         return true;
     }
@@ -17,11 +18,11 @@ class FeaturePolicy
     /**
      * Determine whether the Account can view the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(mixed $account, Feature $feature)
+    public function view(Account $account, Feature $feature)
     {
         return $account->canView($feature, 'features');
     }
@@ -29,11 +30,11 @@ class FeaturePolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(mixed $account, Feature $feature)
+    public function update(Account $account, Feature $feature)
     {
         return $account->canEdit($feature, 'features');
     }
@@ -41,11 +42,11 @@ class FeaturePolicy
     /**
      * Determine whether the Account can delete the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(mixed $account, Feature $feature)
+    public function delete(Account $account, Feature $feature)
     {
         return $account->canEdit($feature, 'features');
     }

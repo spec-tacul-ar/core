@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Account;
 use App\Models\Task;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
 {
     use HandlesAuthorization;
 
-    public function create(mixed $account): bool
+    public function create(Account $account): bool
     {
         return true;
     }
@@ -17,11 +18,11 @@ class TaskPolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(mixed $account, Task $task)
+    public function view(Account $account, Task $task)
     {
         return $account->canView($task, 'features.requirements.tasks');
     }
@@ -29,11 +30,11 @@ class TaskPolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(mixed $account, Task $task)
+    public function update(Account $account, Task $task)
     {
         return $account->canEdit($task, 'features.requirements.tasks');
     }
@@ -41,11 +42,11 @@ class TaskPolicy
     /**
      * Determine whether the Account can delete the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(mixed $account, Task $task)
+    public function delete(Account $account, Task $task)
     {
         return $account->canEdit($task, 'features.requirements.tasks');
     }

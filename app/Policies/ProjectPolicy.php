@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Account;
 use App\Models\Project;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProjectPolicy
 {
     use HandlesAuthorization;
 
-    public function create(mixed $account): bool
+    public function create(Account $account): bool
     {
         return true;
     }
@@ -17,11 +18,11 @@ class ProjectPolicy
     /**
      * Determine whether the Account can view the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(mixed $account, Project $project)
+    public function view(Account $account, Project $project)
     {
         return $account->canView($project);
     }
@@ -29,11 +30,11 @@ class ProjectPolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(mixed $account, Project $project)
+    public function update(Account $account, Project $project)
     {
         return $account->canEdit($project);
     }
@@ -41,11 +42,11 @@ class ProjectPolicy
     /**
      * Determine whether the Account can delete the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(mixed $account, Project $project)
+    public function delete(Account $account, Project $project)
     {
         return $account->owns($project);
     }

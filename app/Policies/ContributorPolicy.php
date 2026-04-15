@@ -2,14 +2,16 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Actions\Account\Account;
 use App\Enums\Role;
+use App\Models\Contributor;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ContributorPolicy
 {
     use HandlesAuthorization;
 
-    public function create(mixed $account): bool
+    public function create(Account $account): bool
     {
         return true;
     }
@@ -17,11 +19,11 @@ class ContributorPolicy
     /**
      * Determine whether the Account can view the model.
      *
-     * @param  mixed  $account
-     * @param  mixed  $contributor
+     * @param  \App\Models\Account  $account
+     * @param  \App\Models\Contributor  $contributor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(mixed $account, mixed $contributor)
+    public function view(Account $account, Contributor $contributor)
     {
         return $account->canView($contributor, 'contributors');
     }
@@ -29,11 +31,11 @@ class ContributorPolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
-     * @param  mixed  $contributor
+     * @param  \App\Models\Account  $account
+     * @param  \App\Models\Contributor  $contributor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(mixed $account, mixed $contributor)
+    public function update(Account $account, Contributor $contributor)
     {
         $owners = $contributor->project->contributors()
             ->where('role', Role::OWNER)
@@ -65,11 +67,11 @@ class ContributorPolicy
     /**
      * Determine whether the Account can delete the model.
      *
-     * @param  mixed  $account
-     * @param  mixed  $contributor
+     * @param  \App\Models\Account  $account
+     * @param  \App\Models\Contributor  $contributor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(mixed $account, mixed $contributor)
+    public function delete(Account $account, Contributor $contributor)
     {
         return $this->update($account, $contributor);
     }

@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Account;
 use App\Models\Unknown;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UnknownPolicy
 {
     use HandlesAuthorization;
 
-    public function create(mixed $account): bool
+    public function create(Account $account): bool
     {
         return true;
     }
@@ -17,11 +18,11 @@ class UnknownPolicy
     /**
      * Determine whether the Account can view the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(mixed $account, Unknown $unknown)
+    public function view(Account $account, Unknown $unknown)
     {
         return $account->canView($unknown, 'features.requirements.unknowns');
     }
@@ -29,11 +30,11 @@ class UnknownPolicy
     /**
      * Determine whether the Account can update the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(mixed $account, Unknown $unknown)
+    public function update(Account $account, Unknown $unknown)
     {
         return $account->canEdit($unknown, 'features.requirements.unknowns');
     }
@@ -41,11 +42,11 @@ class UnknownPolicy
     /**
      * Determine whether the Account can delete the model.
      *
-     * @param  mixed  $account
+     * @param  \App\Models\Account  $account
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(mixed $account, Unknown $unknown)
+    public function delete(Account $account, Unknown $unknown)
     {
         return $account->canEdit($unknown, 'features.requirements.unknowns');
     }
