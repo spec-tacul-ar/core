@@ -33,6 +33,7 @@ class BrowseProjects
                     ->whereHas('tasks')
                     ->whereDoesntHave('tasks', fn($query) => $query->where('is_complete', false)),
             ])
+            ->with(['contributors' => fn($query) => $query->whereBelongsTo(auth()->user())])
             ->orderBy('name', 'asc')
             ->paginate(100)
             ->withQueryString();

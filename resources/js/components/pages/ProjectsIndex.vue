@@ -6,7 +6,7 @@
             <div class="flex justify-between flex-wrap items-end gap-4 mb-4 sm:pl-4">
                 <h1 class="font-display font-semibold text-4xl">Projects</h1>
                 
-                <RouterLink v-if="!is_loading_projects && projects.isNotEmpty()" :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
+                <RouterLink v-if="!is_loading_projects && projects.where('my_role', 'owner').isNotEmpty()" :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
             </div>
 
             <LoadingSpinner label="Loading projects" v-if="is_loading_projects" />
