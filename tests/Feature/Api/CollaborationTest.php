@@ -19,7 +19,7 @@ class CollaborationTest extends TestCase
     use BuildsApiFixtures;
     use RefreshDatabase;
 
-    public function test_comments_add_endpoint_allows_editors_and_rejects_viewers(): void
+    public function test_comments_add_endpoint_allows_editors_and_viewers(): void
     {
         $project = Project::factory()->create();
         $feature = \App\Models\Feature::factory()->for($project)->create();
@@ -53,7 +53,14 @@ class CollaborationTest extends TestCase
             'commentable_type' => 'feature',
             'message' => 'Viewer comment',
             'project_id' => $project->id,
-        ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('comments', [
+            'account_id' => $viewer->id,
+            'commentable_id' => $feature->id,
+            'commentable_type' => 'feature',
+            'project_id' => $project->id,
+        ]);
     }
 
     public function test_comments_browse_endpoint_allows_viewers_but_not_outsiders(): void
@@ -89,15 +96,13 @@ class CollaborationTest extends TestCase
             ->assertJsonValidationErrors('project_id');
     }
 
-    public function test_comments_delete_endpoint_allows_comment_authors_and_project_owners_only(): void
+    public function test_comments_delete_endpoint_allows_comment_authors_only(): void
     {
         $project = Project::factory()->create();
 
-        $owner = Account::factory()->create();
         $author = Account::factory()->create();
         $otherEditor = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
         $this->attachContributor($author, $project, Role::EDITOR);
         $this->attachContributor($otherEditor, $project, Role::EDITOR);
 
@@ -118,9 +123,17 @@ class CollaborationTest extends TestCase
         $this->postJson('/api/comments/' . $authorComment->id . '/delete')->assertNoContent();
         $this->assertDatabaseMissing('comments', ['id' => $authorComment->id]);
 
+        $owner = Account::factory()->create();
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $ownerBlockedComment = Comment::factory()
+            ->for($author, 'account')
+            ->for($project)
+            ->create();
+
         $this->actingAsAccount($owner);
-        $this->postJson('/api/comments/' . $comment->id . '/delete')->assertNoContent();
-        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+        $this->postJson('/api/comments/' . $ownerBlockedComment->id . '/delete')->assertForbidden();
+        $this->assertDatabaseHas('comments', ['id' => $ownerBlockedComment->id]);
     }
 
     public function test_invitations_add_endpoint_allows_owners_and_rejects_non_owners(): void

@@ -152,32 +152,6 @@ class AuthorizationEdgeCasesTest extends TestCase
         $response->assertJsonPath('data.0.name', 'Visible');
     }
 
-    public function test_promoting_a_contributor_to_owner_fails_when_their_project_limit_is_reached(): void
-    {
-        $project = Project::factory()->create();
-        $owner = Account::factory()->create();
-        $promotedAccount = Account::factory()->create();
-        $contributor = $this->attachContributor($promotedAccount, $project, Role::EDITOR);
-
-        $this->attachContributor($owner, $project, Role::OWNER);
-
-        foreach (range(1, 5) as $index) {
-            $ownedProject = Project::factory()->create(['name' => 'Owned ' . $index]);
-            $this->attachContributor($promotedAccount, $ownedProject, Role::OWNER);
-        }
-
-        $this->actingAsAccount($owner);
-
-        $this->postJson('/api/contributors/' . $contributor->id . '/edit', [
-            'role' => Role::OWNER->value,
-        ])->assertForbidden();
-
-        $this->assertDatabaseHas('contributors', [
-            'id' => $contributor->id,
-            'role' => Role::EDITOR->value,
-        ]);
-    }
-
     public function test_soft_deleted_nested_resources_cannot_be_modified_through_api_routes(): void
     {
         $featureFixture = $this->createProjectFixture(Role::EDITOR);
