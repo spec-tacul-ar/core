@@ -24,7 +24,7 @@ class BrowseInvitations
     public function asController(Request $request): ResourceCollection
     {
         $validated = $request->validate([
-            'project_id' => ['exists:projects,id', new Authorized('update', Project::class)],
+            'project_id' => ['exists:projects,id', new Authorized('invite', Project::class)],
         ]);
 
         $invitations = Invitation::query()

@@ -52,7 +52,7 @@ class AddProject
         }
 
         if (auth()->user()->exists) {
-            auth()->user()->projects()->attach($project, ['role' => Role::OWNER]);
+            $project->addContributor(auth()->user(), Role::OWNER);
         }
 
         return $project;

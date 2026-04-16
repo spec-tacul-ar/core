@@ -36,10 +36,6 @@ class EditContributor
         $currentRole = $contributor->role;
         $newRole = Role::from($validated['role']);
 
-        if ($newRole === Role::OWNER && $currentRole !== Role::OWNER) {
-            abort(403);
-        }
-
         $contributor->update($validated);
 
         return $contributor;

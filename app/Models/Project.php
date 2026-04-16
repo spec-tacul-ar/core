@@ -47,7 +47,9 @@ class Project extends Model
 
     public function accounts()
     {
-        return $this->belongsToMany(Account::class, 'contributors');
+        return $this->belongsToMany(Account::class, 'contributors')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     public function comments()

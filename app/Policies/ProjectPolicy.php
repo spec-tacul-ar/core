@@ -50,4 +50,16 @@ class ProjectPolicy
     {
         return $account->owns($project);
     }
+
+    /**
+     * Determine whether the Account can create invitations.
+     *
+     * @param  \App\Models\Account  $account
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function invite(Account $account, Project $project)
+    {
+        return $account->owns($project);
+    }
 }

@@ -78,12 +78,17 @@ class Account extends Authenticatable
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'contributors');
+        return $this->belongsToMany(Project::class, 'contributors')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     public function ownedProjects()
     {
-        return $this->belongsToMany(Project::class, 'contributors')->wherePivot('role', Role::OWNER);
+        return $this->belongsToMany(Project::class, 'contributors')
+            ->withPivot('role')
+            ->withTimestamps()
+            ->wherePivot('role', Role::OWNER);
     }
 
     public function readmarks()

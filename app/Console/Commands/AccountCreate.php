@@ -18,8 +18,8 @@ class AccountCreate extends Command
      * @var string
      */
     protected $signature = 'spectacular:account:create
-    {email? : The email address of the user}
-    {name? : The name of the user}';
+                            {email? : The email address of the user}
+                            {name? : The name of the user}';
 
     /**
      * The console command description.

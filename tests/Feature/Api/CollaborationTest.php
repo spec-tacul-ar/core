@@ -123,19 +123,21 @@ class CollaborationTest extends TestCase
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
-    public function test_invitations_add_endpoint_allows_editors_and_rejects_viewers(): void
+    public function test_invitations_add_endpoint_allows_owners_and_rejects_non_owners(): void
     {
         Notification::fake();
 
         $project = Project::factory()->create();
 
+        $owner = Account::factory()->create();
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
+        $this->attachContributor($owner, $project, Role::OWNER);
         $this->attachContributor($editor, $project, Role::EDITOR);
         $this->attachContributor($viewer, $project, Role::VIEWER);
 
-        $this->actingAsAccount($editor);
+        $this->actingAsAccount($owner);
 
         $this->postJson('/api/invitations/add', [
             'email' => 'new-person@example.test',
@@ -152,10 +154,18 @@ class CollaborationTest extends TestCase
         ]);
         Notification::assertSentOnDemand(InvitationForNewAccount::class);
 
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/invitations/add', [
+            'email' => 'blocked-editor@example.test',
+            'project_id' => $project->id,
+            'role' => Role::VIEWER->value,
+        ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
+
         $this->actingAsAccount($viewer);
 
         $this->postJson('/api/invitations/add', [
-            'email' => 'blocked@example.test',
+            'email' => 'blocked-viewer@example.test',
             'project_id' => $project->id,
             'role' => Role::VIEWER->value,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');

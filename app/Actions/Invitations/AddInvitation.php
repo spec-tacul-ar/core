@@ -33,7 +33,7 @@ class AddInvitation
     public function asController(Request $request): InvitationResource
     {
         $validated = Validator::make($request->all(), [
-            'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
+            'project_id' => ['required', 'integer', new Authorized('invite', Project::class)],
             'email' => ['required', 'email', 'max:250', new InvitationEmail(), new NotOwnEmail($request->user())],
             'role' => ['required', Rule::enum(Role::class)],
         ])->stopOnFirstFailure()->validate();

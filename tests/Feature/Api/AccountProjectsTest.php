@@ -164,6 +164,20 @@ class AccountProjectsTest extends TestCase
             'project_id' => $project->id,
             'role' => Role::OWNER->value,
         ]);
+        $this->assertDatabaseHas('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $project->id,
+        ]);
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $project->id,
+            'created_at' => null,
+        ]);
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $project->id,
+            'updated_at' => null,
+        ]);
         $this->assertDatabaseHas('actors', [
             'name' => 'Operators',
             'project_id' => $project->id,
@@ -190,6 +204,33 @@ class AccountProjectsTest extends TestCase
 
         $this->assertDatabaseHas('projects', ['id' => $projectId]);
         $this->assertDatabaseMissing('contributors', ['project_id' => $projectId]);
+    }
+
+    public function test_projects_demo_endpoint_sets_contributor_timestamps_for_real_accounts(): void
+    {
+        $account = $this->actingAsAccount();
+
+        $response = $this->postJson('/api/projects/demo');
+
+        $response->assertCreated();
+
+        $projectId = $response->json('data.id');
+
+        $this->assertDatabaseHas('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $projectId,
+            'role' => Role::OWNER->value,
+        ]);
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $projectId,
+            'created_at' => null,
+        ]);
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $account->id,
+            'project_id' => $projectId,
+            'updated_at' => null,
+        ]);
     }
 
     public function test_projects_read_endpoint_returns_hydrated_data_to_contributors_and_forbids_outsiders(): void
