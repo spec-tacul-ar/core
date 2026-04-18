@@ -1,5 +1,13 @@
 <template>
     <SidepanelLayout>
+        <template #toolbar>
+            <Tooltip v-if="can_leave" text="Leave project">
+                <button type="button" class="p-2" @click="leave">
+                    <IconSet name="leave" class="text-red-400 size-6" />
+                </button>
+            </Tooltip>
+        </template>
+
         <h2 class="text-4xl font-light mb-4">People</h2>
 
         <dl class="bg-gray-50 p-4 -mx-4 grid grid-cols-[max-content_1fr] gap-4 mb-4">
@@ -69,6 +77,7 @@
 </template>
 
 <script>
+import Contributor from '@/stores/models/Contributor';
 import ContributorItem from '@/components/items/ContributorItem.vue';
 import Invitation from '@/stores/models/Invitation';
 import Project from '@/stores/models/Project';
@@ -76,10 +85,12 @@ import FormInput from '@/components/forms/FormInput.vue';
 import FormOptions from '@/components/forms/FormOptions.vue';
 import IconSet from '@/components/IconSet.vue';
 import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import Model from '@/stores/Model.js';
 import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
+import Tooltip from '@/components/Tooltip.vue';
 import TrackDirty from '@/mixins/TrackDirty';
 import UniqueId from '@/mixins/UniqueId';
-import { useAlertsStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 
 export default {
     components: {
@@ -88,10 +99,20 @@ export default {
         FormOptions,
         IconSet,
         SidepanelLayout,
+        Tooltip,
     },
     computed: {
         active_invitations() {
             return this.project.invitations.whereNotNull('account').sortByDesc('created_at');
+        },
+        can_leave() {
+            const me = this.project.contributors.firstWhere('account_id', useAuthStore().account.id);
+
+            if (me.role === 'owner') {
+                return this.project.contributors.where('role', 'owner').count() > 1;
+            }
+
+            return true;
         },
         pending_invitations() {
             return this.project.invitations.whereNull('account').sortByDesc('created_at');
@@ -135,6 +156,24 @@ export default {
         'api',
     ],
     methods: {
+        leave() {
+            if (!confirm('Are you sure you wish to leave this project entirely?')) {
+                return;
+            }
+
+            const me = this.project.contributors.firstWhere('account_id', useAuthStore().account.id);
+
+            this.api.post('contributors/' + me.id + '/delete')
+                .then(() => {
+                    // TODO Is is even possible to do this without an error?
+                    Model.resetRepositories();
+
+                    this.$router.push({ name: 'projects.index' });
+
+                    useAlertsStore().push('You have left the project.');
+                })
+                .catch(error => this.errors = error.body.errors ?? {});
+        },
         removeInvitation(invitation) {
             if (!confirm('Are you sure?')) {
                 return;

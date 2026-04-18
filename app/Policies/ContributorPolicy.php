@@ -48,7 +48,7 @@ class ContributorPolicy
         }
 
         if ($contributor->role === Role::OWNER) {
-            if ($owners->hasSole()) {
+            if ($owners->count() === 1) {
                 return false;
             }
 
@@ -73,6 +73,31 @@ class ContributorPolicy
      */
     public function delete(Account $account, Contributor $contributor)
     {
-        return $this->update($account, $contributor);
+        // Get my role in this project
+        $me = $contributor->project->contributors()->whereBelongsTo($account)->first();
+
+        // If I'm not in this project, reject.
+        if (!$me) {
+            return false;
+        }
+
+        // If I'm an owner
+        if ($me->role === Role::OWNER) {
+            // If it's me, check there's another owner to take my place
+            if ($contributor->is($me)) {
+                return $contributor->project->contributors()->where('role', Role::OWNER)->count() > 1;
+            }
+
+            // If the other user is an owner and older than us, reject.
+            if ($contributor->role === Role::OWNER && $contributor->updated_at->isBefore($me->updated_at)) {
+                return false;
+            }
+
+            // I'm an owner so I can delete them.
+            return true;
+        }
+
+        // You can always remove yourself if you're not an owner
+        return $contributor->account->is($account);
     }
 }

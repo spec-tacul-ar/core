@@ -180,9 +180,14 @@
         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
     </svg>
 
-    <svg v-else-if="name === 'logout'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" v-bind="attributes">
+    <svg v-else-if="name === 'leave'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" v-bind="attributes">
         <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
         <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+    </svg>
+
+    <svg v-else-if="name === 'logout'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" v-bind="attributes">
+        <path d="M7.5 1v7h1V1z"/>
+        <path d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812"/>
     </svg>
 
     <svg v-else-if="name === 'mark-read'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" v-bind="attributes">
