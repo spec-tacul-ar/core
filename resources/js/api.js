@@ -1,24 +1,14 @@
 import { mande } from 'mande';
 import { useAlertsStore, useAuthStore } from '@/stores';
-import { isBefore, subMinutes } from 'date-fns';
 
-// TODO Switch to getting CSRF on demand and replaying requests if necessary.
 export class Api {
     constructor(base) {
         this.base = base || 'api';
-        this.csrf_last_refreshed_at = null;
     }
 
     get(url, options) {
         return mande('/' + this.base, { credentials: 'same-origin' })
             .get(url, options)
-            .then(response => {
-                if (!this.csrf_last_refreshed_at) {
-                    this.csrf_last_refreshed_at = new Date();
-                }
-
-                return response;
-            })
             .catch(error => this.handleError(error, 'get'));
     }
 
@@ -32,19 +22,27 @@ export class Api {
     }
 
     async getCsrfToken() {
-        if (!this.csrf_last_refreshed_at || isBefore(this.csrf_last_refreshed_at, subMinutes(new Date(), 60))) {
-            await mande('/sanctum/csrf-cookie').get();
+        let csrf_token = this.findCsrfToken();
 
-            this.csrf_last_refreshed_at = new Date();
+        if (!csrf_token) {
+            await mande('/sanctum/csrf-cookie').get();
+            csrf_token = this.findCsrfToken();
         }
 
+        if (!csrf_token) {
+            throw new Error('Could not find CSRF cookie.');
+        }
+
+        return csrf_token;
+    }
+
+    findCsrfToken() {
         const name = 'XSRF-TOKEN=';
         const cookies = decodeURIComponent(document.cookie).split(';');
-
         const csrf_cookie = cookies.find(cookie => cookie.trim().startsWith(name));
 
         if (!csrf_cookie) {
-            throw new Error('Could not find CSRF cookie.');
+            return null;
         }
 
         return csrf_cookie.substring(name.length);
