@@ -1,32 +1,82 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Actions\Exports;
 
 use App\Models\Project;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
+use Lorisleiva\Actions\ActionRequest;
+use Lorisleiva\Actions\Concerns\AsAction;
 
-class ExportController extends Controller
+class ExportProject
 {
-    public function html(Project $project): Response
-    {
-        $project->loadAll();
+    use AsAction;
 
-        return response()->view('export.html', compact('project'));
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->can('view', $request->route('project'));
     }
 
-    public function markdown(Project $project): Response
+    public static function routes(Router $router): void
     {
-        $project->loadAll();
-
-        return response()->view('export.markdown', compact('project'))->header('Content-Type', 'text/markdown');
+        $router
+            ->middleware('auth:sanctum')
+            ->get('export/{project}/{type}', static::class)
+            ->whereIn('type', ['html', 'markdown', 'json'])
+            ->name('export.show');
     }
 
-    public function json(Project $project): JsonResponse
+    public function handle(Project $project, string $type): string
     {
         $project->loadAll();
 
-        return response()->json([
+        return match ($type) {
+            'html' => $this->generateHtml($project),
+            'markdown' => view('export.markdown', compact('project'))->render(),
+            'json' => $this->generateJson($project),
+        };
+    }
+
+    public function asController(ActionRequest $request, Project $project): Response
+    {
+        $type = $request->route('type');
+
+        $content = $this->handle($project, $type);
+
+        return match ($type) {
+            'html' => response($content)->header('Content-Type', 'text/html; charset=UTF-8'),
+            'markdown' => response($content)->header('Content-Type', 'text/markdown'),
+            'json' => response($content)->header('Content-Type', 'application/json'),
+        };
+    }
+
+    protected function generateHtml(Project $project): string
+    {
+        $html = view('export.html', compact('project'))->render();
+
+        if (extension_loaded('tidy') && $html !== '') {
+            $options = [
+                'indent' => true,
+                'indent-spaces' => 4,
+                'wrap' => 0,
+                'drop-empty-elements' => false,
+                'show-body-only' => false,
+            ];
+
+            $html = tidy_repair_string($html, $options, 'utf8');
+        }
+
+        return $html;
+    }
+
+    protected function generateJson(Project $project): string
+    {
+        return json_encode($this->toExportArray($project), JSON_THROW_ON_ERROR);
+    }
+
+    protected function toExportArray(Project $project): array
+    {
+        return [
             'uuid' => $project->uuid,
             'name' => $project->name,
             'description' => $project->description,
@@ -34,7 +84,7 @@ class ExportController extends Controller
                 ->sortBy('id')
                 ->sortBy('weight')
                 ->values()
-                ->map(fn($actor) => [
+                ->map(fn ($actor) => [
                     'id' => (int) $actor->id,
                     'name' => $actor->name,
                     'summary' => $actor->summary,
@@ -66,7 +116,7 @@ class ExportController extends Controller
                                         ->sortBy('id')
                                         ->sortBy('weight')
                                         ->values()
-                                        ->map(fn($task) => [
+                                        ->map(fn ($task) => [
                                             'name' => $task->name,
                                             'estimate' => $task->estimate,
                                             'is_complete' => (bool) $task->is_complete,
@@ -76,7 +126,7 @@ class ExportController extends Controller
                                     'unknowns' => $requirement->unknowns
                                         ->sortBy('id')
                                         ->values()
-                                        ->map(fn($unknown) => [
+                                        ->map(fn ($unknown) => [
                                             'name' => $unknown->name,
                                         ])
                                         ->all(),
@@ -87,6 +137,6 @@ class ExportController extends Controller
                     ];
                 })
                 ->all(),
-        ])->header('Content-Type', 'application/json');
+        ];
     }
 }
