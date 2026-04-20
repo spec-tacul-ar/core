@@ -34,6 +34,15 @@
                 </div>
             </div>
 
+            <div class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
+                <IconSet name="warning" class="size-6 shrink-0 text-gray-800" />
+                
+                <div>
+                    <p class="font-semibold text-gray-800 mb-2">You cannot accept invitations until you have verified your email address.</p>
+                    <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
+                </div>
+            </div>
+
             <Card v-if="projects.isNotEmpty() || invitations.isNotEmpty()" class="divide-y divide-gray-300">
                 <InvitationItem v-for="invitation in invitations" :key="invitation.id" :invitation="invitation" />
                 <ProjectItem v-for="project in projects" :key="project.id" :project="project" />
@@ -69,8 +78,10 @@ export default {
     },
     data() {
         return {
-            'is_creating_demo_project': false,
-            'is_loading_projects': false,
+            is_creating_demo_project: false,
+            is_loading_projects: false,
+            is_sending_verification: false,
+            is_verification_sent: false,
         };
     },
     computed: {
@@ -79,6 +90,9 @@ export default {
         },
         is_solo() {
             return !!useAuthStore().account.is_solo;
+        },
+        is_verified() {
+            return !!useAuthStore().account.is_email_verified;
         },
         projects() {
             return Project.repository().collection.sortBy('name');
@@ -117,6 +131,17 @@ export default {
                     this.$router.push({ name: 'projects.show', params: { project_id: project.id } });
                 })
                 .finally(() => this.is_creating_demo_project = false);
+        },
+        sendVerificationEmail() {
+            this.is_sending_verification = true;
+
+            this.api.post('email/verification-notification')
+                .then(() => {
+                    this.is_verification_sent = true;
+
+                    useAlertsStore().push('Verification email sent.');
+                })
+                .finally(() => this.is_sending_verification = false);
         },
     },
 };

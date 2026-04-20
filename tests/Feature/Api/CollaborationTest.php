@@ -266,6 +266,33 @@ class CollaborationTest extends TestCase
         Notification::assertSentTo($owner, InvitationAccepted::class);
     }
 
+    public function test_invitations_accept_endpoint_requires_a_verified_email_address(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+        $recipient = Account::factory()->unverified()->create(['email' => 'invitee@example.test']);
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create([
+                'email' => $recipient->email,
+                'role' => Role::VIEWER,
+            ]);
+
+        $this->actingAsAccount($recipient);
+        $this->postJson('/api/invitations/' . $invitation->id . '/accept')
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $recipient->id,
+            'project_id' => $project->id,
+        ]);
+        $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
+    }
+
     public function test_invitations_delete_endpoint_allows_project_owners_and_recipients_only(): void
     {
         $project = Project::factory()->create();
@@ -299,6 +326,28 @@ class CollaborationTest extends TestCase
         $this->actingAsAccount($owner);
         $this->postJson('/api/invitations/' . $ownerInvitation->id . '/delete')->assertNoContent();
         $this->assertDatabaseMissing('invitations', ['id' => $ownerInvitation->id]);
+    }
+
+    public function test_invitations_delete_endpoint_requires_a_verified_email_address_for_recipients(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+        $recipient = Account::factory()->unverified()->create(['email' => 'recipient@example.test']);
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create([
+                'email' => $recipient->email,
+            ]);
+
+        $this->actingAsAccount($recipient);
+        $this->postJson('/api/invitations/' . $invitation->id . '/delete')
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
     }
 
     public function test_contributors_edit_endpoint_requires_owner_permissions(): void

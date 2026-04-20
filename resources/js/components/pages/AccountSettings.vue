@@ -20,10 +20,24 @@
             <h1 class="font-display font-semibold text-4xl text-center mb-4 mx-6">Settings</h1>
 
             <Card class="p-6">
+                <div v-if="true" class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
+                    <IconSet name="info" class="size-6 shrink-0 text-gray-800" />
+                    
+                    <div>
+                        <p class="text-gray-800 mb-2">Verify your email address to accept invitations.</p>
+
+                        <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
+                    </div>
+                </div>
+
                 <form @submit.prevent="submit">
                     <dl class="mb-3">
                         <dt class="font-bold mb-1 mr-auto">Email address</dt>
-                        <dd>{{ email }}</dd>
+                        <dd class="flex justify-between items-center gap-4">
+                            {{ email }}
+                            <span v-if="false" class="text-sm uppercase rounded-full bg-green-600 text-white px-2 py-1">Verified</span>
+                            <span v-if="true" class="text-sm uppercase rounded-full bg-orange-600 text-white px-2 py-1">Unverified</span>
+                        </dd>
                     </dl>
 
                     <div class="mb-3">
@@ -61,6 +75,7 @@ export default {
         Tooltip,
     },
     computed: {
+        account: () => useAuthStore().account,
         mode_icon() {
             return {
                 auto: 'mode-auto',
@@ -85,6 +100,7 @@ export default {
                 name: auth_store.account.name,
             },
             errors: {},
+            is_sending_verification: false,
             is_waiting: false,
             mode: 'auto',
         };
@@ -98,6 +114,15 @@ export default {
             const index = modes.indexOf(this.mode);
 
             this.mode = modes[(index + 1) % modes.length];
+        },
+        sendVerificationEmail() {
+            this.is_sending_verification = true;
+
+            this.api.post('email/verification-notification')
+                .then(() => {
+                    useAlertsStore().push('Verification email sent.');
+                })
+                .finally(() => this.is_sending_verification = false);
         },
         submit() {
             this.errors = {};

@@ -37,7 +37,7 @@ class InvitationPolicy
      */
     public function update(Account $account, Invitation $invitation)
     {
-        return $account->email === $invitation->email;
+        return $account->email === $invitation->email && $account->hasVerifiedEmail();
     }
 
     /**
@@ -49,7 +49,10 @@ class InvitationPolicy
      */
     public function delete(Account $account, Invitation $invitation)
     {
-        return $account->owns($invitation, 'invitations')
-            || $account->email === $invitation->email;
+        if ($account->owns($invitation, 'invitations')) {
+            return true;
+        }
+
+        return $account->email === $invitation->email && $account->hasVerifiedEmail();
     }
 }

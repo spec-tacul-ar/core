@@ -31,7 +31,7 @@
 }
 
 .btn.btn-primary {
-    @apply bg-gray-800 text-white ring-gray-800 hover:bg-black hover:ring-2 hover:ring-gray-800;
+    @apply bg-gray-800 text-white ring-gray-800 hover:bg-black hover:ring-2 hover:ring-gray-800 hover:disabled:ring-0 hover:disabled:bg-gray-800;
 }
 
 .btn.btn-primary-outline {

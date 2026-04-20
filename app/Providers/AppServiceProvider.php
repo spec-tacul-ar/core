@@ -50,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
                 'id' => 0,
                 'name' => 'Solo User',
                 'email' => 'solo@spectacular',
+                'email_verified_at' => now(),
             ]);
         });
     }

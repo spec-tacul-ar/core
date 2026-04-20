@@ -11,8 +11,8 @@
         </div>
         <div class="ml-auto">
             <div class="flex justify-end gap-1 ml-auto">
-                <button @click="accept" type="button" class="btn btn-sm btn-primary">Accept</button>
-                <button @click="decline" type="button" class="btn btn-sm btn-danger">Decline</button>
+                <button @click="accept" type="button" class="btn btn-sm btn-primary" :disabled="!is_verified">Accept</button>
+                <button @click="decline" type="button" class="btn btn-sm btn-danger" :disabled="!is_verified">Decline</button>
             </div>
         </div> 
     </div>
@@ -21,12 +21,15 @@
 <script>
 import Invitation from '@/stores/models/Invitation';
 import { formatDistance } from 'date-fns';
-import { useAlertsStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 
 export default {
     computed: {
         created_at() {
             return formatDistance(this.invitation.created_at, new Date());
+        },
+        is_verified() {
+            return useAuthStore().account.is_email_verified;
         },
     },
     data() {

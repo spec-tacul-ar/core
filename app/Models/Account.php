@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use InvalidArgumentException;
@@ -12,16 +14,18 @@ use Laravel\Sanctum\HasApiTokens;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use App\Enums\Role;
 
-class Account extends Authenticatable
+class Account extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
     use HasRelationships;
+    use MustVerifyEmailTrait;
     use Notifiable;
 
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
         'timezone',
     ];

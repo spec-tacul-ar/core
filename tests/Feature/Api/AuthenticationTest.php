@@ -68,7 +68,18 @@ class AuthenticationTest extends TestCase
         $response->assertJsonPath('data.id', $account->id);
         $response->assertJsonPath('data.name', $account->name);
         $response->assertJsonPath('data.email', $account->email);
+        $response->assertJsonPath('data.is_email_verified', true);
         $response->assertJsonMissingPath('data.is_solo');
+    }
+
+    public function test_auth_account_endpoint_reports_unverified_accounts(): void
+    {
+        $account = $this->actingAsAccount(Account::factory()->unverified()->create());
+
+        $this->getJson('/api/auth/account')
+            ->assertOk()
+            ->assertJsonPath('data.id', $account->id)
+            ->assertJsonPath('data.is_email_verified', false);
     }
 
     public function test_auth_account_endpoint_does_not_activate_solo_mode_when_accounts_exist(): void
@@ -86,6 +97,7 @@ class AuthenticationTest extends TestCase
         $response->assertJsonPath('data.name', 'Solo User');
         $response->assertJsonPath('data.email', 'solo@spectacular');
         $response->assertJsonPath('data.is_solo', true);
+        $response->assertJsonPath('data.is_email_verified', true);
     }
 
     public static function protectedRouteProvider(): array
