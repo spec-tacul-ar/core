@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -61,6 +62,17 @@ class Account extends Authenticatable implements MustVerifyEmail
     public static function findByEmail(string $email)
     {
         return static::firstWhere('email', $email);
+    }
+
+    public function markEmailAsVerified()
+    {
+        $verified = parent::markEmailAsVerified();
+
+        if ($verified) {
+            event(new Verified($this));
+        }
+
+        return $verified;
     }
 
     /* Relations */

@@ -20,13 +20,13 @@
             <h1 class="font-display font-semibold text-4xl text-center mb-4 mx-6">Settings</h1>
 
             <Card class="p-6">
-                <div v-if="true" class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
+                <div v-if="!account.is_email_verified" class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
                     <IconSet name="info" class="size-6 shrink-0 text-gray-800" />
                     
                     <div>
                         <p class="text-gray-800 mb-2">Verify your email address to accept invitations.</p>
 
-                        <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
+                        <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" :disabled="is_verification_sent" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
                     </div>
                 </div>
 
@@ -35,8 +35,8 @@
                         <dt class="font-bold mb-1 mr-auto">Email address</dt>
                         <dd class="flex justify-between items-center gap-4">
                             {{ email }}
-                            <span v-if="false" class="text-sm uppercase rounded-full bg-green-600 text-white px-2 py-1">Verified</span>
-                            <span v-if="true" class="text-sm uppercase rounded-full bg-orange-600 text-white px-2 py-1">Unverified</span>
+                            <span v-if="account.is_email_verified" class="text-sm uppercase rounded-full bg-green-600 text-white px-2 py-1">Verified</span>
+                            <span v-if="!account.is_email_verified" class="text-sm uppercase rounded-full bg-orange-600 text-white px-2 py-1">Unverified</span>
                         </dd>
                     </dl>
 
@@ -101,6 +101,7 @@ export default {
             },
             errors: {},
             is_sending_verification: false,
+            is_verification_sent: false,
             is_waiting: false,
             mode: 'auto',
         };
@@ -121,6 +122,8 @@ export default {
             this.api.post('email/verification-notification')
                 .then(() => {
                     useAlertsStore().push('Verification email sent.');
+
+                    this.is_verification_sent = true;
                 })
                 .finally(() => this.is_sending_verification = false);
         },

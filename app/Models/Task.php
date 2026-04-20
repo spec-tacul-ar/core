@@ -41,7 +41,7 @@ class Task extends Model
         $this->save();
     }
 
-    /* Accessors and mutators */
+    /* Attributes */
 
     protected function estimate(): Attribute
     {

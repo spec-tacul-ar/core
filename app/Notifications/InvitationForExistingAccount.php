@@ -29,7 +29,7 @@ class InvitationForExistingAccount extends Notification implements ShouldQueue
             ->subject('You have been invited to collaborate on a specification')
             ->greeting('Hello!')
             ->line(Str::escapeMarkdown($this->invitation->account->name) . ' has invited you to collaborate on their project: ' . Str::escapeMarkdown($this->invitation->project->name) . '.')
-            ->action('Accept invitation', url('/app/projects'));
+            ->action('Accept invitation', $this->invitation->url);
     }
 
     public function toArray(object $notifiable): array

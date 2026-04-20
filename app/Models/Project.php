@@ -255,4 +255,13 @@ class Project extends Model
 
         return $project;
     }
+
+    /* Attributes */
+
+    protected function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => url(config('spectacular.path') . '/projects/' . $this->getRouteKey()),
+        );
+    }
 }

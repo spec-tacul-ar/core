@@ -30,7 +30,7 @@ class InvitationForNewAccount extends Notification implements ShouldQueue
             ->greeting('Hello! We are Spectacular.')
             ->line(Str::escapeMarkdown($this->invitation->account->name) . ' has invited you to collaborate on their project: ' . Str::escapeMarkdown($this->invitation->project->name))
             ->line('You will need to register account first. Your invitation will be waiting for you when you log in.')
-            ->action('Register', url('/app/register'));
+            ->action('Accept invitation', $this->invitation->url);
     }
 
     public function toArray(object $notifiable): array

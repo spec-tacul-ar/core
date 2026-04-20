@@ -6,13 +6,13 @@
             <div class="flex justify-between flex-wrap items-end gap-4 mb-4 sm:pl-4">
                 <h1 class="font-display font-semibold text-4xl">Projects</h1>
                 
-                <RouterLink v-if="!is_loading_projects && projects.where('my_role', 'owner').isNotEmpty()" :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
+                <RouterLink v-if="!is_loading_projects && projects.isNotEmpty()" :to="{ name: 'projects.create' }" class="btn btn-primary">Create project</RouterLink>
             </div>
 
             <LoadingSpinner label="Loading projects" v-if="is_loading_projects" />
 
             <div
-                v-if="!is_loading_projects && projects.where('my_role', 'owner').isEmpty()"
+                v-if="!is_loading_projects && projects.isEmpty()"
                 class="flex flex-col items-center gap-2 bg-white/25 border-2 border-gray-200 border-dashed rounded-2xl p-4 mb-4">
 
                 <IconSet name="create-project" class="size-16 text-gray-600" />
@@ -34,12 +34,12 @@
                 </div>
             </div>
 
-            <div class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
+            <div v-if="invitations.isNotEmpty() && !is_verified" class="flex items-start gap-4 border border-gray-800 bg-gray-800/10 rounded-lg p-4 mb-4">
                 <IconSet name="warning" class="size-6 shrink-0 text-gray-800" />
                 
                 <div>
                     <p class="font-semibold text-gray-800 mb-2">You cannot accept invitations until you have verified your email address.</p>
-                    <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
+                    <SpinnerButton type="button" class="btn btn-primary" :loading="is_sending_verification" :disabled="is_verification_sent" @click="sendVerificationEmail">{{ is_verification_sent ? 'Verification email sent' : 'Send verification email' }}</SpinnerButton>
                 </div>
             </div>
 

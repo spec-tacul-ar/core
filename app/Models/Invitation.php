@@ -47,13 +47,6 @@ class Invitation extends Model
         return $this->belongsTo(Account::class);
     }
 
-    /* Accessors and mutators */
-
-    public function url(): Attribute
-    {
-        return new Attribute(fn () => URL::signedRoute('invitations.show', $this));
-    }
-
     /* Helpers */
 
     public function sendNotification()
@@ -65,5 +58,12 @@ class Invitation extends Model
         } else {
             Notification::route('mail', $this->email)->notify(new InvitationForNewAccount($this));
         }
+    }
+
+    /* Attributes */
+
+    public function url(): Attribute
+    {
+        return new Attribute(fn () => URL::signedRoute('invitations.accept', $this));
     }
 }

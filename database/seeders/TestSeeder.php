@@ -34,6 +34,11 @@ class TestSeeder extends Seeder
             ->state(['email' => 'other.user@example.com'])
             ->create();
 
+        $unverified_account = Account::factory()
+            ->state(['email' => 'unverified@example.com'])
+            ->unverified()
+            ->create();
+
         $project = Project::factory()
             ->state(['name' => 'My Project'])
             ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
@@ -66,6 +71,7 @@ class TestSeeder extends Seeder
             ->state(['name' => 'Other Project'])
             ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($other_account))
             ->has(Invitation::factory()->state(['email' => $account->email, 'role' => Role::OWNER])->for($other_account))
+            ->has(Invitation::factory()->state(['email' => $unverified_account->email, 'role' => Role::OWNER])->for($other_account))
             ->create();
 
         Project::factory()

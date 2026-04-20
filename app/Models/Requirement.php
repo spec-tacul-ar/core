@@ -87,7 +87,7 @@ class Requirement extends Model
         return $this->belongsToMany(Actor::class, Assignment::class);
     }
 
-    /* Accessors and mutators */
+    /* Attributes */
 
     public function isBlocked(): Attribute
     {

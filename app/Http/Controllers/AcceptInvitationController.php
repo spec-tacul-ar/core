@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Actions\Invitations\AcceptInvitation;
+use App\Models\Account;
+use App\Models\Invitation;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class AcceptInvitationController extends Controller
+{
+    public function __invoke(Request $request, Invitation $invitation): RedirectResponse
+    {
+        // This route is signed so we can verify the account without auth.
+        $account = Account::findByEmail($invitation->email);
+
+        if ($account && !$account->hasVerifiedEmail()) {
+            $account->markEmailAsVerified();
+        }
+
+        // Redirect the user to login, if unauthenticated. They'll see the pending invite on their dashboard.
+        if (!$request->user()) {
+            return redirect(config('spectacular.path'));
+        }
+
+        // We verified our user, remember? $request will need to know
+        $request->user()->refresh();
+
+        // Check the user can accept this invitation.
+        if (!$request->user()->can('update', $invitation)) {
+            return abort(403, 'Your email address does not match the invitation.');
+        }
+
+        // Accept the invitation
+        AcceptInvitation::run($request, $invitation);
+
+        return redirect($invitation->project->url);
+    }
+}

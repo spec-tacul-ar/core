@@ -2,20 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\Fortify\ResetAccountPassword;
 use App\Models\Account;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
-class AccountPassword extends Command
+class AccountVerify extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'spectacular:account:password
+    protected $signature = 'spectacular:account:verify
                             {email? : The email address of the user}';
 
     /**
@@ -23,7 +20,7 @@ class AccountPassword extends Command
      *
      * @var string
      */
-    protected $description = 'Reset a user password by email address.';
+    protected $description = 'Verify a user account by email address.';
 
     /**
      * Execute the console command.
@@ -46,24 +43,15 @@ class AccountPassword extends Command
             return self::INVALID;
         }
 
-        $provided_password = $this->secret('New password (leave blank for random password)');
-        $password = $provided_password ?: Str::password(16);
+        if ($account->hasVerifiedEmail()) {
+            $this->info('Account is already verified.');
 
-        try {
-            new ResetAccountPassword()->reset($account, [
-                'password' => $password,
-            ]);
-        } catch (ValidationException $exception) {
-            $this->error($exception->getMessage());
-
-            return self::INVALID;
+            return self::SUCCESS;
         }
 
-        if ($provided_password) {
-            $this->info('Password reset.');
-        } else {
-            $this->info('Password reset to: ' . $password);
-        }
+        $account->markEmailAsVerified();
+
+        $this->info('Account verified.');
 
         return self::SUCCESS;
     }

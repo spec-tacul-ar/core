@@ -49,7 +49,7 @@ class Feature extends Model
         return $this->hasMany(Requirement::class);
     }
 
-    /* Accessors and mutators */
+    /* Attributes */
 
     public function requirementsEstimate(): Attribute
     {

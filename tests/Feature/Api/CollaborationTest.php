@@ -11,6 +11,7 @@ use App\Notifications\InvitationAccepted;
 use App\Notifications\InvitationForNewAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -288,6 +289,89 @@ class CollaborationTest extends TestCase
 
         $this->assertDatabaseMissing('contributors', [
             'account_id' => $recipient->id,
+            'project_id' => $project->id,
+        ]);
+        $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
+    }
+
+    public function test_signed_invitation_route_redirects_guests_to_the_app(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create([
+                'email' => 'invitee@example.test',
+                'role' => Role::VIEWER,
+            ]);
+
+        $url = URL::signedRoute('invitations.accept', $invitation);
+
+        $this->get($url)
+            ->assertRedirect(config('spectacular.path'));
+    }
+
+    public function test_signed_invitation_route_verifies_the_email_and_accepts_the_invitation(): void
+    {
+        Notification::fake();
+
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+        $recipient = Account::factory()->unverified()->create(['email' => 'invitee@example.test']);
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create([
+                'email' => $recipient->email,
+                'role' => Role::VIEWER,
+            ]);
+
+        $this->actingAs($recipient);
+
+        $this->get(URL::signedRoute('invitations.accept', $invitation))
+            ->assertRedirect('/projects/' . $project->id);
+
+        $this->assertTrue($recipient->fresh()->hasVerifiedEmail());
+        $this->assertDatabaseHas('contributors', [
+            'account_id' => $recipient->id,
+            'project_id' => $project->id,
+            'role' => Role::VIEWER->value,
+        ]);
+        $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
+        Notification::assertSentTo($owner, InvitationAccepted::class);
+    }
+
+    public function test_signed_invitation_route_is_forbidden_for_a_different_authenticated_account(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+        $recipient = Account::factory()->create(['email' => 'invitee@example.test']);
+        $outsider = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create([
+                'email' => $recipient->email,
+                'role' => Role::VIEWER,
+            ]);
+
+        $this->actingAs($outsider);
+
+        $this->get(URL::signedRoute('invitations.accept', $invitation))
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $outsider->id,
             'project_id' => $project->id,
         ]);
         $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
