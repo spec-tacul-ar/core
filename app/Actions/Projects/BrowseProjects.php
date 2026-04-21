@@ -20,7 +20,7 @@ class BrowseProjects
 
     public function handle(): LengthAwarePaginator
     {
-        $query = auth()->user()->exists ? auth()->user()->projects() : Project::query()->doesntHave('contributors');
+        $query = config('spectacular.mode') === 'solo' ? Project::query()->doesntHave('contributors') : auth()->user()->projects();
 
         return $query
             ->withCount([

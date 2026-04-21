@@ -262,7 +262,7 @@ function buildRouter(base) {
         }
 
         // Disable authentication and collaboration routes for solo users
-        if (auth_store.is_logged_in && auth_store.account.is_solo && to.meta.solo === false) {
+        if (auth_store.is_logged_in && window.Spectacular.mode === 'solo' && to.meta.solo === false) {
             useAlertsStore().push('Not available in solo mode.', 'warning');
 
             return { name: 'home' }

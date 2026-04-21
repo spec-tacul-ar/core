@@ -52,9 +52,7 @@ Upgrades are simple too - just grab the latest code and rebuild the container. T
 
 ### Self-hosting
 
-Spectacular defaults to a standalone *solo* mode so you can get started immediately. If you're self hosting, you probably want to enable the authentication and collaboration features. To do this, simply create the first account using the following command:
-
-`php artisan spectacular:account:create`
+Spectacular defaults to a standalone *solo* mode so you can get started immediately. If you're self hosting, you probably want to enable the authentication and collaboration features. To do this, simply remove `SPECTACULAR_MODE=solo` from the .env file.
 
 ## Contributing
 

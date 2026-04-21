@@ -82,21 +82,23 @@ class AuthenticationTest extends TestCase
             ->assertJsonPath('data.is_email_verified', false);
     }
 
-    public function test_auth_account_endpoint_does_not_activate_solo_mode_when_accounts_exist(): void
+    public function test_auth_account_endpoint_does_not_activate_solo_mode_when_team_mode_is_configured(): void
     {
-        Account::factory()->create();
-
         $this->getJson('/api/auth/account')->assertUnauthorized();
     }
 
-    public function test_auth_account_endpoint_returns_the_solo_account_when_there_are_no_accounts(): void
+    public function test_auth_account_endpoint_returns_the_solo_account_when_solo_mode_is_configured(): void
     {
+        config(['spectacular.mode' => 'solo']);
+
+        Account::factory()->create();
+
         $response = $this->getJson('/api/auth/account');
 
         $response->assertOk();
         $response->assertJsonPath('data.name', 'Solo User');
         $response->assertJsonPath('data.email', 'solo@spectacular');
-        $response->assertJsonPath('data.is_solo', true);
+        $response->assertJsonMissingPath('data.is_solo');
         $response->assertJsonPath('data.is_email_verified', true);
     }
 

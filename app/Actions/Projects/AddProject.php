@@ -51,7 +51,7 @@ class AddProject
             $project->features()->createMany($features);
         }
 
-        if (auth()->user()->exists) {
+        if (config('spectacular.mode') !== 'solo') {
             $project->addContributor(auth()->user(), Role::OWNER);
         }
 

@@ -65,7 +65,6 @@ import Project from '@/stores/models/Project';
 import { useAuthStore } from '@/stores';
 
 export default {
-    inject: ['api'],
     components: {
         Announcements,
         Card,
@@ -88,9 +87,6 @@ export default {
         invitations() {
             return Invitation.repository().collection.where('email', useAuthStore().account.email).sortBy('name');
         },
-        is_solo() {
-            return !!useAuthStore().account.is_solo;
-        },
         is_verified() {
             return !!useAuthStore().account.is_email_verified;
         },
@@ -99,6 +95,8 @@ export default {
         },
     },
     mounted() {
+        console.log(this.settings);
+
         // Projects
         if (this.projects.isEmpty()) {
             this.is_loading_projects = true;
@@ -110,7 +108,7 @@ export default {
             })
             .finally(() => this.is_loading_projects = false);
 
-        if (!this.is_solo) {
+        if (this.settings.mode !== 'solo') {
             // Invitations
             this.api.get('invitations/browse', { query: { account_id: useAuthStore().account.id }})
                 .then((result) => {
@@ -144,5 +142,6 @@ export default {
                 .finally(() => this.is_sending_verification = false);
         },
     },
+    inject: ['api', 'settings'],
 };
 </script>

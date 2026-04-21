@@ -4,6 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mode
+    |--------------------------------------------------------------------------
+    |
+    | This determines whether authentication and collaboration features are
+    | enabled. The default .env file sets this to solo mode.
+    |
+    */
+
+    'mode' => env('SPECTACULAR_MODE', 'team'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application path
     |--------------------------------------------------------------------------
     |

@@ -46,6 +46,10 @@ export default class Project extends Model {
     get my_role() {
         const account = useAuthStore().account;
 
+        if (window.Spectacular.mode === 'solo') {
+            return 'owner';
+        }
+
         return this.contributors.firstWhere('account_id', account.id)?.role;
     }
     get my_role_name() {

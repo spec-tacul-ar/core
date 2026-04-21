@@ -20,7 +20,7 @@
         <div class="flex w-full items-center justify-end gap-2 px-4">
             <slot name="menu"></slot>
             
-            <UserMenu v-if="!is_solo" />
+            <UserMenu v-if="settings.mode !== 'solo'" />
         </div>
     </nav>
 
@@ -156,9 +156,6 @@ export default {
         route_key() {
             return this.$route.path + '?' + new URLSearchParams(this.$route.query).toString();
         },
-        is_solo() {
-            return !!useAuthStore().account.is_solo;
-        },
     },
     data() {
         return {
@@ -172,6 +169,7 @@ export default {
         };
     },
     inheritAttrs: false,
+    inject: ['settings'],
     methods: {
         closeSidebar() {
             this.show_sidebar = false;

@@ -35,23 +35,21 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::before(function (Account $account) {
             // Allow solo users to bypass policies
-            if (!$account->exists) {
+            if (config('spectacular.mode') === 'solo') {
                 return true;
             }
         });
 
         Auth::viaRequest('solo', function (Request $request) {
             // The solo account is only available when there are no real accounts in the database.
-            if (Account::exists()) {
-                return null;
+            if (config('spectacular.mode') === 'solo') {
+                return new Account([
+                    'id' => 0,
+                    'name' => 'Solo User',
+                    'email' => 'solo@spectacular',
+                    'email_verified_at' => now(),
+                ]);
             }
-
-            return new Account([
-                'id' => 0,
-                'name' => 'Solo User',
-                'email' => 'solo@spectacular',
-                'email_verified_at' => now(),
-            ]);
         });
     }
 }

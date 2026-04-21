@@ -125,6 +125,8 @@ class AccountProjectsTest extends TestCase
 
     public function test_projects_browse_endpoint_does_not_include_contributor_projects_in_solo_mode(): void
     {
+        config(['spectacular.mode' => 'solo']);
+
         $solo = Project::factory()->create(['name' => 'Solo']);
         $owned = Project::factory()->create(['name' => 'Owned']);
 
@@ -190,6 +192,8 @@ class AccountProjectsTest extends TestCase
 
     public function test_projects_demo_endpoint_leaves_demo_projects_unclaimed_in_solo_mode(): void
     {
+        config(['spectacular.mode' => 'solo']);
+
         Sanctum::actingAs(new Account([
             'id' => 0,
             'name' => 'Default',

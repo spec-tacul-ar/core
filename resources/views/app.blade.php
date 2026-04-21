@@ -13,6 +13,7 @@
 
         <script>
             window.Spectacular = {
+                mode: {{ Js::from(config('spectacular.mode')) }},
                 path: {{ Js::from(config('spectacular.path')) }},
             };
         </script>

@@ -32,7 +32,7 @@ class DemoProject
 
         $project = Project::import($data);
 
-        if (auth()->user()->exists) {
+        if (config('spectacular.mode') !== 'solo') {
             $project->addContributor(auth()->user(), Role::OWNER);
         }
 
