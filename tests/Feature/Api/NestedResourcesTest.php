@@ -85,6 +85,12 @@ class NestedResourcesTest extends TestCase
         $this->attachContributor($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
+
+        $this->getJson('/api/actors/' . $actor->id . '/read')
+            ->assertOk()
+            ->assertJsonPath('data.id', $actor->id)
+            ->assertJsonPath('data.name', 'Initial users');
+
         $this->postJson('/api/actors/add', [
             'name' => 'Operators',
             'project_id' => $project->id,
@@ -100,6 +106,11 @@ class NestedResourcesTest extends TestCase
         ]);
 
         $this->actingAsAccount($viewer);
+
+        $this->getJson('/api/actors/' . $actor->id . '/read')
+            ->assertOk()
+            ->assertJsonPath('data.id', $actor->id);
+
         $this->postJson('/api/actors/add', [
             'name' => 'Blocked users',
             'project_id' => $project->id,
@@ -110,6 +121,11 @@ class NestedResourcesTest extends TestCase
         ])->assertForbidden();
 
         $this->postJson('/api/actors/' . $actor->id . '/delete')->assertForbidden();
+
+        $outsider = Account::factory()->create();
+        $this->actingAsAccount($outsider);
+
+        $this->getJson('/api/actors/' . $actor->id . '/read')->assertForbidden();
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/actors/' . $actor->id . '/edit', [

@@ -12,7 +12,7 @@ class ContributorResource extends JsonResource
             'id' => $this->id,
             'account_id' => $this->account_id,
             'project_id' => $this->project_id,
-            'account_name' => $this->when($this->whenLoaded('account'), $this->account->name),
+            'account_name' => $this->whenLoaded('account', fn() => $this->account->name),
             'role' => $this->role,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

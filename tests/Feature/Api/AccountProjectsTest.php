@@ -100,6 +100,8 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('data.0.tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
+        $response->assertJsonPath('data.0.contributors.0.account_id', $account->id);
+        $response->assertJsonMissingPath('data.0.contributors.0.account_name');
         $response->assertJsonPath('data.1.name', 'Beta');
         $response->assertJsonPath('meta.total', 2);
     }
@@ -240,6 +242,7 @@ class AccountProjectsTest extends TestCase
     public function test_projects_read_endpoint_returns_hydrated_data_to_contributors_and_forbids_outsiders(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
+        $fixture['account']->markAsRead($fixture['project'], now()->subMinute());
 
         $this->actingAsAccount($fixture['account']);
 
@@ -253,6 +256,8 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('data.features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->id);
         $response->assertJsonPath('data.features.0.requirements.0.tasks.0.id', $fixture['task']->id);
         $response->assertJsonPath('data.features.0.requirements.0.unknowns.0.id', $fixture['unknown']->id);
+        $response->assertJsonPath('data.contributors.0.account_name', $fixture['account']->name);
+        $response->assertJsonPath('data.readmark', $fixture['account']->readmarks()->first()->updated_at->toJSON());
 
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);

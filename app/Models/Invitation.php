@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use App\Enums\Role;
@@ -15,7 +14,6 @@ use App\Notifications\InvitationForNewAccount;
 class Invitation extends Model
 {
     use HasFactory;
-    use Prunable;
 
     protected $fillable = [
         'email',
@@ -28,11 +26,6 @@ class Invitation extends Model
         return [
             'role' => Role::class,
         ];
-    }
-
-    public function prunable(): Builder
-    {
-        return static::where('created_at', '<=', now()->subWeek());
     }
 
     /* Relations */
@@ -64,6 +57,6 @@ class Invitation extends Model
 
     public function url(): Attribute
     {
-        return new Attribute(fn () => URL::signedRoute('invitations.accept', $this));
+        return new Attribute(fn() => URL::signedRoute('invitations.accept', $this));
     }
 }

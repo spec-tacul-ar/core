@@ -20,6 +20,11 @@ class Commentable implements ValidationRule, ValidatorAwareRule
         $type = Arr::get($this->validator->getData(), 'commentable_type');
         $class = Relation::getMorphedModel($type);
 
+        if (!$class) {
+            $fail('The :attribute cannot be found.');
+            return;
+        }
+
         $model = $class::find($value);
 
         if (!$model) {
@@ -43,7 +48,7 @@ class Commentable implements ValidationRule, ValidatorAwareRule
             return;
         }
 
-        if ($type === 'requirement' && !$model->whereRelation('feature.project', 'id', $project_id)->exists()) {
+        if ($type === 'requirement' && $model->feature?->project_id !== $project_id) {
             $fail('This requirement does not belong to the project.');
             return;
         }

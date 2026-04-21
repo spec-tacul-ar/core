@@ -170,6 +170,7 @@ class AuthenticationTest extends TestCase
                 'name' => 'Operators',
                 'project_id' => '{project}',
             ]],
+            'actors.read' => ['GET', '/api/actors/{actor}/read'],
             'actors.edit' => ['POST', '/api/actors/{actor}/edit', ['name' => 'Operators Updated']],
             'actors.delete' => ['POST', '/api/actors/{actor}/delete'],
         ];

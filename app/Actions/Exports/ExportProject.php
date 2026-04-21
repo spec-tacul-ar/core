@@ -22,7 +22,6 @@ class ExportProject
         $router
             ->middleware('auth:sanctum')
             ->get('export/{project}/{type}', static::class)
-            ->whereIn('type', ['html', 'markdown', 'json'])
             ->name('export.show');
     }
 
@@ -34,6 +33,7 @@ class ExportProject
             'html' => $this->generateHtml($project),
             'markdown' => view('export.markdown', compact('project'))->render(),
             'json' => $this->generateJson($project),
+            default => abort(404),
         };
     }
 
@@ -47,6 +47,7 @@ class ExportProject
             'html' => response($content)->header('Content-Type', 'text/html; charset=UTF-8'),
             'markdown' => response($content)->header('Content-Type', 'text/markdown'),
             'json' => response($content)->header('Content-Type', 'application/json'),
+            default => abort(404),
         };
     }
 
