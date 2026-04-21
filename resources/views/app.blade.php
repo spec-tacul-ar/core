@@ -10,6 +10,12 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-title" content="Spectacular" />
         <link rel="manifest" href="/site.webmanifest" />
+
+        <script>
+            window.Spectacular = {
+                path: {{ Js::from(config('spectacular.path')) }},
+            };
+        </script>
         @vite(['resources/js/app.js'])
 
         <style>

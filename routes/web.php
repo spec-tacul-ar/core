@@ -10,4 +10,4 @@ Route::get('invitations/{invitation}', AcceptInvitationController::class)
     ->middleware('signed')
     ->name('invitations.accept');
 
-Route::view('/{any?}', 'app')->where('any', '.*')->name('app');
+Route::view(config('spectacular.path') . '/{any?}', 'app')->where('any', '.*')->name('app');

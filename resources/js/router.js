@@ -23,9 +23,8 @@ import { useAlertsStore, useAuthStore } from '@/stores';
 function buildRouter(base) {
     const api = new Api();
 
-    // If we haven't been given a base path, look in the environment or just use root
     if (!base) {
-        base = import.meta.env.VITE_ROUTER_BASE || '/';
+        base = Spectacular.path + '/';
     }
 
     const router = createRouter({
