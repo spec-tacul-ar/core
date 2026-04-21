@@ -117,10 +117,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{{ $feature->name }}</td>
-                        <td>{{ $feature->requirements_estimate }}</td>
-                    </tr>
+                    @foreach ($project->features as $feature)
+                        <tr>
+                            <td>{{ $feature->name }}</td>
+                            <td>{{ $feature->requirements_estimate }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
                 <tfoot>
                     <tr>

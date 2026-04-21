@@ -24,7 +24,7 @@ function buildRouter(base) {
     const api = new Api();
 
     if (!base) {
-        base = Spectacular.path + '/';
+        base = window.Spectacular.path + '/';
     }
 
     const router = createRouter({
@@ -265,7 +265,7 @@ function buildRouter(base) {
         if (auth_store.is_logged_in && window.Spectacular.mode === 'solo' && to.meta.solo === false) {
             useAlertsStore().push('Not available in solo mode.', 'warning');
 
-            return { name: 'home' }
+            return { name: 'home' };
         }
     });
 

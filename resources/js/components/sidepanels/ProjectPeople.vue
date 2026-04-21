@@ -77,7 +77,6 @@
 </template>
 
 <script>
-import Contributor from '@/stores/models/Contributor';
 import ContributorItem from '@/components/items/ContributorItem.vue';
 import Invitation from '@/stores/models/Invitation';
 import Project from '@/stores/models/Project';

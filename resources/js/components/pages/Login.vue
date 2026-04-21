@@ -31,7 +31,6 @@
 import Card from '@/components/Card.vue';
 import FormInput from '@/components/forms/FormInput.vue';
 import GuestLayout from '@/components/layouts/GuestLayout.vue';
-import IconSet from '@/components/IconSet.vue';
 import Model from '@/stores/Model.js';
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import UniqueId from '@/mixins/UniqueId';
@@ -43,7 +42,6 @@ export default {
         Card,
         FormInput,
         GuestLayout,
-        IconSet,
         SpinnerButton,
     },
     data() {

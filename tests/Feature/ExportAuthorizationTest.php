@@ -137,6 +137,43 @@ class ExportAuthorizationTest extends TestCase
         $this->get('/api/export/' . $fixture['project']->id . '/xml')->assertNotFound();
     }
 
+    public function test_project_html_export_summary_lists_each_estimated_feature(): void
+    {
+        $account = Account::factory()->create();
+        $project = Project::factory()->create();
+        $this->attachContributor($account, $project, Role::VIEWER);
+
+        $firstFeature = Feature::factory()->for($project)->create(['name' => 'First estimated feature']);
+        $firstRequirement = Requirement::factory()->for($firstFeature)->create();
+        Task::factory()->for($firstRequirement)->create(['estimate' => 1.25]);
+
+        $secondFeature = Feature::factory()->for($project)->create(['name' => 'Second estimated feature']);
+        $secondRequirement = Requirement::factory()->for($secondFeature)->create();
+        Task::factory()->for($secondRequirement)->create(['estimate' => 2.5]);
+
+        $this->actingAsAccount($account);
+
+        $response = $this->get('/export/' . $project->id . '/html');
+
+        $response->assertOk()
+            ->assertSeeTextInOrder([
+                'Summary',
+                'Feature',
+                'Estimate',
+                'First estimated feature',
+                '1.25',
+                'Second estimated feature',
+                '2.5',
+                'Total',
+                '3.75',
+            ]);
+
+        $content = $response->getContent();
+
+        $this->assertSame(2, substr_count($content, 'First estimated feature'));
+        $this->assertSame(2, substr_count($content, 'Second estimated feature'));
+    }
+
     private function buildExportData(Project $project): void
     {
         $actor = Actor::factory()->for($project)->create(['name' => 'Export Actor']);

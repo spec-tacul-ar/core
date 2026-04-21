@@ -62,7 +62,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import ProjectItem from '@/components/items/ProjectItem.vue';
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import Project from '@/stores/models/Project';
-import { useAuthStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 
 export default {
     components: {

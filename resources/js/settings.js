@@ -1,5 +1,5 @@
 export default {
-    install(app, base) {
+    install(app) {
         app.provide('settings', window.Spectacular);
     },
 };

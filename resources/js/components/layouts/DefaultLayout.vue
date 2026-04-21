@@ -93,7 +93,7 @@
 
 <script>
 import UserMenu from '@/components/navigation/UserMenu.vue';
-import { useAuthStore, useModalStore } from '@/stores';
+import { useModalStore } from '@/stores';
 
 export default {
     components: {
