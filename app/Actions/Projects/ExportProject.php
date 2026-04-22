@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Exports;
+namespace App\Actions\Projects;
 
 use App\Models\Project;
 use Illuminate\Http\Response;
@@ -20,7 +20,6 @@ class ExportProject
     public static function routes(Router $router): void
     {
         $router
-            ->middleware('auth:sanctum')
             ->get('export/{project}/{type}', static::class)
             ->name('export.show');
     }
