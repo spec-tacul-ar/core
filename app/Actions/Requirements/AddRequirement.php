@@ -30,21 +30,21 @@ class AddRequirement
     public function rules(): array
     {
         return [
-            'blocked_reason' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'blocked_reason' => ['nullable', 'string', 'max:250'],
+            'description' => ['nullable', 'string', 'max:10000'],
             'feature_id' => ['required', 'integer', new Authorized('update', Feature::class)],
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:250'],
             'unknowns' => ['nullable', 'array'],
-            'unknowns.*.name' => ['required', 'string', 'max:255'],
+            'unknowns.*.name' => ['required', 'string', 'max:250'],
             'actor_ids' => ['array'],
             'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorized('update', Actor::class)],
-            'source' => ['nullable', 'string', 'max:255'],
+            'source' => ['nullable', 'string', 'max:250'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
-            'tasks.*.name' => ['required', 'string', 'max:255'],
-            'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'tasks.*.name' => ['required', 'string', 'max:250'],
+            'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

@@ -28,14 +28,14 @@ class OrganiseProject
         return [
             'actors' => ['nullable', 'array'],
             'actors.*.id' => ['required', 'integer', 'min:0'],
-            'actors.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
+            'actors.*.weight' => ['required', 'integer', 'min:0', 'max:250'],
             'features' => ['nullable', 'array'],
             'features.*.id' => ['required', 'integer', 'min:0'],
-            'features.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
+            'features.*.weight' => ['required', 'integer', 'min:0', 'max:250'],
             'requirements' => ['nullable', 'array'],
             'requirements.*.id' => ['required', 'integer', 'min:0'],
             'requirements.*.feature_id' => ['required', 'integer', 'min:0'],
-            'requirements.*.weight' => ['required', 'integer', 'min:0', 'max:255'],
+            'requirements.*.weight' => ['required', 'integer', 'min:0', 'max:250'],
         ];
     }
 

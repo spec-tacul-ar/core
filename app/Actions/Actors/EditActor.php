@@ -25,9 +25,9 @@ class EditActor
     public function rules(): array
     {
         return [
-            'summary' => ['nullable', 'string'],
-            'name' => ['required', 'string', 'max:255'],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'summary' => ['nullable', 'string', 'max:2500'],
+            'name' => ['required', 'string', 'max:250'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

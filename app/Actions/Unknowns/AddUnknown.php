@@ -27,7 +27,7 @@ class AddUnknown
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:250'],
             'requirement_id' => ['required', 'integer', new Authorized('update', Requirement::class)],
 
         ];

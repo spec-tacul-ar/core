@@ -27,10 +27,10 @@ class EditFeature
     public function rules(): array
     {
         return [
-            'description' => ['nullable', 'string'],
-            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:10000'],
+            'name' => ['required', 'string', 'max:250'],
             'project_id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Project::class)],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

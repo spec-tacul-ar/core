@@ -28,9 +28,9 @@ class AddFeature
     {
         return [
             'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
-            'description' => ['nullable', 'string'],
-            'name' => ['required', 'string', 'max:255'],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'description' => ['nullable', 'string', 'max:10000'],
+            'name' => ['required', 'string', 'max:250'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

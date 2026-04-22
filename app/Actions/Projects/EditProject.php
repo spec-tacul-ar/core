@@ -26,8 +26,8 @@ class EditProject
     public function rules(): array
     {
         return [
-            'description' => ['nullable', 'string'],
-            'name' => ['sometimes', 'string', 'max:255', new SluggableNameRule()],
+            'description' => ['nullable', 'string', 'max:10000'],
+            'name' => ['sometimes', 'string', 'max:250', new SluggableNameRule()],
         ];
     }
 

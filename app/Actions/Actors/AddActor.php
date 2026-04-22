@@ -28,9 +28,9 @@ class AddActor
     {
         return [
             'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
-            'summary' => ['nullable', 'string'],
-            'name' => ['required', 'string', 'max:255'],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'summary' => ['nullable', 'string', 'max:2500'],
+            'name' => ['required', 'string', 'max:250'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

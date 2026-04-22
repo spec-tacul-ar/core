@@ -26,10 +26,10 @@ class EditTask
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'name' => ['sometimes', 'required', 'string', 'max:250'],
             'estimate' => ['sometimes', 'nullable', 'numeric', new QuarterHourRule()],
             'is_complete' => ['sometimes', 'required', 'boolean'],
-            'weight' => ['nullable', 'integer', 'between:0,255'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
 

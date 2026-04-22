@@ -32,7 +32,7 @@ class AddComment
             'project_id' => ['required', 'integer', new Authorized('view', Project::class)],
             'commentable_type' => ['nullable', 'in:feature,requirement'],
             'commentable_id' => ['nullable', new Commentable()],
-            'message' => ['required', 'string'],
+            'message' => ['required', 'string', 'max:5000'],
         ]);
 
         $comment = $request->user()->comments()->create($validated);

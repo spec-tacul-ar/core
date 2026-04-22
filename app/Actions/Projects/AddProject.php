@@ -28,10 +28,10 @@ class AddProject
     {
         return [
             'actors' => ['array', 'max:25'],
-            'actors.*' => ['string'],
+            'actors.*' => ['string', 'max:250'],
             'features' => ['array', 'max:25'],
-            'features.*' => ['string'],
-            'name' => ['required', 'string', 'max:255', new SluggableNameRule()],
+            'features.*' => ['string', 'max:250'],
+            'name' => ['required', 'string', 'max:250', new SluggableNameRule()],
         ];
     }
 
