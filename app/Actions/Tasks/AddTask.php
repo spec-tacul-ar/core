@@ -30,7 +30,7 @@ class AddTask
         return [
             'requirement_id' => ['required', 'integer', new Authorized('update', Requirement::class)],
             'name' => ['required', 'string', 'max:250'],
-            'estimate' => ['nullable', 'numeric', new QuarterHourRule()],
+            'estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'is_complete' => ['required', 'boolean'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];

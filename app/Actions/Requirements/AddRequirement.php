@@ -40,7 +40,7 @@ class AddRequirement
             'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorized('update', Actor::class)],
             'source' => ['nullable', 'string', 'max:250'],
             'tasks' => ['nullable', 'array'],
-            'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
+            'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
             'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],

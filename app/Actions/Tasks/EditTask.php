@@ -27,7 +27,7 @@ class EditTask
     {
         return [
             'name' => ['sometimes', 'required', 'string', 'max:250'],
-            'estimate' => ['sometimes', 'nullable', 'numeric', new QuarterHourRule()],
+            'estimate' => ['sometimes', 'nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'is_complete' => ['sometimes', 'required', 'boolean'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];

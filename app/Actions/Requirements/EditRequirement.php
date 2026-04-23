@@ -43,7 +43,7 @@ class EditRequirement
             'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features')],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Task::class)],
-            'tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
+            'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
             'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
