@@ -165,14 +165,17 @@
                                         </InfoPopover>
                                     </div>
 
-                                    <div class="flex items-center flex-wrap gap-4">
-                                        <div class="flex items-center gap-2 w-48">
-                                            <FormInput type="text" :id="elementId('task_estimate_' + index)" :class="{ 'is-invalid': errors['tasks.' + index + '.estimate'] }" v-model="element.estimate" />
-                                            <span>hours</span>
-                                            <div class="text-red-400" v-if="errors['tasks.' + index + '.estimate']">{{ errors['tasks.' + index + '.estimate'][0] }}</div>
+                                    <div>
+                                        <div class="flex items-center flex-wrap gap-4">
+                                            <div class="flex items-center gap-2 w-48">
+                                                <FormInput type="text" :id="elementId('task_estimate_' + index)" :class="{ 'is-invalid': errors['tasks.' + index + '.estimate'] }" v-model="element.estimate" />
+                                                <span>hours</span>
+                                            </div>
+
+                                            <FormInput type="checkbox" label="Task is complete" :id="elementId('task_is_complete_' + index)" v-model="element.is_complete" />
                                         </div>
 
-                                        <FormInput type="checkbox" label="Task is complete" :id="elementId('task_is_complete_' + index)" v-model="element.is_complete" />
+                                        <div class="text-red-400" v-if="errors['tasks.' + index + '.estimate']">{{ errors['tasks.' + index + '.estimate'][0] }}</div>
                                     </div>
                                 </div>
                             </div>
