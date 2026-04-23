@@ -22,7 +22,7 @@
                 <div class="bg-red-400 text-white flex items-center justify-between px-4 py-2" v-if="requirement.is_blocked">
                     <p>{{ requirement.blocked_reason }}</p>
 
-                    <DropdownMenu>
+                    <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" ref="dropdown">
                         <DropdownMenuItem icon="unblock" :loading="is_waiting_for_unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
                     </DropdownMenu>
                 </div>
@@ -58,8 +58,11 @@ import RequirementToolbar from '@/components/navigation/RequirementToolbar.vue';
 import RichText from '@/components/RichText.vue';
 import UnknownItem from '@/components/items/UnknownItem.vue';
 import TaskItem from '@/components/items/TaskItem.vue';
+import Requirement from '@/stores/models/Requirement';
+import { useAlertsStore } from '@/stores';
 
 export default {
+    inject: ['api', 'project'],
     components: {
         DropdownMenu,
         DropdownMenuItem,
@@ -76,7 +79,23 @@ export default {
     data() {
         return {
             'highlight': false,
+            'is_waiting_for_unblock': false,
         };
+    },
+    methods: {
+        unblock() {
+            this.is_waiting_for_unblock = true;
+
+            this.api.post('requirements/' + this.requirement.id + '/edit', { blocked_reason: null })
+                .then((result) => {
+                    Requirement.repository().save(result.data);
+
+                    useAlertsStore().push('Requirement unblocked.');
+
+                    this.$refs.dropdown.close();
+                })
+                .finally(() => this.is_waiting_for_unblock = false);
+        },
     },
     mounted() {
         if (this.is_active) {
