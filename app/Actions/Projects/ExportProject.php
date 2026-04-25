@@ -77,35 +77,37 @@ class ExportProject
     protected function toExportArray(Project $project): array
     {
         return [
-            'uuid' => $project->uuid,
+            'id' => $project->uuid,
             'name' => $project->name,
             'description' => $project->description,
             'actors' => $project->actors
-                ->sortBy('id')
+                ->sortBy('created_at')
                 ->sortBy('weight')
                 ->values()
                 ->map(fn ($actor) => [
-                    'id' => (int) $actor->id,
+                    'id' => $actor->uuid,
                     'name' => $actor->name,
                     'summary' => $actor->summary,
                     'weight' => $actor->weight,
                 ])
                 ->all(),
             'features' => $project->features
-                ->sortBy('id')
+                ->sortBy('created_at')
                 ->sortBy('weight')
                 ->values()
                 ->map(function ($feature) {
                     return [
+                        'id' => $feature->uuid,
                         'name' => $feature->name,
                         'description' => $feature->description,
                         'weight' => $feature->weight,
                         'requirements' => $feature->requirements
-                            ->sortBy('id')
+                            ->sortBy('created_at')
                             ->sortBy('weight')
                             ->values()
                             ->map(function ($requirement) {
                                 return [
+                                    'id' => $requirement->uuid,
                                     'name' => $requirement->name,
                                     'description' => $requirement->description,
                                     'blocked_reason' => $requirement->blocked_reason,
@@ -113,10 +115,11 @@ class ExportProject
                                     'reference' => $requirement->reference,
                                     'weight' => $requirement->weight,
                                     'tasks' => $requirement->tasks
-                                        ->sortBy('id')
+                                        ->sortBy('created_at')
                                         ->sortBy('weight')
                                         ->values()
                                         ->map(fn ($task) => [
+                                            'id' => $task->uuid,
                                             'name' => $task->name,
                                             'estimate' => $task->estimate,
                                             'is_complete' => (bool) $task->is_complete,
@@ -124,13 +127,18 @@ class ExportProject
                                         ])
                                         ->all(),
                                     'unknowns' => $requirement->unknowns
-                                        ->sortBy('id')
+                                        ->sortBy('created_at')
                                         ->values()
                                         ->map(fn ($unknown) => [
+                                            'id' => $unknown->uuid,
                                             'name' => $unknown->name,
                                         ])
                                         ->all(),
-                                    'actor_ids' => $requirement->actors->pluck('id'),
+                                    'assignments' => $requirement->assignments->map(fn ($assignment) => [
+                                        'id' => $assignment->uuid,
+                                        'actor_id' => $assignment->actor_id,
+                                    ])
+                                    ->all(),
                                 ];
                             })
                             ->all(),

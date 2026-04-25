@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->tinyInteger('weight')->unsigned()->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 

@@ -17,8 +17,7 @@ return new class extends Migration {
             $table->tinyInteger('weight')->unsigned()->nullable();
             $table->string('blocked_reason')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 

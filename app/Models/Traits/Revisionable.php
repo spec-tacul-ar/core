@@ -4,11 +4,15 @@ namespace App\Models\Traits;
 
 use DateTime;
 use App\Casts\CompressedCollection;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
+use Illuminate\Support\Str;
 use LogicException;
 
 trait Revisionable
 {
+    use SoftDeletes;
+
     protected function initializeRevisionable(): void
     {
         $this->attributes['history'] = null;
@@ -20,6 +24,12 @@ trait Revisionable
 
     public static function bootRevisionable()
     {
+        static::creating(function ($model) {
+            if (!$model->uuid) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+
         static::updated(function ($model) {
             $data = array_intersect_key($model->getOriginal(), $model->getChanges());
 

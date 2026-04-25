@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\Requirement;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,21 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Relation::enforceMorphMap([
-            'account' => Account::class,
-            'feature' => Feature::class,
-            'requirement' => Requirement::class,
-        ]);
-
-        Gate::before(function (Account $account) {
-            // Allow solo users to bypass policies
-            if (config('spectacular.mode') === 'solo') {
-                return true;
-            }
-        });
-
         Auth::viaRequest('solo', function (Request $request) {
-            // The solo account is only available when there are no real accounts in the database.
             if (config('spectacular.mode') === 'solo') {
                 return new Account([
                     'id' => 0,
@@ -51,5 +38,24 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        Blueprint::macro('revisionable', function (): void {
+            $this->softDeletes();
+            $this->uuid('uuid')->unique();
+            $this->binary('history')->nullable();
+        });
+
+        Gate::before(function (Account $account) {
+            // Allow solo users to bypass policies
+            if (config('spectacular.mode') === 'solo') {
+                return true;
+            }
+        });
+
+        Relation::enforceMorphMap([
+            'account' => Account::class,
+            'feature' => Feature::class,
+            'requirement' => Requirement::class,
+        ]);
     }
 }

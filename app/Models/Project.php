@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\Role;
-use App\Exceptions\ProjectAlreadyExistsException;
 use App\Rules\QuarterHour as QuarterHourRule;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
@@ -29,12 +27,6 @@ class Project extends Model
 
     protected static function booted(): void
     {
-        static::creating(function ($project) {
-            if (!$project->uuid) {
-                $project->uuid = (string) Str::uuid();
-            }
-        });
-
         static::deleting(function ($project) {
             $project->comments->each->delete();
             $project->contributors->each->delete();
@@ -159,67 +151,14 @@ class Project extends Model
     {
         // Note: This is only good for importing the demo project at the moment.
 
-        $validated = Validator::make($data, [
-            'uuid' => ['sometimes', 'required', 'uuid'],
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-
-            'actors' => ['required', 'array'],
-            'actors.*.id' => ['required', 'integer', 'distinct'],
-            'actors.*.name' => ['required', 'string', 'max:255'],
-            'actors.*.summary' => ['nullable', 'string'],
-            'actors.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
-
-            'features' => ['required', 'array'],
-            'features.*.name' => ['required', 'string', 'max:255'],
-            'features.*.description' => ['nullable', 'string'],
-            'features.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
-            'features.*.requirements' => ['required', 'array'],
-
-            'features.*.requirements.*.name' => ['required', 'string', 'max:255'],
-            'features.*.requirements.*.description' => ['nullable', 'string'],
-            'features.*.requirements.*.blocked_reason' => ['nullable', 'string', 'max:255'],
-            'features.*.requirements.*.source' => ['nullable', 'string', 'max:255'],
-            'features.*.requirements.*.reference' => ['nullable', 'integer', 'min:1'],
-            'features.*.requirements.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
-
-            'features.*.requirements.*.tasks' => ['nullable', 'array'],
-            'features.*.requirements.*.tasks.*.name' => ['required', 'string', 'max:255'],
-            'features.*.requirements.*.tasks.*.estimate' => ['nullable', 'numeric', new QuarterHourRule()],
-            'features.*.requirements.*.tasks.*.is_complete' => ['nullable', 'boolean'],
-            'features.*.requirements.*.tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:255'],
-
-            'features.*.requirements.*.unknowns' => ['nullable', 'array'],
-            'features.*.requirements.*.unknowns.*.name' => ['required', 'string', 'max:255'],
-
-            'features.*.requirements.*.actor_ids' => ['nullable', 'array'],
-            'features.*.requirements.*.actor_ids.*' => ['required', 'integer'],
-        ])->validate();
-
-        $project = Project::query()
-            ->when(config('spectacular.mode') !== 'solo', fn ($query, $account) => $query->ownedBy(auth()->user()))
-            ->when($validated['uuid'], fn ($query, $uuid) => $query->where('uuid', $validated['uuid']))
-            ->firstOrNew();
-
-        if ($project->exists) {
-            if (!$replace) {
-                throw new ProjectAlreadyExistsException($project);
-            }
-
-            $project->delete();
-        }
-
         DB::beginTransaction();
 
-        $project->fill([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'uuid' => $validated['uuid'],
+        $project = Project::create([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
         ]);
 
-        $project->save();
-
-        $actors = collect($validated['actors'])
+        $actors = collect($data['actors'])
             ->keyBy('id')
             ->map(fn($actor) => $project->actors()->create([
                 'name' => $actor['name'],
@@ -227,7 +166,7 @@ class Project extends Model
                 'weight' => $actor['weight'] ?? null,
             ]));
 
-        foreach ($validated['features'] as $feature_data) {
+        foreach ($data['features'] as $feature_data) {
             $feature_model = $project->features()->create([
                 'name' => $feature_data['name'],
                 'description' => $feature_data['description'] ?? null,
@@ -244,7 +183,7 @@ class Project extends Model
                     'weight' => $requirement_data['weight'] ?? null,
                 ]);
 
-                foreach ($requirement_data['tasks'] as $task_data) {
+                foreach ($requirement_data['tasks'] ?? [] as $task_data) {
                     $requirement_model->tasks()->create([
                         'name' => $task_data['name'],
                         'estimate' => $task_data['estimate'] ?? null,
@@ -253,14 +192,16 @@ class Project extends Model
                     ]);
                 }
 
-                foreach ($requirement_data['unknowns'] as $unknown_data) {
+                foreach ($requirement_data['unknowns'] ?? [] as $unknown_data) {
                     $requirement_model->unknowns()->create([
                         'name' => $unknown_data['name'],
                     ]);
                 }
 
-                foreach ($requirement_data['actor_ids'] as $actor_id) {
-                    $requirement_model->actors()->attach($actors[$actor_id]);
+                foreach ($requirement_data['actor_ids'] ?? [] as $actor_id) {
+                    $requirement_model->assignments()->create([
+                        'actor_id' => $actors[$actor_id]->id,
+                    ]);
                 }
             }
         }

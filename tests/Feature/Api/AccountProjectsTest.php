@@ -59,7 +59,7 @@ class AccountProjectsTest extends TestCase
         $response->assertNoContent();
 
         $this->assertDatabaseMissing('accounts', ['id' => $account->id]);
-        $this->assertDatabaseMissing('projects', ['id' => $ownedProject->id]);
+        $this->assertSoftDeleted('projects', ['id' => $ownedProject->id]);
         $this->assertDatabaseHas('projects', ['id' => $sharedProject->id]);
         $this->assertDatabaseMissing('contributors', [
             'account_id' => $account->id,
@@ -351,7 +351,7 @@ class AccountProjectsTest extends TestCase
         $this->actingAsAccount($owner);
         $this->postJson('/api/projects/' . $project->id . '/delete')->assertNoContent();
 
-        $this->assertDatabaseMissing('projects', ['id' => $project->id]);
+        $this->assertSoftDeleted('projects', ['id' => $project->id]);
     }
 
     public function test_projects_readmark_endpoint_marks_projects_as_read_for_contributors_and_forbids_outsiders(): void

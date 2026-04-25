@@ -15,8 +15,7 @@ return new class extends Migration {
             $table->boolean('is_complete')->default(false);
             $table->tinyInteger('weight')->unsigned()->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 

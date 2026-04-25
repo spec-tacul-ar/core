@@ -12,8 +12,7 @@ return new class extends Migration {
             $table->foreignId('requirement_id')->constrained();
             $table->string('name');
             $table->timestamps();
-            $table->softDeletes();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 

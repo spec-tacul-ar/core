@@ -1,7 +1,6 @@
 {
-    "uuid": "6d40b341-65f1-4bc8-9793-e900adedf335",
     "name": "Example Project",
-    "description": "<p>This is the sample project to demonstrate what a  specification can look like. It roughly describes the features of Spectacular itself.</p><p>Since Spectacular is single-user, the users defined below describe expected behaviours and not role based access control.</p>",
+    "description": "<p>This is the sample project to demonstrate what a specification can look like. It roughly describes the features of Spectacular itself.</p>",
     "actors":
     [
         {

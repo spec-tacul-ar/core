@@ -17,8 +17,7 @@ return new class extends Migration {
             $table->foreignId('actor_id')->constrained();
             $table->foreignId('requirement_id')->constrained();
             $table->timestamps();
-            $table->softDeletes();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 

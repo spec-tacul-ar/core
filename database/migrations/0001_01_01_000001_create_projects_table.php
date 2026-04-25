@@ -12,9 +12,8 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('next_requirement_reference')->unsigned()->default(1);
-            $table->uuid('uuid'); // This helps track duplicates when importing. No need for index.
             $table->timestamps();
-            $table->binary('history')->nullable();
+            $table->revisionable();
         });
     }
 
