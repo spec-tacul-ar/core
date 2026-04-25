@@ -95,8 +95,6 @@ export default {
         },
     },
     mounted() {
-        console.log(this.settings);
-
         // Projects
         if (this.projects.isEmpty()) {
             this.is_loading_projects = true;

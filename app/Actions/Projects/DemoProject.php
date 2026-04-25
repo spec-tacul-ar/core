@@ -30,7 +30,7 @@ class DemoProject
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $project = Project::import($data);
+        $project = Project::import($data, false);
 
         if (config('spectacular.mode') !== 'solo') {
             $project->addContributor(auth()->user(), Role::OWNER);

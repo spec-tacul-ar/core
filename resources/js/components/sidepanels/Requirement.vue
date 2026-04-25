@@ -2,7 +2,7 @@
     <SidepanelLayout>
         <template #toolbar>
             <button v-if="requirement_id" type="button" class="hidden sm:block p-2" @click="scrollToRequirement()">
-                <IconSet name="scroll-to" class="size-6 -scale-x-100" />
+                <IconSet name="scroll-to" class="size-6" />
             </button>
         </template>
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use App\Exceptions\ProjectAlreadyExistsException;
 use App\Rules\QuarterHour as QuarterHourRule;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -114,6 +115,13 @@ class Project extends Model
         }]);
     }
 
+    public function scopeOwnedBy($query, Account $account)
+    {
+        return $query->whereHas('contributors', function ($query) use ($account) {
+            return $query->whereBelongsTo($account)->where('role', Role::OWNER);
+        });
+    }
+
     /* Helpers */
 
     public function loadAll(): static
@@ -147,13 +155,12 @@ class Project extends Model
         return $this;
     }
 
-    public static function import(array $data): static
+    public static function import(array $data, bool $replace = false): static
     {
-        // TODO Lock this validation down and make sure the writing logic handles nullables.
-        // TODO Wrap it in a DB transition.
+        // Note: This is only good for importing the demo project at the moment.
 
         $validated = Validator::make($data, [
-            'uuid' => ['required', 'uuid'],
+            'uuid' => ['sometimes', 'required', 'uuid'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
 
@@ -189,13 +196,20 @@ class Project extends Model
             'features.*.requirements.*.actor_ids.*' => ['required', 'integer'],
         ])->validate();
 
-        $project = Project::firstOrNew(['uuid' => $validated['uuid']]);
-
-        DB::beginTransaction();
+        $project = Project::query()
+            ->when(config('spectacular.mode') !== 'solo', fn ($query, $account) => $query->ownedBy(auth()->user()))
+            ->when($validated['uuid'], fn ($query, $uuid) => $query->where('uuid', $validated['uuid']))
+            ->firstOrNew();
 
         if ($project->exists) {
+            if (!$replace) {
+                throw new ProjectAlreadyExistsException($project);
+            }
+
             $project->delete();
         }
+
+        DB::beginTransaction();
 
         $project->fill([
             'name' => $validated['name'],

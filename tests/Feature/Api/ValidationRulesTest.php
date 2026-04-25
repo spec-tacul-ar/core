@@ -10,6 +10,7 @@ use App\Models\Invitation;
 use App\Models\Project;
 use App\Models\Requirement;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -164,5 +165,49 @@ class ValidationRulesTest extends TestCase
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('actor_ids.0');
+    }
+
+    public function test_project_import_requires_requirement_collections_to_be_arrays(): void
+    {
+        try {
+            Project::import([
+                'name' => 'Imported Project',
+                'description' => null,
+                'actors' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Operators',
+                        'summary' => null,
+                        'weight' => null,
+                    ],
+                ],
+                'features' => [
+                    [
+                        'name' => 'Feature',
+                        'description' => null,
+                        'weight' => null,
+                        'requirements' => [
+                            [
+                                'name' => 'Requirement',
+                                'description' => null,
+                                'blocked_reason' => null,
+                                'source' => null,
+                                'reference' => null,
+                                'weight' => null,
+                                'tasks' => null,
+                                'unknowns' => null,
+                                'actor_ids' => null,
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+
+            $this->fail('Expected import validation to reject null requirement collections.');
+        } catch (ValidationException $exception) {
+            $this->assertArrayHasKey('features.0.requirements.0.tasks', $exception->errors());
+            $this->assertArrayHasKey('features.0.requirements.0.unknowns', $exception->errors());
+            $this->assertArrayHasKey('features.0.requirements.0.actor_ids', $exception->errors());
+        }
     }
 }
