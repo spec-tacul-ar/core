@@ -47,15 +47,15 @@ class OrganiseProject
         $project->load(['actors', 'features', 'requirements']);
 
         return DB::transaction(function () use ($project, $validated) {
-            foreach ($validated['actors'] as $actor) {
+            foreach ($validated['actors'] ?? [] as $actor) {
                 $project->actors->find($actor['id'])->update($actor);
             }
 
-            foreach ($validated['features'] as $feature) {
+            foreach ($validated['features'] ?? [] as $feature) {
                 $project->features->find($feature['id'])->update($feature);
             }
 
-            foreach ($validated['requirements'] as $requirement) {
+            foreach ($validated['requirements'] ?? [] as $requirement) {
                 if ($project->features->contains($requirement['feature_id'])) {
                     $project->requirements->find($requirement['id'])->update($requirement);
                 }

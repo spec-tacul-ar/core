@@ -167,6 +167,27 @@ class ValidationRulesTest extends TestCase
             ->assertJsonValidationErrors('actor_ids.0');
     }
 
+    public function test_malformed_sqids_are_reported_as_validation_errors(): void
+    {
+        $fixture = $this->createProjectFixture(Role::EDITOR);
+        $this->actingAsAccount($fixture['account']);
+
+        $this->postJson('/api/features/add', [
+            'name' => 'Malformed feature',
+            'project_id' => 'not-a-sqid',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('project_id');
+
+        $this->postJson('/api/requirements/add', [
+            'actor_ids' => ['not-a-sqid'],
+            'feature_id' => $fixture['feature']->sqid,
+            'name' => 'Malformed actor assignment',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('actor_ids.0');
+    }
+
     public function test_project_import_requires_requirement_collections_to_be_arrays(): void
     {
         try {

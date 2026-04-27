@@ -265,6 +265,13 @@ class AccountProjectsTest extends TestCase
         $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read')->assertNotFound();
     }
 
+    public function test_projects_read_endpoint_returns_not_found_for_malformed_sqids(): void
+    {
+        $this->actingAsAccount();
+
+        $this->getJson('/api/projects/not-a-sqid/read')->assertNotFound();
+    }
+
     public function test_projects_edit_endpoint_allows_editors_and_forbids_viewers(): void
     {
         $project = Project::factory()->create(['name' => 'Before']);
@@ -333,6 +340,27 @@ class AccountProjectsTest extends TestCase
             'requirements' => [],
             'actors' => [],
         ])->assertForbidden();
+    }
+
+    public function test_projects_organise_endpoint_accepts_partial_payloads(): void
+    {
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->for($project)->create(['weight' => 1]);
+        $editor = Account::factory()->create();
+
+        $this->attachContributor($editor, $project, Role::EDITOR);
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/organise', [
+            'features' => [
+                ['id' => $feature->sqid, 'weight' => 22],
+            ],
+        ])->assertOk();
+
+        $this->assertDatabaseHas('features', [
+            'id' => $feature->id,
+            'weight' => 22,
+        ]);
     }
 
     public function test_projects_delete_endpoint_requires_owner_role(): void
