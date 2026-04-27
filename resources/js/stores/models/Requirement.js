@@ -97,7 +97,7 @@ export default class Requirement extends Model {
         if (filters.has_actors) {
             const actor_ids = this.assignments.pluck('actor_id');
 
-            if (!Object.entries(filters.actors).every(([id, required]) => required ? actor_ids.contains(+id) : actor_ids.doesntContain(+id))) {
+            if (!Object.entries(filters.actors).every(([id, required]) => required ? actor_ids.contains(id) : actor_ids.doesntContain(id))) {
                 return true;
             }
         }
