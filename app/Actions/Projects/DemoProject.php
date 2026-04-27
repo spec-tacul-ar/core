@@ -28,7 +28,7 @@ class DemoProject
 
     public function handle(array $validated): Project
     {
-        $json = file_get_contents(storage_path('example_project.json'));
+        $json = file_get_contents(resource_path('example_project.json'));
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
