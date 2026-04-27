@@ -2,16 +2,23 @@
 
 namespace App\Models\Traits;
 
-use DateTime;
 use App\Casts\CompressedCollection;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use DateTime;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use LogicException;
 
 trait Revisionable
 {
+    use HasUuids;
     use SoftDeletes;
+
+    public function uniqueIds()
+    {
+        return ['uuid'];
+    }
 
     protected function initializeRevisionable(): void
     {
@@ -24,12 +31,6 @@ trait Revisionable
 
     public static function bootRevisionable()
     {
-        static::creating(function ($model) {
-            if (!$model->uuid) {
-                $model->uuid = (string) Str::uuid();
-            }
-        });
-
         static::updated(function ($model) {
             $data = array_intersect_key($model->getOriginal(), $model->getChanges());
 
