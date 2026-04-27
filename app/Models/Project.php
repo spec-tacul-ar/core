@@ -70,7 +70,7 @@ class Project extends Model
     {
         return $this->hasOne(Contributor::class)->ofMany(
             ['id' => 'min'],
-            fn ($query) => $query->where('account_id', auth()->id())
+            fn($query) => $query->where('account_id', auth()->id()),
         );
     }
 
@@ -148,68 +148,98 @@ class Project extends Model
         return $this;
     }
 
-    public static function import(array $data, bool $replace = false): static
+    public static function import(array $data): static
     {
         // Note: This is only good for importing the demo project at the moment.
 
-        DB::beginTransaction();
+        $data = Validator::make($data, [
+            'id' => ['nullable', 'uuid'],
+            'name' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'actors' => ['required', 'array'],
+            'actors.*.id' => ['required'],
+            'actors.*.name' => ['required', 'string'],
+            'actors.*.summary' => ['nullable', 'string'],
+            'actors.*.weight' => ['nullable', 'integer'],
+            'features' => ['required', 'array'],
+            'features.*.name' => ['required', 'string'],
+            'features.*.description' => ['nullable', 'string'],
+            'features.*.weight' => ['nullable', 'integer'],
+            'features.*.requirements' => ['required', 'array'],
+            'features.*.requirements.*.name' => ['nullable', 'string'],
+            'features.*.requirements.*.description' => ['nullable', 'string'],
+            'features.*.requirements.*.blocked_reason' => ['nullable', 'string'],
+            'features.*.requirements.*.source' => ['nullable', 'string'],
+            'features.*.requirements.*.reference' => ['nullable'],
+            'features.*.requirements.*.weight' => ['nullable', 'integer'],
+            'features.*.requirements.*.tasks' => ['sometimes', 'array'],
+            'features.*.requirements.*.tasks.*.name' => ['required', 'string'],
+            'features.*.requirements.*.tasks.*.estimate' => ['nullable', new QuarterHourRule()],
+            'features.*.requirements.*.tasks.*.is_complete' => ['boolean'],
+            'features.*.requirements.*.tasks.*.weight' => ['nullable', 'integer'],
+            'features.*.requirements.*.unknowns' => ['sometimes', 'array'],
+            'features.*.requirements.*.unknowns.*.name' => ['required', 'string'],
+            'features.*.requirements.*.actor_ids' => ['sometimes', 'array'],
+        ])->validate();
 
-        $project = Project::create([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-        ]);
-
-        $actors = collect($data['actors'])
-            ->keyBy('id')
-            ->map(fn($actor) => $project->actors()->create([
-                'name' => $actor['name'],
-                'summary' => $actor['summary'] ?? null,
-                'weight' => $actor['weight'] ?? null,
-            ]));
-
-        foreach ($data['features'] as $feature_data) {
-            $feature_model = $project->features()->create([
-                'name' => $feature_data['name'],
-                'description' => $feature_data['description'] ?? null,
-                'weight' => $feature_data['weight'] ?? null,
+        return DB::transaction(function () use ($data) {
+            $project = new Project([
+                'name' => $data['name'],
+                'description' => $data['description'] ?? null,
             ]);
 
-            foreach ($feature_data['requirements'] as $requirement_data) {
-                $requirement_model = $feature_model->requirements()->create([
-                    'name' => $requirement_data['name'] ?? null,
-                    'description' => $requirement_data['description'] ?? null,
-                    'blocked_reason' => $requirement_data['blocked_reason'] ?? null,
-                    'source' => $requirement_data['source'] ?? null,
-                    'reference' => $requirement_data['reference'] ?? null,
-                    'weight' => $requirement_data['weight'] ?? null,
+            $project->save();
+
+            $actors = collect($data['actors'])
+                ->keyBy('id')
+                ->map(fn($actor) => $project->actors()->create([
+                    'name' => $actor['name'],
+                    'summary' => $actor['summary'] ?? null,
+                    'weight' => $actor['weight'] ?? null,
+                ]));
+
+            foreach ($data['features'] as $feature_data) {
+                $feature_model = $project->features()->create([
+                    'name' => $feature_data['name'],
+                    'description' => $feature_data['description'] ?? null,
+                    'weight' => $feature_data['weight'] ?? null,
                 ]);
 
-                foreach ($requirement_data['tasks'] ?? [] as $task_data) {
-                    $requirement_model->tasks()->create([
-                        'name' => $task_data['name'],
-                        'estimate' => $task_data['estimate'] ?? null,
-                        'is_complete' => $task_data['is_complete'] ?? false,
-                        'weight' => $task_data['weight'] ?? null,
+                foreach ($feature_data['requirements'] as $requirement_data) {
+                    $requirement_model = $feature_model->requirements()->create([
+                        'name' => $requirement_data['name'] ?? null,
+                        'description' => $requirement_data['description'] ?? null,
+                        'blocked_reason' => $requirement_data['blocked_reason'] ?? null,
+                        'source' => $requirement_data['source'] ?? null,
+                        'reference' => $requirement_data['reference'] ?? null,
+                        'weight' => $requirement_data['weight'] ?? null,
                     ]);
-                }
 
-                foreach ($requirement_data['unknowns'] ?? [] as $unknown_data) {
-                    $requirement_model->unknowns()->create([
-                        'name' => $unknown_data['name'],
-                    ]);
-                }
+                    foreach ($requirement_data['tasks'] ?? [] as $task_data) {
+                        $requirement_model->tasks()->create([
+                            'name' => $task_data['name'],
+                            'estimate' => $task_data['estimate'] ?? null,
+                            'is_complete' => $task_data['is_complete'] ?? false,
+                            'weight' => $task_data['weight'] ?? null,
+                        ]);
+                    }
 
-                foreach ($requirement_data['actor_ids'] ?? [] as $actor_id) {
-                    $requirement_model->assignments()->create([
-                        'actor_id' => $actors[$actor_id]->id,
-                    ]);
+                    foreach ($requirement_data['unknowns'] ?? [] as $unknown_data) {
+                        $requirement_model->unknowns()->create([
+                            'name' => $unknown_data['name'],
+                        ]);
+                    }
+
+                    foreach ($requirement_data['actor_ids'] ?? [] as $actor_id) {
+                        $requirement_model->assignments()->create([
+                            'actor_id' => $actors[$actor_id]->id,
+                        ]);
+                    }
                 }
             }
-        }
 
-        DB::commit();
-
-        return $project;
+            return $project;
+        });
     }
 
     /* Attributes */
@@ -217,7 +247,7 @@ class Project extends Model
     protected function url(): Attribute
     {
         return Attribute::make(
-            get: fn () => url(config('spectacular.path') . '/projects/' . $this->getRouteKey()),
+            get: fn() => url(config('spectacular.path') . '/projects/' . $this->getRouteKey()),
         );
     }
 }

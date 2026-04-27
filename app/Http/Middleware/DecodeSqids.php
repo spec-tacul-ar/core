@@ -21,7 +21,7 @@ class DecodeSqids
         $data = $request->all();
 
         foreach ($fields as $field) {
-            $parts = array_map(fn ($part) => trim($part, '.'), explode('*', $field));
+            $parts = array_map(fn($part) => trim($part, '.'), explode('*', $field));
 
             if (count($parts) > 2) {
                 throw new RuntimeException('Too many wildcards in field name.');
@@ -40,11 +40,15 @@ class DecodeSqids
             } elseif (!$parts[1]) {
                 $sqids = data_get($data, $parts[0]);
 
-                $ids = array_map(fn ($sqid) => $this->decode($sqid), $sqids);
+                $ids = array_map(fn($sqid) => $this->decode($sqid), $sqids);
 
                 data_set($data, $parts[0], $ids);
             } else {
                 $items = array_map(function ($item) use ($parts) {
+                    if (!Arr::has($item, $parts[1])) {
+                        return $item;
+                    }
+
                     $sqid = data_get($item, $parts[1]);
 
                     $id = $this->decode($sqid);
