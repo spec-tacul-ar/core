@@ -10,7 +10,7 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->sqid,
             'actors' => ActorResource::collection($this->whenLoaded('actors')),
             'features' => FeatureResource::collection($this->whenLoaded('features')),
             'description' => $this->description,

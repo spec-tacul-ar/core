@@ -14,6 +14,7 @@ use App\Notifications\InvitationForNewAccount;
 class Invitation extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
 
     protected $fillable = [
         'email',

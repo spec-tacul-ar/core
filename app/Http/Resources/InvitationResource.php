@@ -9,8 +9,8 @@ class InvitationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'project_id' => $this->project_id,
+            'id' => $this->sqid,
+            'project_id' => $this->idToSqid('project_id'),
             'project_name' => $this->whenLoaded('project', fn () => $this->project->name),
             'account_name' => $this->whenLoaded('account', fn () => $this->account->name),
             'email' => $this->email,

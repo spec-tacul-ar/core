@@ -8,7 +8,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
 use App\Models\Project;
-use Spatie\ValidationRules\Rules\Authorized;
+use App\Rules\Authorised;
 
 class AddFeature
 {
@@ -16,7 +16,8 @@ class AddFeature
 
     public static function routes(Router $router): void
     {
-        $router->post('features/add', static::class);
+        $router->post('features/add', static::class)
+            ->middleware('sqids:project_id');
     }
 
     public function authorize(ActionRequest $request): bool
@@ -27,7 +28,7 @@ class AddFeature
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
+            'project_id' => ['required', 'integer', new Authorised('update', Project::class)],
             'description' => ['nullable', 'string', 'max:10000'],
             'name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
 
     protected $fillable = [
         'commentable_id',

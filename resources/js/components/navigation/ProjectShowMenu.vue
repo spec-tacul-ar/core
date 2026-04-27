@@ -1,7 +1,7 @@
 <template>
     <slot name="before" />
 
-    <NavbarButton v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex" />
+    <NavbarButton v-if="['editor', 'owner'].includes(project.my_role) && project.features.isNotEmpty()" :to="{ name: 'projects.requirements.create' }" icon="plus-lg" tooltip="Add requirement" class="hidden sm:flex" />
     <NavbarButton v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.organise' }" icon="organise" tooltip="Organise" class="hidden sm:flex" />
     <NavbarButton v-if="settings.mode !== 'solo'" :to="{ name: 'projects.people' }" icon="people" tooltip="People" class="hidden sm:flex" />
     <NavbarButton v-if="settings.mode !== 'solo'" :to="{ name: 'projects.feedback' }" icon="feedback" tooltip="Feedback" class="hidden sm:flex" />

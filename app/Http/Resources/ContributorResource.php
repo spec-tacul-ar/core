@@ -9,9 +9,9 @@ class ContributorResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'account_id' => $this->account_id,
-            'project_id' => $this->project_id,
+            'id' => $this->sqid,
+            'account_id' => $this->idToSqid('account_id'),
+            'project_id' => $this->idToSqid('project_id'),
             'account_name' => $this->whenLoaded('account', fn() => $this->account->name),
             'role' => $this->role,
             'created_at' => $this->created_at,

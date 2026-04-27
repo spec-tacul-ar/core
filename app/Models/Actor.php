@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Actor extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $fillable = [

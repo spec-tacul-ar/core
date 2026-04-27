@@ -9,6 +9,7 @@ use App\Enums\Role;
 class Contributor extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
 
     protected $fillable = [
         'role',

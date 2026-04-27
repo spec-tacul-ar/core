@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Feature extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $casts = [

@@ -16,7 +16,7 @@
         "league/html-to-markdown": "^5.1",
         "lorisleiva/laravel-actions": "^2.9",
         "mews/purifier": "^3.4",
-        "spatie/laravel-validation-rules": "^3.4",
+        "sqids/sqids": "^0.5.0",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {

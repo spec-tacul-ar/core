@@ -5,10 +5,10 @@ namespace App\Actions\Features;
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
 use App\Models\Project;
+use App\Rules\Authorised;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Spatie\ValidationRules\Rules\Authorized;
 
 class EditFeature
 {
@@ -21,7 +21,8 @@ class EditFeature
 
     public static function routes(Router $router): void
     {
-        $router->post('features/{feature}/edit', static::class);
+        $router->post('features/{feature}/edit', static::class)
+            ->middleware('sqids:project_id');
     }
 
     public function rules(): array
@@ -29,7 +30,7 @@ class EditFeature
         return [
             'description' => ['nullable', 'string', 'max:10000'],
             'name' => ['required', 'string', 'max:250'],
-            'project_id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Project::class)],
+            'project_id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Project::class)],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

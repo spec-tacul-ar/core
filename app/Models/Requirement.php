@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class Requirement extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $casts = [

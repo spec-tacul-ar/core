@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Unknown extends Model
 {
     use HasFactory;
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $fillable = [

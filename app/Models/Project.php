@@ -18,6 +18,7 @@ class Project extends Model
 {
     use HasFactory;
     use HasRelationships;
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $fillable = [

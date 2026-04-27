@@ -2,19 +2,18 @@
 
 namespace App\Actions\Invitations;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Lorisleiva\Actions\ActionRequest;
-use Lorisleiva\Actions\Concerns\AsAction;
 use App\Enums\Role;
 use App\Http\Resources\InvitationResource;
 use App\Models\Invitation;
 use App\Models\Project;
+use App\Rules\Authorised;
 use App\Rules\InvitationEmail;
 use App\Rules\NotOwnEmail;
-use Spatie\ValidationRules\Rules\Authorized;
+use Illuminate\Routing\Router;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
+use Lorisleiva\Actions\ActionRequest;
+use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddInvitation
 {
@@ -22,7 +21,8 @@ class AddInvitation
 
     public static function routes(Router $router): void
     {
-        $router->post('invitations/add', static::class);
+        $router->post('invitations/add', static::class)
+            ->middleware('sqids:project_id');
     }
 
     public function authorize(ActionRequest $request): bool
@@ -30,18 +30,33 @@ class AddInvitation
         return $request->user()->can('create', Invitation::class);
     }
 
-    public function asController(Request $request): InvitationResource
+    public function rules(ActionRequest $request): array
     {
-        $validated = Validator::make($request->all(), [
-            'project_id' => ['required', 'integer', new Authorized('invite', Project::class)],
+        return [
+            'project_id' => ['required', 'integer', new Authorised('invite', Project::class)],
             'email' => ['required', 'email', 'max:250', new InvitationEmail(), new NotOwnEmail($request->user())],
             'role' => ['required', Rule::enum(Role::class)],
-        ])->stopOnFirstFailure()->validate();
+        ];
+    }
 
-        $invitation = $request->user()->invitations()->create($validated);
+    public function withValidator(Validator $validator): void
+    {
+        $validator->stopOnFirstFailure();
+    }
+
+    public function handle(array $validated, $account): Invitation
+    {
+        $invitation = $account->invitations()->create($validated);
 
         $invitation->sendNotification();
         $invitation->load('account');
+
+        return $invitation;
+    }
+
+    public function asController(ActionRequest $request): InvitationResource
+    {
+        $invitation = $this->handle($request->validated(), $request->user());
 
         return new InvitationResource($invitation);
     }

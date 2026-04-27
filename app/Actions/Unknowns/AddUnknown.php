@@ -8,7 +8,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\UnknownResource;
 use App\Models\Requirement;
 use App\Models\Unknown;
-use Spatie\ValidationRules\Rules\Authorized;
+use App\Rules\Authorised;
 
 class AddUnknown
 {
@@ -21,14 +21,15 @@ class AddUnknown
 
     public static function routes(Router $router): void
     {
-        $router->post('unknowns/add', static::class);
+        $router->post('unknowns/add', static::class)
+            ->middleware('sqids:requirement_id');
     }
 
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:250'],
-            'requirement_id' => ['required', 'integer', new Authorized('update', Requirement::class)],
+            'requirement_id' => ['required', 'integer', new Authorised('update', Requirement::class)],
 
         ];
     }

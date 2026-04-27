@@ -11,9 +11,9 @@ class ActorResource extends JsonResource
     {
         return [
             'created_at' => $this->created_at,
-            'id' => $this->id,
+            'id' => $this->sqid,
             'name' => $this->name,
-            'project_id' => (int) $this->project_id,
+            'project_id' => $this->idToSqid('project_id'),
             'summary' => $this->summary,
             'updated_at' => $this->updated_at,
             'weight' => $this->weight,

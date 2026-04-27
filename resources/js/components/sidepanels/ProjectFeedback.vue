@@ -189,11 +189,11 @@ export default {
     },
     props: {
         'project_id': {
-            'type': Number,
+            'type': String,
             'required': true,
         },
-        'requirement_id': Number,
-        'feature_id': Number,
+        'requirement_id': String,
+        'feature_id': String,
     },
     async setup(props) {
         return {

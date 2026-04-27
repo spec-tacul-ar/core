@@ -8,7 +8,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\ActorResource;
 use App\Models\Project;
 use App\Models\Actor;
-use Spatie\ValidationRules\Rules\Authorized;
+use App\Rules\Authorised;
 
 class AddActor
 {
@@ -21,13 +21,14 @@ class AddActor
 
     public static function routes(Router $router): void
     {
-        $router->post('actors/add', static::class);
+        $router->post('actors/add', static::class)
+            ->middleware('sqids:project_id');
     }
 
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', new Authorized('update', Project::class)],
+            'project_id' => ['required', 'integer', new Authorised('update', Project::class)],
             'summary' => ['nullable', 'string', 'max:2500'],
             'name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],

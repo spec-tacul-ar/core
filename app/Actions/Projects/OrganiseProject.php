@@ -20,7 +20,8 @@ class OrganiseProject
 
     public static function routes(Router $router): void
     {
-        $router->post('projects/{project}/organise', static::class);
+        $router->post('projects/{project}/organise', static::class)
+            ->middleware('sqids:actors.*.id,features.*.id,requirements.*.id,requirements.*.feature_id');
     }
 
     public function rules(): array
@@ -59,9 +60,21 @@ class OrganiseProject
             }
 
             return [
-                'actors' => $project->actors->map->only(['id', 'weight'])->toArray(),
-                'features' => $project->features->map->only(['id', 'weight'])->toArray(),
-                'requirements' => $project->requirements->map->only(['id', 'feature_id', 'weight'])->toArray(),
+                'actors' => $project->actors->map(fn($actor) => [
+                    'id' => $actor->sqid,
+                    'weight' => $actor->weight,
+                ])->toArray(),
+
+                'features' => $project->features->map(fn($feature) => [
+                    'id' => $feature->sqid,
+                    'weight' => $feature->weight,
+                ])->toArray(),
+
+                'requirements' => $project->requirements->map(fn($requirement) => [
+                    'id' => $requirement->sqid,
+                    'feature_id' => $requirement->idToSqid('feature_id'),
+                    'weight' => $requirement->weight,
+                ])->toArray(),
             ];
         });
     }

@@ -9,7 +9,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Rules\QuarterHour as QuarterHourRule;
-use Spatie\ValidationRules\Rules\Authorized;
+use App\Rules\Authorised;
 
 class AddTask
 {
@@ -22,13 +22,14 @@ class AddTask
 
     public static function routes(Router $router): void
     {
-        $router->post('tasks/add', static::class);
+        $router->post('tasks/add', static::class)
+            ->middleware('sqids:requirement_id');
     }
 
     public function rules(): array
     {
         return [
-            'requirement_id' => ['required', 'integer', new Authorized('update', Requirement::class)],
+            'requirement_id' => ['required', 'integer', new Authorised('update', Requirement::class)],
             'name' => ['required', 'string', 'max:250'],
             'estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'is_complete' => ['required', 'boolean'],

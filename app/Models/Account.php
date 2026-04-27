@@ -22,6 +22,7 @@ class Account extends Authenticatable implements MustVerifyEmail
     use HasRelationships;
     use MustVerifyEmailTrait;
     use Notifiable;
+    use Traits\HasSqid;
 
     protected $fillable = [
         'name',

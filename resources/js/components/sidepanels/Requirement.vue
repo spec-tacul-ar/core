@@ -402,15 +402,15 @@ export default {
     },
     props: {
         'feature_id': {
-            'type': Number,
+            'type': String,
             'required': false,
         },
         'requirement_id': {
-            'type': Number,
+            'type': String,
             'required': false,
         },
         'project_id': {
-            'type': Number,
+            'type': String,
             'required': true,
         },
     },

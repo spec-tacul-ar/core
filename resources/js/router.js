@@ -220,15 +220,6 @@ function buildRouter(base) {
         }
     });
 
-    // Normalises IDs so they're always integers.
-    router.beforeEach(async (to) => {
-        for (const param in to.params) {
-            if (param.endsWith('_id')) {
-                to.params[param] = parseInt(to.params[param]);
-            }
-        }
-    });
-
     // Add some auth middleware
     router.beforeEach(async (to) => {
         const auth_store = useAuthStore();

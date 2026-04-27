@@ -11,9 +11,9 @@ use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\Actor;
+use App\Rules\Authorised;
 use App\Rules\QuarterHour as QuarterHourRule;
 use App\Rules\SharesRelation;
-use Spatie\ValidationRules\Rules\Authorized;
 
 class EditRequirement
 {
@@ -26,30 +26,8 @@ class EditRequirement
 
     public static function routes(Router $router): void
     {
-        $router->post('requirements/{requirement}/edit', static::class);
-    }
-
-    public function rules(): array
-    {
-        return [
-            'blocked_reason' => ['sometimes', 'nullable', 'string', 'max:250'],
-            'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
-            'feature_id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Feature::class)],
-            'name' => ['sometimes', 'required', 'string', 'max:250'],
-            'unknowns' => ['sometimes', 'array'],
-            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Unknown::class)],
-            'unknowns.*.name' => ['required', 'string', 'max:250'],
-            'actor_ids' => ['sometimes', 'array'],
-            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features')],
-            'tasks' => ['sometimes', 'array'],
-            'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorized('update', Task::class)],
-            'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
-            'tasks.*.is_complete' => ['nullable', 'boolean'],
-            'tasks.*.name' => ['required', 'string', 'max:250'],
-            'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
-            'source' => ['sometimes', 'nullable', 'string', 'max:250'],
-            'weight' => ['nullable', 'integer', 'between:0,250'],
-        ];
+        $router->post('requirements/{requirement}/edit', static::class)
+            ->middleware('sqids:feature_id,actor_ids.*,unknowns.*.id,tasks.*.id');
     }
 
     public function prepareForValidation(ActionRequest $request): void
@@ -57,6 +35,29 @@ class EditRequirement
         if (!$request->has('feature_id')) {
             $request->merge(['feature_id' => $request->route('requirement')->feature_id]);
         }
+    }
+
+    public function rules(): array
+    {
+        return [
+            'blocked_reason' => ['sometimes', 'nullable', 'string', 'max:250'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
+            'feature_id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Feature::class)],
+            'name' => ['sometimes', 'required', 'string', 'max:250'],
+            'unknowns' => ['sometimes', 'array'],
+            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Unknown::class)],
+            'unknowns.*.name' => ['required', 'string', 'max:250'],
+            'actor_ids' => ['sometimes', 'array'],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
+            'tasks' => ['sometimes', 'array'],
+            'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Task::class)],
+            'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
+            'tasks.*.is_complete' => ['nullable', 'boolean'],
+            'tasks.*.name' => ['required', 'string', 'max:250'],
+            'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
+            'source' => ['sometimes', 'nullable', 'string', 'max:250'],
+            'weight' => ['nullable', 'integer', 'between:0,250'],
+        ];
     }
 
     public function handle(Requirement $requirement, array $validated): Requirement

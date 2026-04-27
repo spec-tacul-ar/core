@@ -76,6 +76,8 @@ class ExportProject
 
     protected function toExportArray(Project $project): array
     {
+        // TODO Provide tombstones for deleted entities.
+
         return [
             'id' => $project->uuid,
             'name' => $project->name,
@@ -136,7 +138,7 @@ class ExportProject
                                         ->all(),
                                     'assignments' => $requirement->assignments->map(fn ($assignment) => [
                                         'id' => $assignment->uuid,
-                                        'actor_id' => $assignment->actor_id,
+                                        'actor_id' => $assignment->actor->uuid,
                                     ])
                                     ->all(),
                                 ];

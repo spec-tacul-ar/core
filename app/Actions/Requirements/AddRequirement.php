@@ -2,16 +2,16 @@
 
 namespace App\Actions\Requirements;
 
+use App\Http\Resources\RequirementResource;
+use App\Models\Actor;
+use App\Models\Feature;
+use App\Models\Requirement;
+use App\Rules\Authorised;
+use App\Rules\QuarterHour as QuarterHourRule;
+use App\Rules\SharesRelation;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Http\Resources\RequirementResource;
-use App\Models\Feature;
-use App\Models\Requirement;
-use App\Models\Actor;
-use App\Rules\QuarterHour as QuarterHourRule;
-use App\Rules\SharesRelation;
-use Spatie\ValidationRules\Rules\Authorized;
 
 class AddRequirement
 {
@@ -24,7 +24,8 @@ class AddRequirement
 
     public static function routes(Router $router): void
     {
-        $router->post('requirements/add', static::class);
+        $router->post('requirements/add', static::class)
+            ->middleware('sqids:feature_id,actor_ids.*');
     }
 
     public function rules(): array
@@ -32,12 +33,12 @@ class AddRequirement
         return [
             'blocked_reason' => ['nullable', 'string', 'max:250'],
             'description' => ['nullable', 'string', 'max:10000'],
-            'feature_id' => ['required', 'integer', new Authorized('update', Feature::class)],
+            'feature_id' => ['required', 'integer', new Authorised('update', Feature::class)],
             'name' => ['required', 'string', 'max:250'],
             'unknowns' => ['nullable', 'array'],
             'unknowns.*.name' => ['required', 'string', 'max:250'],
             'actor_ids' => ['array'],
-            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorized('update', Actor::class)],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
             'source' => ['nullable', 'string', 'max:250'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],

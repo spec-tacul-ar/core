@@ -9,7 +9,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Project;
-use Spatie\ValidationRules\Rules\Authorized;
+use App\Rules\Authorised;
 
 class BrowseComments
 {
@@ -17,7 +17,8 @@ class BrowseComments
 
     public static function routes(Router $router): void
     {
-        $router->get('comments/browse', static::class);
+        $router->get('comments/browse', static::class)
+            ->middleware('sqids:project_id');
     }
 
     public function rules(): array
@@ -25,7 +26,7 @@ class BrowseComments
         // TODO: project_id shouldn't be required when we filter by commentable
 
         return [
-            'project_id' => ['required', 'integer', new Authorized('view', Project::class)],
+            'project_id' => ['required', 'integer', new Authorised('view', Project::class)],
         ];
     }
 

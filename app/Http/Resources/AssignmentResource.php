@@ -10,9 +10,9 @@ class AssignmentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'requirement_id' => (int) $this->requirement_id,
-            'actor_id' => $this->actor_id,
+            'id' => $this->sqid,
+            'requirement_id' => $this->idToSqid('requirement_id'),
+            'actor_id' => $this->idToSqid('actor_id'),
         ];
     }
 }

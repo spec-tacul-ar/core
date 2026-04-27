@@ -28,7 +28,7 @@ class ReadmarkProject
         $readmark = $request->user()->markAsRead($project);
 
         return new JsonResource([
-            'id' => $project->getKey(),
+            'id' => $project->sqid,
             'readmark' => $readmark->updated_at,
         ]);
     }

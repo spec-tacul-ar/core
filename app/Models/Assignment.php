@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignment extends Model
 {
+    use Traits\HasSqid;
     use Traits\Revisionable;
 
     protected $fillable = [

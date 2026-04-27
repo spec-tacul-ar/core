@@ -12,9 +12,9 @@ class FeatureResource extends JsonResource
         return [
             'created_at' => $this->created_at,
             'description' => $this->description,
-            'id' => $this->id,
+            'id' => $this->sqid,
             'name' => $this->name,
-            'project_id' => (int) $this->project_id,
+            'project_id' => $this->idToSqid('project_id'),
             'requirements' => RequirementResource::collection($this->whenLoaded('requirements')),
             'updated_at' => $this->updated_at,
             'weight' => $this->weight,

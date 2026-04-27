@@ -27,7 +27,10 @@ class CompleteTasksForRequirement
     {
         return $requirement->tasks
             ->each->complete()
-            ->map->only('id', 'is_complete');
+            ->map(fn($task) => [
+                'id' => $task->sqid,
+                'is_complete' => $task->is_complete,
+            ]);
     }
 
     public function asController(Requirement $requirement): JsonResource

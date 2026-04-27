@@ -129,7 +129,7 @@ export default {
     ],
     props: {
         'project_id': {
-            'type': Number,
+            'type': String,
             'required': true,
         },
         'feature_id': {

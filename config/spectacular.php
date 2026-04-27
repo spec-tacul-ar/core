@@ -26,4 +26,21 @@ return [
 
     'path' => env('SPECTACULAR_PATH', ''),
 
+    /*
+    |--------------------------------------------------------------------------
+    | SQIDs
+    |--------------------------------------------------------------------------
+    |
+    | Resource IDs are converted to short alphanumeric strings like YouTube
+    | IDs for readability. If you're hosting Spectacular publically, you should
+    | provide your own shuffled alphabet in the .env file so IDs are less
+    | predictable.
+    |
+    */
+
+    'sqids' => [
+        'alphabet' => env('SPECTACULAR_SQIDS_ALPHABET', 'abcdefghijklmnopqrstuvwxyz0123456789'),
+        'length' => env('SPECTACULAR_SQIDS_LENGTH', 6),
+    ],
+
 ];
