@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Feature;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FeaturePolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class FeaturePolicy
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Feature $feature)
+    public function view(Account $account, Feature $feature): Response
     {
-        return $account->canView($feature, 'features');
+        return $account->canView($feature, 'features')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,9 +37,15 @@ class FeaturePolicy
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Feature $feature)
+    public function update(Account $account, Feature $feature): Response
     {
-        return $account->canEdit($feature, 'features');
+        if ($this->view($account, $feature)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($feature, 'features')
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -46,8 +55,14 @@ class FeaturePolicy
      * @param  \App\Models\Feature  $feature
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Feature $feature)
+    public function delete(Account $account, Feature $feature): Response
     {
-        return $account->canEdit($feature, 'features');
+        if ($this->view($account, $feature)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($feature, 'features')
+            ? Response::allow()
+            : Response::deny();
     }
 }

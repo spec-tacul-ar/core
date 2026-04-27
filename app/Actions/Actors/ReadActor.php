@@ -2,6 +2,8 @@
 
 namespace App\Actions\Actors;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ActorResource;
 use App\Models\Actor;
 use Illuminate\Routing\Router;
@@ -12,9 +14,9 @@ class ReadActor
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('view', $request->route('actor'));
+        return Gate::inspect('view', $request->route('actor'));
     }
 
     public static function routes(Router $router): void

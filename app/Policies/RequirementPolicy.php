@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Requirement;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RequirementPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class RequirementPolicy
      * @param  \App\Models\Requirement  $requirement
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Requirement $requirement)
+    public function view(Account $account, Requirement $requirement): Response
     {
-        return $account->canView($requirement, 'features.requirements');
+        return $account->canView($requirement, 'features.requirements')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,9 +37,15 @@ class RequirementPolicy
      * @param  \App\Models\Requirement  $requirement
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Requirement $requirement)
+    public function update(Account $account, Requirement $requirement): Response
     {
-        return $account->canEdit($requirement, 'features.requirements');
+        if ($this->view($account, $requirement)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($requirement, 'features.requirements')
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -46,8 +55,14 @@ class RequirementPolicy
      * @param  \App\Models\Requirement  $requirement
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Requirement $requirement)
+    public function delete(Account $account, Requirement $requirement): Response
     {
-        return $account->canEdit($requirement, 'features.requirements');
+        if ($this->view($account, $requirement)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($requirement, 'features.requirements')
+            ? Response::allow()
+            : Response::deny();
     }
 }

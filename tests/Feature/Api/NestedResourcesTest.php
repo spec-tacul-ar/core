@@ -125,7 +125,7 @@ class NestedResourcesTest extends TestCase
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/actors/' . $actor->sqid . '/read')->assertForbidden();
+        $this->getJson('/api/actors/' . $actor->sqid . '/read')->assertNotFound();
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/actors/' . $actor->sqid . '/edit', [

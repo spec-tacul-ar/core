@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Unknown;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UnknownPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class UnknownPolicy
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Unknown $unknown)
+    public function view(Account $account, Unknown $unknown): Response
     {
-        return $account->canView($unknown, 'features.requirements.unknowns');
+        return $account->canView($unknown, 'features.requirements.unknowns')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,9 +37,15 @@ class UnknownPolicy
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Unknown $unknown)
+    public function update(Account $account, Unknown $unknown): Response
     {
-        return $account->canEdit($unknown, 'features.requirements.unknowns');
+        if ($this->view($account, $unknown)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($unknown, 'features.requirements.unknowns')
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -46,8 +55,14 @@ class UnknownPolicy
      * @param  \App\Models\Unknown  $unknown
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Unknown $unknown)
+    public function delete(Account $account, Unknown $unknown): Response
     {
-        return $account->canEdit($unknown, 'features.requirements.unknowns');
+        if ($this->view($account, $unknown)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($unknown, 'features.requirements.unknowns')
+            ? Response::allow()
+            : Response::deny();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Actions\Actors;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -12,9 +14,9 @@ class EditActor
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('actor'));
+        return Gate::inspect('update', $request->route('actor'));
     }
 
     public static function routes(Router $router): void

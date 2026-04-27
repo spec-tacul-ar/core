@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Actor;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ActorPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class ActorPolicy
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Actor $actor)
+    public function view(Account $account, Actor $actor): Response
     {
-        return $account->canView($actor, 'actors');
+        return $account->canView($actor, 'actors')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,9 +37,15 @@ class ActorPolicy
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Actor $actor)
+    public function update(Account $account, Actor $actor): Response
     {
-        return $account->canEdit($actor, 'actors');
+        if ($this->view($account, $actor)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($actor, 'actors')
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -46,8 +55,14 @@ class ActorPolicy
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Actor $actor)
+    public function delete(Account $account, Actor $actor): Response
     {
-        return $account->canEdit($actor, 'actors');
+        if ($this->view($account, $actor)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($actor, 'actors')
+            ? Response::allow()
+            : Response::deny();
     }
 }

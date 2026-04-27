@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Invitation;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InvitationPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,10 +23,13 @@ class InvitationPolicy
      * @param  \App\Models\Invitation  $invitation
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Invitation $invitation)
+    public function view(Account $account, Invitation $invitation): Response
     {
-        return $account->owns($invitation, 'invitations')
-            || $account->email === $invitation->email;
+        if (!$account->owns($invitation, 'invitations') && $account->email !== $invitation->email) {
+            return Response::denyAsNotFound();
+        }
+
+        return Response::allow();
     }
 
     /**
@@ -35,9 +39,15 @@ class InvitationPolicy
      * @param  \App\Models\Invitation  $invitation
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Invitation $invitation)
+    public function update(Account $account, Invitation $invitation): Response
     {
-        return $account->email === $invitation->email && $account->hasVerifiedEmail();
+        if ($this->view($account, $invitation)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->email === $invitation->email && $account->hasVerifiedEmail()
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -47,12 +57,18 @@ class InvitationPolicy
      * @param  \App\Models\Invitation  $invitation
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Invitation $invitation)
+    public function delete(Account $account, Invitation $invitation): Response
     {
-        if ($account->owns($invitation, 'invitations')) {
-            return true;
+        if ($this->view($account, $invitation)->denied()) {
+            return Response::denyAsNotFound();
         }
 
-        return $account->email === $invitation->email && $account->hasVerifiedEmail();
+        if ($account->owns($invitation, 'invitations')) {
+            return Response::allow();
+        }
+
+        return $account->email === $invitation->email && $account->hasVerifiedEmail()
+            ? Response::allow()
+            : Response::deny();
     }
 }

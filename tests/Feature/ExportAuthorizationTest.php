@@ -32,7 +32,7 @@ class ExportAuthorizationTest extends TestCase
         $fixture = $this->createProjectFixture();
         $stranger = $this->actingAsAccount();
 
-        $this->getJson('/api/export/' . $fixture['project']->sqid . '/json')->assertForbidden();
+        $this->getJson('/api/export/' . $fixture['project']->sqid . '/json')->assertNotFound();
     }
 
     public function test_project_json_export_allows_project_members(): void
@@ -92,7 +92,7 @@ class ExportAuthorizationTest extends TestCase
         $this->actingAsAccount($outsider);
 
         foreach (['json', 'html', 'markdown'] as $type) {
-            $this->get('/api/export/' . $project->sqid . '/' . $type)->assertForbidden();
+            $this->get('/api/export/' . $project->sqid . '/' . $type)->assertNotFound();
         }
     }
 

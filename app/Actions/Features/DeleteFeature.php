@@ -2,6 +2,8 @@
 
 namespace App\Actions\Features;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
@@ -12,9 +14,9 @@ class DeleteFeature
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('delete', $request->route('feature'));
+        return Gate::inspect('delete', $request->route('feature'));
     }
 
     public static function routes(Router $router): void

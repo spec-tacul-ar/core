@@ -2,6 +2,8 @@
 
 namespace App\Actions\Comments;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Project;
@@ -16,9 +18,9 @@ class AddComment
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Comment::class);
+        return Gate::inspect('create', Comment::class);
     }
 
     public static function routes(Router $router): void

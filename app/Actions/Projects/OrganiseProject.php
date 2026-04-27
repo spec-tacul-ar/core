@@ -2,6 +2,8 @@
 
 namespace App\Actions\Projects;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\DB;
@@ -13,9 +15,9 @@ class OrganiseProject
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('project'));
+        return Gate::inspect('update', $request->route('project'));
     }
 
     public static function routes(Router $router): void

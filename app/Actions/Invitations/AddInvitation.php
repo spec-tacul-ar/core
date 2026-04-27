@@ -2,6 +2,8 @@
 
 namespace App\Actions\Invitations;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Enums\Role;
 use App\Http\Resources\InvitationResource;
 use App\Models\Invitation;
@@ -25,9 +27,9 @@ class AddInvitation
             ->middleware('sqids:project_id');
     }
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Invitation::class);
+        return Gate::inspect('create', Invitation::class);
     }
 
     public function rules(ActionRequest $request): array

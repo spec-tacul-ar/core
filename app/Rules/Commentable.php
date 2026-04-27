@@ -27,15 +27,8 @@ class Commentable implements ValidationRule, ValidatorAwareRule
 
         $model = $class::find($value);
 
-        if (!$model) {
+        if (!$model || auth()->user()->cannot('view', $model)) {
             $fail('The :attribute cannot be found.');
-            return;
-        }
-
-        // Check authorised
-
-        if (!auth()->user()->can('view', $model)) {
-            $fail('You are not authorized to view this :attribute.');
             return;
         }
 

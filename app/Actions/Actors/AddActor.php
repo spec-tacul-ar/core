@@ -2,6 +2,8 @@
 
 namespace App\Actions\Actors;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -14,9 +16,9 @@ class AddActor
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Actor::class);
+        return Gate::inspect('create', Actor::class);
     }
 
     public static function routes(Router $router): void

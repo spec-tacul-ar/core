@@ -2,6 +2,8 @@
 
 namespace App\Actions\Contributors;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Router;
 use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
@@ -14,9 +16,9 @@ class EditContributor
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('contributor'));
+        return Gate::inspect('update', $request->route('contributor'));
     }
 
     public static function routes(Router $router): void

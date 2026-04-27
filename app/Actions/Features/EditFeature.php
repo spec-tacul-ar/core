@@ -2,6 +2,8 @@
 
 namespace App\Actions\Features;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
 use App\Models\Project;
@@ -14,9 +16,9 @@ class EditFeature
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('feature'));
+        return Gate::inspect('update', $request->route('feature'));
     }
 
     public static function routes(Router $router): void

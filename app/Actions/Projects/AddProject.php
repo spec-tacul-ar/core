@@ -2,6 +2,8 @@
 
 namespace App\Actions\Projects;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Enums\Role;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
@@ -14,9 +16,9 @@ class AddProject
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Project::class);
+        return Gate::inspect('create', Project::class);
     }
 
     public static function routes(Router $router): void

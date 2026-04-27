@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Invitation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AcceptInvitationController extends Controller
 {
@@ -24,13 +25,11 @@ class AcceptInvitationController extends Controller
             return redirect(config('spectacular.path'));
         }
 
-        // We verified our user, remember? $request will need to know
+        // We verified our user. $request will need to know.
         $request->user()->refresh();
 
         // Check the user can accept this invitation.
-        if (!$request->user()->can('update', $invitation)) {
-            return abort(403, 'Your email address does not match the invitation.');
-        }
+        Gate::authorize('update', $invitation);
 
         // Accept the invitation
         AcceptInvitation::run($request, $invitation);

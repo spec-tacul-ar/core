@@ -337,7 +337,7 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($outsider);
-        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertForbidden();
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertNotFound();
 
         $this->actingAsAccount($recipient);
         $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertNoContent();
@@ -452,7 +452,7 @@ class CollaborationTest extends TestCase
         $this->actingAs($outsider);
 
         $this->get(URL::signedRoute('invitations.accept', $invitation))
-            ->assertForbidden();
+            ->assertNotFound();
 
         $this->assertDatabaseMissing('contributors', [
             'account_id' => $outsider->id,
@@ -485,7 +485,7 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($outsider);
-        $this->postJson('/api/invitations/' . $recipientInvitation->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/invitations/' . $recipientInvitation->sqid . '/delete')->assertNotFound();
 
         $this->actingAsAccount($recipient);
         $this->postJson('/api/invitations/' . $recipientInvitation->sqid . '/delete')->assertNoContent();

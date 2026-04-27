@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Task;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Task $task)
+    public function view(Account $account, Task $task): Response
     {
-        return $account->canView($task, 'features.requirements.tasks');
+        return $account->canView($task, 'features.requirements.tasks')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,9 +37,15 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(Account $account, Task $task)
+    public function update(Account $account, Task $task): Response
     {
-        return $account->canEdit($task, 'features.requirements.tasks');
+        if ($this->view($account, $task)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($task, 'features.requirements.tasks')
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**
@@ -46,8 +55,14 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Task $task)
+    public function delete(Account $account, Task $task): Response
     {
-        return $account->canEdit($task, 'features.requirements.tasks');
+        if ($this->view($account, $task)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $account->canEdit($task, 'features.requirements.tasks')
+            ? Response::allow()
+            : Response::deny();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Actions\Requirements;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\RequirementResource;
 use App\Models\Actor;
 use App\Models\Feature;
@@ -17,9 +19,9 @@ class AddRequirement
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Requirement::class);
+        return Gate::inspect('create', Requirement::class);
     }
 
     public static function routes(Router $router): void

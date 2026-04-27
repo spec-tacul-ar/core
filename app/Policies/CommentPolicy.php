@@ -4,15 +4,16 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Comment;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CommentPolicy
 {
     use HandlesAuthorization;
 
-    public function create(Account $account): bool
+    public function create(Account $account): Response
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -22,9 +23,11 @@ class CommentPolicy
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(Account $account, Comment $comment)
+    public function view(Account $account, Comment $comment): Response
     {
-        return $account->canView($comment, 'comments');
+        return $account->canView($comment, 'comments')
+            ? Response::allow()
+            : Response::denyAsNotFound();
     }
 
     /**
@@ -34,8 +37,14 @@ class CommentPolicy
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(Account $account, Comment $comment)
+    public function delete(Account $account, Comment $comment): Response
     {
-        return $comment->authorIs($account);
+        if ($this->view($account, $comment)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $comment->authorIs($account)
+            ? Response::allow()
+            : Response::deny();
     }
 }

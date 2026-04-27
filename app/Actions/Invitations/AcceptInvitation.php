@@ -2,6 +2,8 @@
 
 namespace App\Actions\Invitations;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
@@ -20,9 +22,9 @@ class AcceptInvitation
         $router->post('invitations/{invitation}/accept', static::class);
     }
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('invitation'));
+        return Gate::inspect('update', $request->route('invitation'));
     }
 
     public function handle(Request $request, Invitation $invitation): void

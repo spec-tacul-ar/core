@@ -262,7 +262,7 @@ class AccountProjectsTest extends TestCase
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read')->assertForbidden();
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read')->assertNotFound();
     }
 
     public function test_projects_edit_endpoint_allows_editors_and_forbids_viewers(): void
@@ -372,6 +372,6 @@ class AccountProjectsTest extends TestCase
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark')->assertForbidden();
+        $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark')->assertNotFound();
     }
 }

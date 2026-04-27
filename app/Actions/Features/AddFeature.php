@@ -2,6 +2,8 @@
 
 namespace App\Actions\Features;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -20,9 +22,9 @@ class AddFeature
             ->middleware('sqids:project_id');
     }
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('create', Feature::class);
+        return Gate::inspect('create', Feature::class);
     }
 
     public function rules(): array

@@ -2,6 +2,8 @@
 
 namespace App\Actions\Requirements;
 
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
@@ -13,9 +15,9 @@ class CompleteTasksForRequirement
 {
     use AsAction;
 
-    public function authorize(ActionRequest $request): bool
+    public function authorize(ActionRequest $request): GateResponse
     {
-        return $request->user()->can('update', $request->route('requirement'));
+        return Gate::inspect('update', $request->route('requirement'));
     }
 
     public static function routes(Router $router): void
