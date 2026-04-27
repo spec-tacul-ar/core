@@ -34,7 +34,7 @@ class NestedResourcesTest extends TestCase
         $this->postJson('/api/features/add', [
             'description' => 'Feature details',
             'name' => 'Workflow',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'weight' => 5,
         ])->assertCreated();
 
@@ -48,17 +48,17 @@ class NestedResourcesTest extends TestCase
         $this->actingAsAccount($viewer);
         $this->postJson('/api/features/add', [
             'name' => 'Blocked feature',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
 
-        $this->postJson('/api/features/' . $feature->id . '/edit', [
+        $this->postJson('/api/features/' . $feature->sqid . '/edit', [
             'name' => 'Blocked edit',
         ])->assertForbidden();
 
-        $this->postJson('/api/features/' . $feature->id . '/delete')->assertForbidden();
+        $this->postJson('/api/features/' . $feature->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/features/' . $feature->id . '/edit', [
+        $this->postJson('/api/features/' . $feature->sqid . '/edit', [
             'description' => 'Changed',
             'name' => 'Updated',
         ])->assertOk();
@@ -69,7 +69,7 @@ class NestedResourcesTest extends TestCase
             'name' => 'Updated',
         ]);
 
-        $this->postJson('/api/features/' . $feature->id . '/delete')->assertNoContent();
+        $this->postJson('/api/features/' . $feature->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('features', ['id' => $feature->id]);
     }
 
@@ -86,14 +86,14 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->getJson('/api/actors/' . $actor->id . '/read')
+        $this->getJson('/api/actors/' . $actor->sqid . '/read')
             ->assertOk()
-            ->assertJsonPath('data.id', $actor->id)
+            ->assertJsonPath('data.id', $actor->sqid)
             ->assertJsonPath('data.name', 'Initial users');
 
         $this->postJson('/api/actors/add', [
             'name' => 'Operators',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'summary' => 'Platform users',
             'weight' => 6,
         ])->assertCreated();
@@ -107,28 +107,28 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->getJson('/api/actors/' . $actor->id . '/read')
+        $this->getJson('/api/actors/' . $actor->sqid . '/read')
             ->assertOk()
-            ->assertJsonPath('data.id', $actor->id);
+            ->assertJsonPath('data.id', $actor->sqid);
 
         $this->postJson('/api/actors/add', [
             'name' => 'Blocked users',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
 
-        $this->postJson('/api/actors/' . $actor->id . '/edit', [
+        $this->postJson('/api/actors/' . $actor->sqid . '/edit', [
             'name' => 'Blocked update',
         ])->assertForbidden();
 
-        $this->postJson('/api/actors/' . $actor->id . '/delete')->assertForbidden();
+        $this->postJson('/api/actors/' . $actor->sqid . '/delete')->assertForbidden();
 
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/actors/' . $actor->id . '/read')->assertForbidden();
+        $this->getJson('/api/actors/' . $actor->sqid . '/read')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/actors/' . $actor->id . '/edit', [
+        $this->postJson('/api/actors/' . $actor->sqid . '/edit', [
             'name' => 'Updated users',
             'summary' => 'Updated summary',
             'weight' => 11,
@@ -141,7 +141,7 @@ class NestedResourcesTest extends TestCase
             'weight' => 11,
         ]);
 
-        $this->postJson('/api/actors/' . $actor->id . '/delete')->assertNoContent();
+        $this->postJson('/api/actors/' . $actor->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('actors', ['id' => $actor->id]);
     }
 
@@ -163,7 +163,7 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/requirements/add', [
-            'feature_id' => $feature->id,
+            'feature_id' => $feature->sqid,
             'name' => 'deliver notifications',
             'tasks' => [
                 ['estimate' => 1.5, 'is_complete' => false, 'name' => 'Write implementation', 'weight' => 2],
@@ -171,7 +171,7 @@ class NestedResourcesTest extends TestCase
             'unknowns' => [
                 ['name' => 'Which provider?'],
             ],
-            'actor_ids' => [$projectActor->id],
+            'actor_ids' => [$projectActor->sqid],
             'weight' => 3,
         ])->assertOk();
 
@@ -191,7 +191,7 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($viewer);
         $this->postJson('/api/requirements/add', [
-            'feature_id' => $feature->id,
+            'feature_id' => $feature->sqid,
             'name' => 'blocked requirement',
             'tasks' => [],
             'unknowns' => [],
@@ -200,30 +200,30 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/requirements/add', [
-            'feature_id' => $feature->id,
+            'feature_id' => $feature->sqid,
             'name' => 'cross project assignment',
             'tasks' => [],
             'unknowns' => [],
-            'actor_ids' => [$otherProjectActor->id],
+            'actor_ids' => [$otherProjectActor->sqid],
         ])->assertUnprocessable()->assertJsonValidationErrors('actor_ids.0');
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'name' => 'Blocked update',
         ])->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'name' => 'Updated requirement',
             'tasks' => [
-                ['estimate' => 2.0, 'id' => $existingTask->id, 'is_complete' => true, 'name' => 'Updated task', 'weight' => 6],
+                ['estimate' => 2.0, 'id' => $existingTask->sqid, 'is_complete' => true, 'name' => 'Updated task', 'weight' => 6],
                 ['estimate' => 1.0, 'is_complete' => false, 'name' => 'Fresh task', 'weight' => 7],
             ],
             'unknowns' => [
-                ['id' => $existingUnknown->id, 'name' => 'Updated unknown?'],
+                ['id' => $existingUnknown->sqid, 'name' => 'Updated unknown?'],
                 ['name' => 'Fresh unknown?'],
             ],
-            'actor_ids' => [$projectActor->id],
+            'actor_ids' => [$projectActor->sqid],
             'weight' => 10,
         ])->assertOk();
 
@@ -263,16 +263,16 @@ class NestedResourcesTest extends TestCase
         $this->attachContributor($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/requirements/' . $requirement->id . '/tasks/complete')->assertForbidden();
-        $this->postJson('/api/requirements/' . $requirement->id . '/delete')->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/tasks/complete')->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/requirements/' . $requirement->id . '/tasks/complete')->assertOk();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/tasks/complete')->assertOk();
 
         $this->assertDatabaseHas('tasks', ['id' => $taskA->id, 'is_complete' => true]);
         $this->assertDatabaseHas('tasks', ['id' => $taskB->id, 'is_complete' => true]);
 
-        $this->postJson('/api/requirements/' . $requirement->id . '/delete')->assertNoContent();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('requirements', ['id' => $requirement->id]);
     }
 
@@ -294,7 +294,7 @@ class NestedResourcesTest extends TestCase
             'estimate' => 0.75,
             'is_complete' => false,
             'name' => 'Create endpoint',
-            'requirement_id' => $requirement->id,
+            'requirement_id' => $requirement->sqid,
             'weight' => 4,
         ])->assertCreated();
 
@@ -309,17 +309,17 @@ class NestedResourcesTest extends TestCase
         $this->postJson('/api/tasks/add', [
             'is_complete' => false,
             'name' => 'Blocked task',
-            'requirement_id' => $requirement->id,
+            'requirement_id' => $requirement->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('requirement_id');
 
-        $this->postJson('/api/tasks/' . $task->id . '/edit', [
+        $this->postJson('/api/tasks/' . $task->sqid . '/edit', [
             'name' => 'Blocked task update',
         ])->assertForbidden();
 
-        $this->postJson('/api/tasks/' . $task->id . '/delete')->assertForbidden();
+        $this->postJson('/api/tasks/' . $task->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/tasks/' . $task->id . '/edit', [
+        $this->postJson('/api/tasks/' . $task->sqid . '/edit', [
             'estimate' => 1.25,
             'is_complete' => true,
             'name' => 'Updated task',
@@ -333,7 +333,7 @@ class NestedResourcesTest extends TestCase
             'weight' => 8,
         ]);
 
-        $this->postJson('/api/tasks/' . $task->id . '/delete')->assertNoContent();
+        $this->postJson('/api/tasks/' . $task->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);
     }
 
@@ -353,7 +353,7 @@ class NestedResourcesTest extends TestCase
         $this->actingAsAccount($editor);
         $this->postJson('/api/unknowns/add', [
             'name' => 'How will retries work?',
-            'requirement_id' => $requirement->id,
+            'requirement_id' => $requirement->sqid,
         ])->assertCreated();
 
         $createdUnknown = Unknown::query()->where('name', 'How will retries work?')->firstOrFail();
@@ -365,17 +365,17 @@ class NestedResourcesTest extends TestCase
         $this->actingAsAccount($viewer);
         $this->postJson('/api/unknowns/add', [
             'name' => 'Blocked unknown?',
-            'requirement_id' => $requirement->id,
+            'requirement_id' => $requirement->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('requirement_id');
 
-        $this->postJson('/api/unknowns/' . $unknown->id . '/edit', [
+        $this->postJson('/api/unknowns/' . $unknown->sqid . '/edit', [
             'name' => 'Blocked?',
         ])->assertForbidden();
 
-        $this->postJson('/api/unknowns/' . $unknown->id . '/delete')->assertForbidden();
+        $this->postJson('/api/unknowns/' . $unknown->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/unknowns/' . $unknown->id . '/edit', [
+        $this->postJson('/api/unknowns/' . $unknown->sqid . '/edit', [
             'name' => 'New?',
         ])->assertOk();
 
@@ -384,7 +384,7 @@ class NestedResourcesTest extends TestCase
             'name' => 'New?',
         ]);
 
-        $this->postJson('/api/unknowns/' . $unknown->id . '/delete')->assertNoContent();
+        $this->postJson('/api/unknowns/' . $unknown->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('unknowns', ['id' => $unknown->id]);
     }
 }

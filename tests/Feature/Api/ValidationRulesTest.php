@@ -39,13 +39,13 @@ class ValidationRulesTest extends TestCase
             'estimate' => 1.3,
             'is_complete' => false,
             'name' => 'Bad estimate',
-            'requirement_id' => $fixture['requirement']->id,
+            'requirement_id' => $fixture['requirement']->sqid,
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('estimate');
 
         $this->postJson('/api/requirements/add', [
-            'feature_id' => $fixture['feature']->id,
+            'feature_id' => $fixture['feature']->sqid,
             'name' => 'requirement with bad estimate',
             'tasks' => [
                 ['estimate' => 0.3, 'is_complete' => false, 'name' => 'Bad nested estimate'],
@@ -72,7 +72,7 @@ class ValidationRulesTest extends TestCase
         $this->actingAsAccount($owner);
 
         $basePayload = [
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
         ];
 
@@ -95,10 +95,10 @@ class ValidationRulesTest extends TestCase
         $this->actingAsAccount($fixture['account']);
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $fixture['requirement']->id,
+            'commentable_id' => $fixture['requirement']->sqid,
             'commentable_type' => 'requirement',
             'message' => 'Requirement comment',
-            'project_id' => $fixture['project']->id,
+            'project_id' => $fixture['project']->sqid,
         ])->assertCreated();
 
         $this->assertDatabaseHas('comments', [
@@ -119,19 +119,19 @@ class ValidationRulesTest extends TestCase
         $this->actingAsAccount($fixture['account']);
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $otherFeature->id,
+            'commentable_id' => $otherFeature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Wrong project feature',
-            'project_id' => $fixture['project']->id,
+            'project_id' => $fixture['project']->sqid,
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('commentable_id');
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $otherRequirement->id,
+            'commentable_id' => $otherRequirement->sqid,
             'commentable_type' => 'requirement',
             'message' => 'Wrong project requirement',
-            'project_id' => $fixture['project']->id,
+            'project_id' => $fixture['project']->sqid,
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('commentable_id');
@@ -143,9 +143,9 @@ class ValidationRulesTest extends TestCase
         $this->actingAsAccount($fixture['account']);
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $fixture['feature']->id,
+            'commentable_id' => $fixture['feature']->sqid,
             'message' => 'Missing type',
-            'project_id' => $fixture['project']->id,
+            'project_id' => $fixture['project']->sqid,
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('commentable_id');
@@ -159,8 +159,8 @@ class ValidationRulesTest extends TestCase
         $this->actingAsAccount($fixture['account']);
 
         $this->postJson('/api/requirements/add', [
-            'actor_ids' => [$foreignActor->id],
-            'feature_id' => $fixture['feature']->id,
+            'actor_ids' => [$foreignActor->sqid],
+            'feature_id' => $fixture['feature']->sqid,
             'name' => 'cross project actor',
         ])
             ->assertUnprocessable()

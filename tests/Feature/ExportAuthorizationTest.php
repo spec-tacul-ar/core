@@ -24,7 +24,7 @@ class ExportAuthorizationTest extends TestCase
         Account::factory()->create();
         $project = Project::factory()->create();
 
-        $this->getJson('/api/export/' . $project->id . '/json')->assertUnauthorized();
+        $this->getJson('/api/export/' . $project->sqid . '/json')->assertUnauthorized();
     }
 
     public function test_project_json_export_rejects_non_members(): void
@@ -32,7 +32,7 @@ class ExportAuthorizationTest extends TestCase
         $fixture = $this->createProjectFixture();
         $stranger = $this->actingAsAccount();
 
-        $this->getJson('/api/export/' . $fixture['project']->id . '/json')->assertForbidden();
+        $this->getJson('/api/export/' . $fixture['project']->sqid . '/json')->assertForbidden();
     }
 
     public function test_project_json_export_allows_project_members(): void
@@ -40,7 +40,7 @@ class ExportAuthorizationTest extends TestCase
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $this->actingAsAccount($fixture['account']);
 
-        $response = $this->getJson('/api/export/' . $fixture['project']->id . '/json');
+        $response = $this->getJson('/api/export/' . $fixture['project']->sqid . '/json');
 
         $response->assertOk();
         $response->assertJsonPath('name', $fixture['project']->name);
@@ -64,18 +64,18 @@ class ExportAuthorizationTest extends TestCase
 
         $this->actingAsAccount($account);
 
-        $jsonResponse = $this->getJson('/api/export/' . $visibleProject->id . '/json');
+        $jsonResponse = $this->getJson('/api/export/' . $visibleProject->sqid . '/json');
 
         $jsonResponse->assertOk();
         $jsonResponse->assertJsonPath('name', 'Visible Export Project');
         $jsonResponse->assertJsonMissing(['name' => 'Hidden Export Project']);
 
-        $this->get('/api/export/' . $visibleProject->id . '/html')
+        $this->get('/api/export/' . $visibleProject->sqid . '/html')
             ->assertOk()
             ->assertSeeText('Visible Export Project')
             ->assertDontSeeText('Hidden Export Project');
 
-        $this->get('/api/export/' . $visibleProject->id . '/markdown')
+        $this->get('/api/export/' . $visibleProject->sqid . '/markdown')
             ->assertOk()
             ->assertSeeText('Visible Export Project')
             ->assertDontSeeText('Hidden Export Project');
@@ -92,7 +92,7 @@ class ExportAuthorizationTest extends TestCase
         $this->actingAsAccount($outsider);
 
         foreach (['json', 'html', 'markdown'] as $type) {
-            $this->get('/api/export/' . $project->id . '/' . $type)->assertForbidden();
+            $this->get('/api/export/' . $project->sqid . '/' . $type)->assertForbidden();
         }
     }
 
@@ -101,15 +101,15 @@ class ExportAuthorizationTest extends TestCase
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $this->actingAsAccount($fixture['account']);
 
-        $this->get('/api/export/' . $fixture['project']->id . '/json')
+        $this->get('/api/export/' . $fixture['project']->sqid . '/json')
             ->assertOk()
             ->assertHeader('Content-Type', 'application/json');
 
-        $this->get('/api/export/' . $fixture['project']->id . '/html')
+        $this->get('/api/export/' . $fixture['project']->sqid . '/html')
             ->assertOk()
             ->assertHeader('Content-Type', 'text/html; charset=UTF-8');
 
-        $this->get('/api/export/' . $fixture['project']->id . '/markdown')
+        $this->get('/api/export/' . $fixture['project']->sqid . '/markdown')
             ->assertOk()
             ->assertHeader('Content-Type', 'text/markdown; charset=utf-8');
     }
@@ -118,11 +118,11 @@ class ExportAuthorizationTest extends TestCase
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
 
-        $this->getJson('/api/export/' . $fixture['project']->id . '/json')->assertUnauthorized();
+        $this->getJson('/api/export/' . $fixture['project']->sqid . '/json')->assertUnauthorized();
 
         $this->actingAsAccount($fixture['account']);
 
-        $this->getJson('/api/export/' . $fixture['project']->id . '/json')
+        $this->getJson('/api/export/' . $fixture['project']->sqid . '/json')
             ->assertOk()
             ->assertJsonPath('name', $fixture['project']->name);
     }
@@ -132,7 +132,7 @@ class ExportAuthorizationTest extends TestCase
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $this->actingAsAccount($fixture['account']);
 
-        $this->get('/api/export/' . $fixture['project']->id . '/xml')->assertNotFound();
+        $this->get('/api/export/' . $fixture['project']->sqid . '/xml')->assertNotFound();
     }
 
     public function test_project_html_export_summary_lists_each_estimated_feature(): void
@@ -151,7 +151,7 @@ class ExportAuthorizationTest extends TestCase
 
         $this->actingAsAccount($account);
 
-        $response = $this->get('/api/export/' . $project->id . '/html');
+        $response = $this->get('/api/export/' . $project->sqid . '/html');
 
         $response->assertOk()
             ->assertSeeTextInOrder([

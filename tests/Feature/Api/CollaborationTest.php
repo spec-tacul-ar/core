@@ -35,10 +35,10 @@ class CollaborationTest extends TestCase
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $feature->id,
+            'commentable_id' => $feature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Editor comment',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
         ])->assertCreated();
 
         $this->assertDatabaseHas('comments', [
@@ -51,10 +51,10 @@ class CollaborationTest extends TestCase
         $this->actingAsAccount($viewer);
 
         $this->postJson('/api/comments/add', [
-            'commentable_id' => $feature->id,
+            'commentable_id' => $feature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Viewer comment',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
         ])->assertCreated();
 
         $this->assertDatabaseHas('comments', [
@@ -87,13 +87,13 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->id)
+        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(1, 'data');
 
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->id)
+        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
             ->assertUnprocessable()
             ->assertJsonValidationErrors('project_id');
     }
@@ -140,12 +140,12 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($account);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->id)
+        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.id', $newer->id)
+            ->assertJsonPath('data.0.id', $newer->sqid)
             ->assertJsonPath('data.0.commentable_name', 'Download invoices')
-            ->assertJsonPath('data.1.id', $older->id)
+            ->assertJsonPath('data.1.id', $older->sqid)
             ->assertJsonPath('data.1.commentable_name', 'Billing portal')
             ->assertJsonMissing(['message' => 'Other project comment']);
     }
@@ -166,7 +166,7 @@ class CollaborationTest extends TestCase
             ->create();
 
         $this->actingAsAccount($otherEditor);
-        $this->postJson('/api/comments/' . $comment->id . '/delete')->assertForbidden();
+        $this->postJson('/api/comments/' . $comment->sqid . '/delete')->assertForbidden();
 
         $authorComment = Comment::factory()
             ->for($author, 'account')
@@ -174,7 +174,7 @@ class CollaborationTest extends TestCase
             ->create();
 
         $this->actingAsAccount($author);
-        $this->postJson('/api/comments/' . $authorComment->id . '/delete')->assertNoContent();
+        $this->postJson('/api/comments/' . $authorComment->sqid . '/delete')->assertNoContent();
         $this->assertDatabaseMissing('comments', ['id' => $authorComment->id]);
 
         $owner = Account::factory()->create();
@@ -186,7 +186,7 @@ class CollaborationTest extends TestCase
             ->create();
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/comments/' . $ownerBlockedComment->id . '/delete')->assertForbidden();
+        $this->postJson('/api/comments/' . $ownerBlockedComment->sqid . '/delete')->assertForbidden();
         $this->assertDatabaseHas('comments', ['id' => $ownerBlockedComment->id]);
     }
 
@@ -208,7 +208,7 @@ class CollaborationTest extends TestCase
 
         $this->postJson('/api/invitations/add', [
             'email' => 'new-person@example.test',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
         ])->assertCreated();
 
@@ -225,7 +225,7 @@ class CollaborationTest extends TestCase
 
         $this->postJson('/api/invitations/add', [
             'email' => 'blocked-editor@example.test',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
 
@@ -233,7 +233,7 @@ class CollaborationTest extends TestCase
 
         $this->postJson('/api/invitations/add', [
             'email' => 'blocked-viewer@example.test',
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
     }
@@ -252,7 +252,7 @@ class CollaborationTest extends TestCase
 
         $this->postJson('/api/invitations/add', [
             'email' => $recipient->email,
-            'project_id' => $project->id,
+            'project_id' => $project->sqid,
             'role' => Role::EDITOR->value,
         ])->assertCreated();
 
@@ -294,10 +294,10 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($owner);
 
-        $this->getJson('/api/invitations/browse?project_id=' . $project->id)
+        $this->getJson('/api/invitations/browse?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', $projectInvitation->id)
+            ->assertJsonPath('data.0.id', $projectInvitation->sqid)
             ->assertJsonPath('data.0.account_name', $owner->name)
             ->assertJsonMissingPath('data.0.project_name');
 
@@ -306,13 +306,13 @@ class CollaborationTest extends TestCase
         $this->getJson('/api/invitations/browse')
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', $projectInvitation->id)
+            ->assertJsonPath('data.0.id', $projectInvitation->sqid)
             ->assertJsonPath('data.0.project_name', $project->name)
             ->assertJsonMissingPath('data.0.account_name');
 
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/invitations/browse?project_id=' . $project->id)
+        $this->getJson('/api/invitations/browse?project_id=' . $project->sqid)
             ->assertUnprocessable()
             ->assertJsonValidationErrors('project_id');
     }
@@ -337,10 +337,10 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($outsider);
-        $this->postJson('/api/invitations/' . $invitation->id . '/accept')->assertForbidden();
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertForbidden();
 
         $this->actingAsAccount($recipient);
-        $this->postJson('/api/invitations/' . $invitation->id . '/accept')->assertNoContent();
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertNoContent();
 
         $this->assertDatabaseHas('contributors', [
             'account_id' => $recipient->id,
@@ -368,7 +368,7 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($recipient);
-        $this->postJson('/api/invitations/' . $invitation->id . '/accept')
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')
             ->assertForbidden();
 
         $this->assertDatabaseMissing('contributors', [
@@ -420,7 +420,7 @@ class CollaborationTest extends TestCase
         $this->actingAs($recipient);
 
         $this->get(URL::signedRoute('invitations.accept', $invitation))
-            ->assertRedirect('/projects/' . $project->id);
+            ->assertRedirect('/projects/' . $project->sqid);
 
         $this->assertTrue($recipient->fresh()->hasVerifiedEmail());
         $this->assertDatabaseHas('contributors', [
@@ -485,14 +485,14 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($outsider);
-        $this->postJson('/api/invitations/' . $recipientInvitation->id . '/delete')->assertForbidden();
+        $this->postJson('/api/invitations/' . $recipientInvitation->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($recipient);
-        $this->postJson('/api/invitations/' . $recipientInvitation->id . '/delete')->assertNoContent();
+        $this->postJson('/api/invitations/' . $recipientInvitation->sqid . '/delete')->assertNoContent();
         $this->assertDatabaseMissing('invitations', ['id' => $recipientInvitation->id]);
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/invitations/' . $ownerInvitation->id . '/delete')->assertNoContent();
+        $this->postJson('/api/invitations/' . $ownerInvitation->sqid . '/delete')->assertNoContent();
         $this->assertDatabaseMissing('invitations', ['id' => $ownerInvitation->id]);
     }
 
@@ -512,7 +512,7 @@ class CollaborationTest extends TestCase
             ]);
 
         $this->actingAsAccount($recipient);
-        $this->postJson('/api/invitations/' . $invitation->id . '/delete')
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/delete')
             ->assertForbidden();
 
         $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
@@ -531,12 +531,12 @@ class CollaborationTest extends TestCase
         $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/contributors/' . $viewerContributor->id . '/edit', [
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/contributors/' . $viewerContributor->id . '/edit', [
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertOk();
 
@@ -561,7 +561,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($newerOwner);
 
-        $this->postJson('/api/contributors/' . $olderContributor->id . '/edit', [
+        $this->postJson('/api/contributors/' . $olderContributor->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
 
@@ -586,7 +586,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($olderOwner);
 
-        $this->postJson('/api/contributors/' . $newerContributor->id . '/edit', [
+        $this->postJson('/api/contributors/' . $newerContributor->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertOk();
 
@@ -612,7 +612,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/contributors/' . $peerContributor->id . '/edit', [
+        $this->postJson('/api/contributors/' . $peerContributor->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
     }
@@ -624,7 +624,7 @@ class CollaborationTest extends TestCase
         $soleOwnerContributor = $this->attachContributor($soleOwner, $soleOwnerProject, Role::OWNER);
 
         $this->actingAsAccount($soleOwner);
-        $this->postJson('/api/contributors/' . $soleOwnerContributor->id . '/delete')->assertForbidden();
+        $this->postJson('/api/contributors/' . $soleOwnerContributor->sqid . '/delete')->assertForbidden();
 
         $project = Project::factory()->create();
         $owner = Account::factory()->create();
@@ -634,7 +634,7 @@ class CollaborationTest extends TestCase
         $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/contributors/' . $viewerContributor->id . '/delete')->assertNoContent();
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
 
         $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
     }
@@ -654,11 +654,11 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($newerOwner);
 
-        $this->postJson('/api/contributors/' . $olderContributor->id . '/delete')->assertForbidden();
+        $this->postJson('/api/contributors/' . $olderContributor->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($olderOwner);
 
-        $this->postJson('/api/contributors/' . $newerContributor->id . '/delete')->assertNoContent();
+        $this->postJson('/api/contributors/' . $newerContributor->sqid . '/delete')->assertNoContent();
 
         $this->assertDatabaseHas('contributors', ['id' => $olderContributor->id]);
         $this->assertDatabaseMissing('contributors', ['id' => $newerContributor->id]);
@@ -678,9 +678,9 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/contributors/' . $otherViewerContributor->id . '/delete')->assertForbidden();
+        $this->postJson('/api/contributors/' . $otherViewerContributor->sqid . '/delete')->assertForbidden();
 
-        $this->postJson('/api/contributors/' . $viewerContributor->id . '/delete')->assertNoContent();
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
 
         $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
         $this->assertDatabaseHas('contributors', ['id' => $otherViewerContributor->id]);

@@ -12,7 +12,6 @@ use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -32,7 +31,7 @@ class AuthorizationEdgeCasesTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/features/' . $feature->id . '/edit', [
+        $this->postJson('/api/features/' . $feature->sqid . '/edit', [
             'name' => 'Moved feature',
             'project_id' => $targetProject->id,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
@@ -56,7 +55,7 @@ class AuthorizationEdgeCasesTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'feature_id' => $targetFeature->id,
             'name' => 'Moved requirement',
         ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
@@ -83,7 +82,7 @@ class AuthorizationEdgeCasesTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'name' => 'Updated requirement',
             'tasks' => [
                 [
@@ -117,7 +116,7 @@ class AuthorizationEdgeCasesTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/requirements/' . $requirement->id . '/edit', [
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'name' => 'Updated requirement',
             'unknowns' => [
                 [
@@ -158,14 +157,14 @@ class AuthorizationEdgeCasesTest extends TestCase
         $taskFixture = $this->createProjectFixture(Role::EDITOR);
 
         $this->actingAsAccount($featureFixture['account']);
-        $this->postJson('/api/features/' . $featureFixture['feature']->id . '/delete')->assertNoContent();
-        $this->postJson('/api/features/' . $featureFixture['feature']->id . '/edit', [
+        $this->postJson('/api/features/' . $featureFixture['feature']->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/features/' . $featureFixture['feature']->sqid . '/edit', [
             'name' => 'Should not work',
         ])->assertNotFound();
 
         $this->actingAsAccount($taskFixture['account']);
-        $this->postJson('/api/tasks/' . $taskFixture['task']->id . '/delete')->assertNoContent();
-        $this->postJson('/api/tasks/' . $taskFixture['task']->id . '/edit', [
+        $this->postJson('/api/tasks/' . $taskFixture['task']->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/tasks/' . $taskFixture['task']->sqid . '/edit', [
             'name' => 'Should not work',
         ])->assertNotFound();
     }

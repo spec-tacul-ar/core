@@ -100,7 +100,7 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('data.0.tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
-        $response->assertJsonPath('data.0.contributors.0.account_id', $account->id);
+        $response->assertJsonPath('data.0.contributors.0.account_id', $account->sqid);
         $response->assertJsonMissingPath('data.0.contributors.0.account_name');
         $response->assertJsonPath('data.1.name', 'Beta');
         $response->assertJsonPath('meta.total', 2);
@@ -206,10 +206,10 @@ class AccountProjectsTest extends TestCase
 
         $response->assertCreated();
 
-        $projectId = $response->json('data.id');
+        $project = Project::whereSqid($response->json('data.id'))->firstOrFail();
 
-        $this->assertDatabaseHas('projects', ['id' => $projectId]);
-        $this->assertDatabaseMissing('contributors', ['project_id' => $projectId]);
+        $this->assertDatabaseHas('projects', ['id' => $project->id]);
+        $this->assertDatabaseMissing('contributors', ['project_id' => $project->id]);
     }
 
     public function test_projects_demo_endpoint_sets_contributor_timestamps_for_real_accounts(): void
@@ -220,21 +220,21 @@ class AccountProjectsTest extends TestCase
 
         $response->assertCreated();
 
-        $projectId = $response->json('data.id');
+        $project = Project::whereSqid($response->json('data.id'))->firstOrFail();
 
         $this->assertDatabaseHas('contributors', [
             'account_id' => $account->id,
-            'project_id' => $projectId,
+            'project_id' => $project->id,
             'role' => Role::OWNER->value,
         ]);
         $this->assertDatabaseMissing('contributors', [
             'account_id' => $account->id,
-            'project_id' => $projectId,
+            'project_id' => $project->id,
             'created_at' => null,
         ]);
         $this->assertDatabaseMissing('contributors', [
             'account_id' => $account->id,
-            'project_id' => $projectId,
+            'project_id' => $project->id,
             'updated_at' => null,
         ]);
     }
@@ -246,23 +246,23 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($fixture['account']);
 
-        $response = $this->getJson('/api/projects/' . $fixture['project']->id . '/read?hydrated=1');
+        $response = $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1');
 
         $response->assertOk();
-        $response->assertJsonPath('data.id', $fixture['project']->id);
-        $response->assertJsonPath('data.actors.0.id', $fixture['projectActor']->id);
-        $response->assertJsonPath('data.features.0.id', $fixture['feature']->id);
-        $response->assertJsonPath('data.features.0.requirements.0.id', $fixture['requirement']->id);
-        $response->assertJsonPath('data.features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->id);
-        $response->assertJsonPath('data.features.0.requirements.0.tasks.0.id', $fixture['task']->id);
-        $response->assertJsonPath('data.features.0.requirements.0.unknowns.0.id', $fixture['unknown']->id);
+        $response->assertJsonPath('data.id', $fixture['project']->sqid);
+        $response->assertJsonPath('data.actors.0.id', $fixture['projectActor']->sqid);
+        $response->assertJsonPath('data.features.0.id', $fixture['feature']->sqid);
+        $response->assertJsonPath('data.features.0.requirements.0.id', $fixture['requirement']->sqid);
+        $response->assertJsonPath('data.features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->sqid);
+        $response->assertJsonPath('data.features.0.requirements.0.tasks.0.id', $fixture['task']->sqid);
+        $response->assertJsonPath('data.features.0.requirements.0.unknowns.0.id', $fixture['unknown']->sqid);
         $response->assertJsonPath('data.contributors.0.account_name', $fixture['account']->name);
         $response->assertJsonPath('data.readmark', $fixture['account']->readmarks()->first()->updated_at->toJSON());
 
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/projects/' . $fixture['project']->id . '/read')->assertForbidden();
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read')->assertForbidden();
     }
 
     public function test_projects_edit_endpoint_allows_editors_and_forbids_viewers(): void
@@ -277,7 +277,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/projects/' . $project->id . '/edit', [
+        $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'description' => 'Updated description',
             'name' => 'After',
         ])->assertOk();
@@ -290,7 +290,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/projects/' . $project->id . '/edit', [
+        $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'name' => 'Blocked',
         ])->assertForbidden();
     }
@@ -310,15 +310,15 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/projects/' . $project->id . '/organise', [
+        $this->postJson('/api/projects/' . $project->sqid . '/organise', [
             'features' => [
-                ['id' => $feature->id, 'weight' => 22],
+                ['id' => $feature->sqid, 'weight' => 22],
             ],
             'requirements' => [
-                ['id' => $requirement->id, 'feature_id' => $feature->id, 'weight' => 33],
+                ['id' => $requirement->sqid, 'feature_id' => $feature->sqid, 'weight' => 33],
             ],
             'actors' => [
-                ['id' => $actor->id, 'weight' => 11],
+                ['id' => $actor->sqid, 'weight' => 11],
             ],
         ])->assertOk();
 
@@ -328,7 +328,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/projects/' . $project->id . '/organise', [
+        $this->postJson('/api/projects/' . $project->sqid . '/organise', [
             'features' => [],
             'requirements' => [],
             'actors' => [],
@@ -346,10 +346,10 @@ class AccountProjectsTest extends TestCase
         $this->attachContributor($editor, $project, Role::EDITOR);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/projects/' . $project->id . '/delete')->assertForbidden();
+        $this->postJson('/api/projects/' . $project->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/projects/' . $project->id . '/delete')->assertNoContent();
+        $this->postJson('/api/projects/' . $project->sqid . '/delete')->assertNoContent();
 
         $this->assertSoftDeleted('projects', ['id' => $project->id]);
     }
@@ -360,10 +360,10 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($fixture['account']);
 
-        $response = $this->postJson('/api/projects/' . $fixture['project']->id . '/readmark');
+        $response = $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark');
 
         $response->assertOk();
-        $response->assertJsonPath('data.id', $fixture['project']->id);
+        $response->assertJsonPath('data.id', $fixture['project']->sqid);
         $this->assertDatabaseHas('readmarks', [
             'account_id' => $fixture['account']->id,
             'project_id' => $fixture['project']->id,
@@ -372,6 +372,6 @@ class AccountProjectsTest extends TestCase
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->postJson('/api/projects/' . $fixture['project']->id . '/readmark')->assertForbidden();
+        $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark')->assertForbidden();
     }
 }

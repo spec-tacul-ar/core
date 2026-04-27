@@ -65,7 +65,7 @@ class AuthenticationTest extends TestCase
         $response = $this->getJson('/api/auth/account');
 
         $response->assertOk();
-        $response->assertJsonPath('data.id', $account->id);
+        $response->assertJsonPath('data.id', $account->sqid);
         $response->assertJsonPath('data.name', $account->name);
         $response->assertJsonPath('data.email', $account->email);
         $response->assertJsonPath('data.is_email_verified', true);
@@ -78,7 +78,7 @@ class AuthenticationTest extends TestCase
 
         $this->getJson('/api/auth/account')
             ->assertOk()
-            ->assertJsonPath('data.id', $account->id)
+            ->assertJsonPath('data.id', $account->sqid)
             ->assertJsonPath('data.is_email_verified', false);
     }
 

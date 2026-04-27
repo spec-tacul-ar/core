@@ -58,7 +58,7 @@ class FortifyAuthenticationTest extends TestCase
 
         $this->getJson('/api/auth/account')
             ->assertOk()
-            ->assertJsonPath('data.id', $account->id);
+            ->assertJsonPath('data.id', $account->sqid);
 
         $this->postJson('/api/auth/logout')->assertNoContent();
 
