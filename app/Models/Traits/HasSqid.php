@@ -5,6 +5,7 @@ namespace App\Models\Traits;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Sqids\SqidsInterface;
 
 trait HasSqid
@@ -20,7 +21,7 @@ trait HasSqid
             $ids = app(SqidsInterface::class)->decode($value);
 
             if (count($ids) !== 1) {
-                throw new ModelNotFoundException()->setModel(get_class($this->model), $value);
+                throw (new ModelNotFoundException())->setModel(static::class, $value);
             }
 
             return $this->findOrFail($ids[0]);
