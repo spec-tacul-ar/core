@@ -2,11 +2,20 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Readmark extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'account_sqid' => AsSqid::class,
+            'project_sqid' => AsSqid::class,
+        ];
+    }
+
     /* Relations */
 
     public function account(): BelongsTo

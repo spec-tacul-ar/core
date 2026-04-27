@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class Task extends Model
 
     protected $casts = [
         'is_complete' => 'boolean',
+        'requirement_sqid' => AsSqid::class,
     ];
 
     protected $fillable = [

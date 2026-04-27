@@ -14,7 +14,7 @@ class FeatureResource extends JsonResource
             'description' => $this->description,
             'id' => $this->sqid,
             'name' => $this->name,
-            'project_id' => $this->idToSqid('project_id'),
+            'project_id' => $this->project_sqid,
             'requirements' => RequirementResource::collection($this->whenLoaded('requirements')),
             'updated_at' => $this->updated_at,
             'weight' => $this->weight,

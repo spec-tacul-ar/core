@@ -11,8 +11,8 @@ class AssignmentResource extends JsonResource
     {
         return [
             'id' => $this->sqid,
-            'requirement_id' => $this->idToSqid('requirement_id'),
-            'actor_id' => $this->idToSqid('actor_id'),
+            'requirement_id' => $this->requirement_sqid,
+            'actor_id' => $this->actor_sqid,
         ];
     }
 }

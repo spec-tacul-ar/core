@@ -74,7 +74,7 @@ class OrganiseProject
 
                 'requirements' => $project->requirements->map(fn($requirement) => [
                     'id' => $requirement->sqid,
-                    'feature_id' => $requirement->idToSqid('feature_id'),
+                    'feature_id' => $requirement->feature_sqid,
                     'weight' => $requirement->weight,
                 ])->toArray(),
             ];

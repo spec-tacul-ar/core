@@ -206,7 +206,7 @@ class AccountProjectsTest extends TestCase
 
         $response->assertCreated();
 
-        $project = Project::whereSqid($response->json('data.id'))->firstOrFail();
+        $project = (new Project())->resolveRouteBinding($response->json('data.id'));
 
         $this->assertDatabaseHas('projects', ['id' => $project->id]);
         $this->assertDatabaseMissing('contributors', ['project_id' => $project->id]);
@@ -220,7 +220,7 @@ class AccountProjectsTest extends TestCase
 
         $response->assertCreated();
 
-        $project = Project::whereSqid($response->json('data.id'))->firstOrFail();
+        $project = (new Project())->resolveRouteBinding($response->json('data.id'));
 
         $this->assertDatabaseHas('contributors', [
             'account_id' => $account->id,

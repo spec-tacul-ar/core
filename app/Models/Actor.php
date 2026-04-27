@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,13 @@ class Actor extends Model
     use HasFactory;
     use Traits\HasSqid;
     use Traits\Revisionable;
+
+    protected function casts(): array
+    {
+        return [
+            'project_sqid' => AsSqid::class,
+        ];
+    }
 
     protected $fillable = [
         'name',

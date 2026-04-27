@@ -17,9 +17,13 @@ trait HasSqid
     public function resolveRouteBinding($value, $field = null)
     {
         if ($field === null) {
-            $key = $this->sqidToId($value);
+            $ids = app(SqidsInterface::class)->decode($value);
 
-            return $this->findOrFail($key);
+            if (count($ids) !== 1) {
+                throw new ModelNotFoundException()->setModel(get_class($this->model), $value);
+            }
+
+            return $this->findOrFail($ids[0]);
         }
 
         return parent::resolveRouteBinding($value, $field);
@@ -27,28 +31,12 @@ trait HasSqid
 
     protected function sqid(): Attribute
     {
+        $id = $this->getKey();
+
+        $sqid = $id ? app(SqidsInterface::class)->encode([$id]) : null;
+
         return Attribute::make(
-            get: fn () => $this->idToSqid(),
+            get: fn() => $sqid,
         );
-    }
-
-    public function idToSqid(?string $field = null)
-    {
-        $id = $field === null ? $this->getKey() : $this->{$field};
-
-        return $id ? app(SqidsInterface::class)->encode([$id]) : null;
-    }
-
-    public static function sqidToId(string $sqid)
-    {
-        $ids = app(SqidsInterface::class)->decode($sqid);
-
-        return count($ids) === 1 ? array_first($ids) : null;
-    }
-
-    #[Scope]
-    protected function whereSqid(Builder $query, string $sqid): void
-    {
-        $query->whereKey($this->sqidToId($sqid));
     }
 }

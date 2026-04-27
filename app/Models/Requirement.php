@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,8 @@ class Requirement extends Model
 
     protected $casts = [
         'actor_id' => 'integer',
+        'actor_sqid' => AsSqid::class,
+        'feature_sqid' => AsSqid::class,
     ];
 
     protected $fillable = [

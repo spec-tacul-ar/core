@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,13 @@ class Unknown extends Model
         'requirement_id',
         'name',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'requirement_sqid' => AsSqid::class,
+        ];
+    }
 
     /* Relations */
 

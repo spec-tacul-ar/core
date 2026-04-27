@@ -14,7 +14,7 @@ class TaskResource extends JsonResource
             'name' => $this->name,
             'estimate' => $this->estimate,
             'is_complete' => $this->is_complete,
-            'requirement_id' => $this->idToSqid('requirement_id'),
+            'requirement_id' => $this->requirement_sqid,
             'weight' => $this->weight,
         ];
     }

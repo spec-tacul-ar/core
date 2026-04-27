@@ -13,7 +13,7 @@ class ActorResource extends JsonResource
             'created_at' => $this->created_at,
             'id' => $this->sqid,
             'name' => $this->name,
-            'project_id' => $this->idToSqid('project_id'),
+            'project_id' => $this->project_sqid,
             'summary' => $this->summary,
             'updated_at' => $this->updated_at,
             'weight' => $this->weight,

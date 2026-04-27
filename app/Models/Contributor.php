@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AsSqid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\Role;
@@ -18,6 +19,8 @@ class Contributor extends Model
     protected function casts(): array
     {
         return [
+            'account_sqid' => AsSqid::class,
+            'project_sqid' => AsSqid::class,
             'role' => Role::class,
         ];
     }

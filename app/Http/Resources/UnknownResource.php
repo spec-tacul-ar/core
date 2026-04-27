@@ -12,7 +12,7 @@ class UnknownResource extends JsonResource
         return [
             'id' => $this->sqid,
             'name' => $this->name,
-            'requirement_id' => $this->idToSqid('requirement_id'),
+            'requirement_id' => $this->requirement_sqid,
         ];
     }
 }

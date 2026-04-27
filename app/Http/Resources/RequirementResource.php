@@ -16,7 +16,7 @@ class RequirementResource extends JsonResource
             'description' => $this->description,
             'id' => $this->sqid,
             'name' => $this->name,
-            'feature_id' => $this->idToSqid('feature_id'),
+            'feature_id' => $this->feature_sqid,
             'unknowns' => UnknownResource::collection($this->whenLoaded('unknowns')),
             'reference' => $this->reference,
             'source' => $this->source,
