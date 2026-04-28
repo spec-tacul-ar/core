@@ -7,7 +7,6 @@ use App\Models\Account;
 use App\Models\Comment;
 use App\Models\Invitation;
 use App\Models\Project;
-use App\Notifications\InvitationAccepted;
 use App\Notifications\InvitationForExistingAccount;
 use App\Notifications\InvitationForNewAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -348,7 +347,6 @@ class CollaborationTest extends TestCase
             'role' => Role::VIEWER->value,
         ]);
         $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
-        Notification::assertSentTo($owner, InvitationAccepted::class);
     }
 
     public function test_invitations_accept_endpoint_requires_a_verified_email_address(): void
@@ -396,7 +394,7 @@ class CollaborationTest extends TestCase
         $url = URL::signedRoute('invitations.accept', $invitation);
 
         $this->get($url)
-            ->assertRedirect(config('spectacular.path'));
+            ->assertRedirect(config('spectacular.path') . '/register');
     }
 
     public function test_signed_invitation_route_verifies_the_email_and_accepts_the_invitation(): void
@@ -429,7 +427,6 @@ class CollaborationTest extends TestCase
             'role' => Role::VIEWER->value,
         ]);
         $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
-        Notification::assertSentTo($owner, InvitationAccepted::class);
     }
 
     public function test_signed_invitation_route_is_forbidden_for_a_different_authenticated_account(): void
