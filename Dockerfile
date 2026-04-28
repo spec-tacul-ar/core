@@ -4,7 +4,7 @@ WORKDIR /var/www/html
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git libsqlite3-dev libzip-dev unzip \
-    && docker-php-ext-install pdo pdo_sqlite zip \
+    && docker-php-ext-install bcmath pdo pdo_sqlite zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node:22-bookworm-slim /usr/local/bin/ /usr/local/bin/
