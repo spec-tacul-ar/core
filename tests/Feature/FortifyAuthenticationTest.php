@@ -178,16 +178,22 @@ class FortifyAuthenticationTest extends TestCase
 
         $this->actingAs($account);
 
-        $url = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(5),
-            [
-                'id' => $account->getKey(),
-                'hash' => sha1($account->getEmailForVerification()),
-            ],
-        );
+        $this->get($this->emailVerificationUrl($account))
+            ->assertRedirect('/account/settings?verified=1');
 
-        $this->get($url)->assertRedirect('/?verified=1');
+        $this->assertTrue($account->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_email_verification_redirects_to_settings_page_under_the_application_path(): void
+    {
+        config()->set('fortify.redirects.email-verification', '/app/account/settings');
+
+        $account = Account::factory()->unverified()->create();
+
+        $this->actingAs($account);
+
+        $this->get($this->emailVerificationUrl($account))
+            ->assertRedirect('/app/account/settings?verified=1');
 
         $this->assertTrue($account->fresh()->hasVerifiedEmail());
     }
@@ -219,5 +225,17 @@ class FortifyAuthenticationTest extends TestCase
         $this->getJson('/api/auth/password/confirmed')
             ->assertOk()
             ->assertJsonPath('confirmed', true);
+    }
+
+    private function emailVerificationUrl(Account $account): string
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(5),
+            [
+                'id' => $account->getKey(),
+                'hash' => sha1($account->getEmailForVerification()),
+            ],
+        );
     }
 }

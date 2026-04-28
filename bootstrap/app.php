@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        $middleware->redirectGuestsTo(fn () => url(config('spectacular.path') . '/login'));
         $middleware->alias([
             'sqids' => DecodeSqids::class,
         ]);

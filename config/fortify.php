@@ -73,7 +73,11 @@ return [
     |
     */
 
-    'home' => '/',
+    'home' => env('SPECTACULAR_PATH', '/'),
+
+    'redirects' => [
+        'email-verification' => env('SPECTACULAR_PATH', '') . '/account/settings',
+    ],
 
     /*
     |--------------------------------------------------------------------------
