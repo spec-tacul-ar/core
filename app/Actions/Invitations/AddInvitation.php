@@ -36,7 +36,7 @@ class AddInvitation
     {
         return [
             'project_id' => ['required', 'integer', new Authorised('invite', Project::class)],
-            'email' => ['required', 'email', 'max:250', new InvitationEmail(), new NotOwnEmail($request->user())],
+            'email' => ['required', 'email:filter', 'max:250', new InvitationEmail(), new NotOwnEmail($request->user())],
             'role' => ['required', Rule::enum(Role::class)],
         ];
     }

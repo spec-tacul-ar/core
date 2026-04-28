@@ -25,5 +25,9 @@ class ResetAccountPassword implements ResetsUserPasswords
         $account->forceFill([
             'password' => Hash::make($input['password']),
         ])->save();
+
+        if (!$account->hasVerifiedEmail()) {
+            $account->markEmailAsVerified();
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Account;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -31,6 +32,21 @@ class FortifyAuthenticationTest extends TestCase
         $this->assertTrue(Hash::check('password', $account->password));
     }
 
+    public function test_registration_does_not_send_an_email_verification_notification(): void
+    {
+        Notification::fake();
+
+        $this->postJson('/api/auth/register', [
+            'name' => 'New Account',
+            'email' => 'new@example.test',
+            'password' => 'password',
+        ])->assertCreated();
+
+        $account = Account::query()->where('email', 'new@example.test')->firstOrFail();
+
+        Notification::assertNotSentTo($account, VerifyEmail::class);
+    }
+
     public function test_registration_rejects_duplicate_email_addresses(): void
     {
         Account::factory()->create(['email' => 'taken@example.test']);
@@ -38,6 +54,17 @@ class FortifyAuthenticationTest extends TestCase
         $this->postJson('/api/auth/register', [
             'name' => 'New Account',
             'email' => 'taken@example.test',
+            'password' => 'password',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('email');
+    }
+
+    public function test_registration_rejects_email_addresses_without_a_domain_suffix(): void
+    {
+        $this->postJson('/api/auth/register', [
+            'name' => 'New Account',
+            'email' => 'new@spectacular',
             'password' => 'password',
         ])
             ->assertUnprocessable()
@@ -111,6 +138,27 @@ class FortifyAuthenticationTest extends TestCase
         $this->assertTrue(Hash::check('new-password', $account->fresh()->password));
     }
 
+    public function test_password_reset_verifies_the_account_email_address(): void
+    {
+        $account = Account::factory()->unverified()->create([
+            'email' => 'reset@example.test',
+            'password' => Hash::make('old-password'),
+        ]);
+
+        $token = Password::broker('accounts')->createToken($account);
+
+        $this->postJson('/api/auth/password/reset', [
+            'email' => $account->email,
+            'password' => 'new-password',
+            'token' => $token,
+        ])->assertOk();
+
+        $account->refresh();
+
+        $this->assertTrue(Hash::check('new-password', $account->password));
+        $this->assertTrue($account->hasVerifiedEmail());
+    }
+
     public function test_password_reset_rejects_invalid_tokens(): void
     {
         $account = Account::factory()->create(['email' => 'reset@example.test']);
@@ -142,6 +190,18 @@ class FortifyAuthenticationTest extends TestCase
         $this->get($url)->assertRedirect('/?verified=1');
 
         $this->assertTrue($account->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_email_verification_notification_can_be_resent(): void
+    {
+        Notification::fake();
+
+        $account = Account::factory()->unverified()->create();
+        $this->actingAs($account);
+
+        $this->postJson('/api/email/verification-notification')->assertAccepted();
+
+        Notification::assertSentTo($account, VerifyEmail::class);
     }
 
     public function test_password_confirmation_records_the_confirmation_in_session(): void

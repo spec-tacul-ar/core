@@ -35,7 +35,8 @@ class AcceptInvitation
 
         $contributor->save();
 
-        $invitation->account->notify(new InvitationAccepted($contributor));
+        // Disabled, for now.
+        // $invitation->account->notify(new InvitationAccepted($contributor));
 
         $invitation->delete();
     }

@@ -89,6 +89,20 @@ class ValidationRulesTest extends TestCase
             ->assertJsonValidationErrors('email');
     }
 
+    public function test_invitations_reject_email_addresses_without_a_domain_suffix(): void
+    {
+        $fixture = $this->createProjectFixture(Role::OWNER);
+        $this->actingAsAccount($fixture['account']);
+
+        $this->postJson('/api/invitations/add', [
+            'project_id' => $fixture['project']->sqid,
+            'email' => 'invitee@spectacular',
+            'role' => Role::VIEWER->value,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('email');
+    }
+
     public function test_comments_can_target_requirements_in_the_same_project(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
