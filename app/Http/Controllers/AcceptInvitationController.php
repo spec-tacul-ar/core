@@ -22,7 +22,11 @@ class AcceptInvitationController extends Controller
 
         // Redirect the user to login, if unauthenticated. They'll see the pending invite on their dashboard.
         if (!$request->user()) {
-            return redirect(config('spectacular.path'));
+            if ($account) {
+                return redirect(config('spectacular.path') . '/login');
+            }
+
+            return redirect(config('spectacular.path') . '/register');
         }
 
         // We verified our user. $request will need to know.
