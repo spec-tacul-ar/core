@@ -2,9 +2,9 @@
 
 Thank you for considering contributing to Spectacular!
 
-Please open an issue or discussion before embarking on major changes or new features to see if they align with the the project's long-term vision.
+Please open an issue or discussion before embarking on major changes or new features to see if they align with the project's long-term vision.
 
-Contributors will be asked to sign our Fiduciary License Agreement. This will guarantee that your contributions remain open forever while making maintenance of the project sustainable.
+Contributors will be asked to sign our [Fiduciary License Agreement](https://fsfe.org/activities/fla/fla.en.html). This will guarantee that your contributions remain open forever while making maintenance of the project sustainable.
 
 ## Code of Conduct
 
@@ -42,11 +42,11 @@ The API keeps things simple. From the client's perspective:
 
 Most endpoints are [Cruddy by Design](https://www.youtube.com/watch?v=MF0jFKvS4SI). Or in our case, *Bready* because it includes a verb for the index endpoint. One difference is that we avoid using nested relations unless absolutely necessary (see exception below).
 
-When not addressing a single entity, the first part of the endpoint defines the type of entitiy we want to retrieve or manipulate. The second is a verb describing what we want to do.
+When not addressing a single entity, the first part of the endpoint defines the type of entity we want to retrieve or manipulate. The second is a verb describing what we want to do.
 
 `templates/add`
 
-Filtering and pagination are achieve with GET parameters. It's important to note that we still require the user's identifier in this example even though it can be fetched from the session. This is to ensure that endpoints are stateless for caching and that the session is only used for authorisation.
+Filtering and pagination are achieved with GET parameters. It's important to note that we still require the user's identifier in this example even though it can be fetched from the session. This is to ensure that endpoints are stateless for caching and that the session is only used for authorisation.
 
 `projects/browse?user_id=123`
 

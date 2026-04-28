@@ -1,4 +1,4 @@
-<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/master/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
+<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
 
 ## About Spectacular
 
@@ -6,7 +6,7 @@ Spectacular is a free open-source functional specification builder.
 
 Spectacular puts the functional specification back at the center of software development. It replaces tickets and conversations with a single, living source of truth that is clear enough for humans and structured enough for AI. Even after launch, changes are integrated into the specification ready for the code to follow.
 
-[DEMO](https://spec.tacul.ar)
+[LIVE DEMO](https://spec.tacul.ar)
 
 ### Features
 * Maintain the specification as change requests come in
@@ -48,7 +48,7 @@ If you don't have PHP available, you can run the app with Docker. Once ready, yo
 docker compose up --build
 ```
 
-Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preservered.
+Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preserved.
 
 ### Self-hosting
 
