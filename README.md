@@ -1,5 +1,7 @@
 <p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
 
+<p align="center"><a href="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/screenshot.png" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/screenshot.png" alt="Screenshot"></a></p>
+
 ## About Spectacular
 
 Spectacular is a free open-source functional specification builder.
