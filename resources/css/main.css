@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../views/pages/**/*.blade.php';
+
+@theme {
+    --font-display: "Funnel Sans", sans-serif;
+}
+
+@utility container {
+  @apply mx-auto px-4 max-w-6xl;
+}
+
+.prose {
+    p:not(:last-child) {
+        @apply not-last:mb-4;
+    }
+
+    code:not(pre code) {
+        @apply bg-gray-100 p-1 rounded;
+    }
+
+    a {
+        @apply text-gray-500 underline hover:text-black transition-all duration-500;
+    }
+
+    h1 {
+        @apply font-display font-semibold text-4xl not-last:mb-4;
+    }
+
+    h2 {
+        @apply font-display font-semibold text-3xl not-last:mb-4;
+    }
+
+    h3 {
+        @apply font-display font-semibold text-2xl not-last:mb-4;
+    }
+
+    h4 {
+        @apply font-display font-semibold text-xl not-last:mb-4;
+    }
+
+    h5 {
+        @apply font-display font-semibold text-lg not-last:mb-4;
+    }
+
+    blockquote {
+        @apply border-l-4 border-gray-200 pl-4 text-lg not-last:mb-4;
+    }
+
+    ul {
+       @apply list-disc list-inside ml-4 not-last:mb-4;
+    }
+
+    li p {
+        @apply inline; /* Fixes TipTap putting <li> content in a <p> */
+    }
+
+    ol {
+       @apply list-decimal list-inside ml-4 not-last:mb-4;
+    }
+
+    pre {
+        @apply bg-gray-100 p-4 rounded not-last:mb-4;
+    }
+
+    hr {
+        @apply text-gray-200 my-4 last:mb-0;
+    }
+}
+
+.link {
+    @apply text-gray-900 hover:underline;
+}
