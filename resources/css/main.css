@@ -1,9 +1,31 @@
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../views/components/**/*.blade.php';
 @source '../views/pages/**/*.blade.php';
 
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
 @theme {
+    --sidebar-width: 320px;
     --font-display: "Funnel Sans", sans-serif;
 }
 
