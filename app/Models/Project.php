@@ -244,6 +244,13 @@ class Project extends Model
 
     /* Attributes */
 
+    protected function slug(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => str($this->name)->slug()->toString() ?: 'project',
+        );
+    }
+
     protected function url(): Attribute
     {
         return Attribute::make(

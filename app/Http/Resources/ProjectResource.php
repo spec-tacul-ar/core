@@ -15,6 +15,7 @@ class ProjectResource extends JsonResource
             'features' => FeatureResource::collection($this->whenLoaded('features')),
             'description' => $this->description,
             'name' => $this->name,
+            'slug' => $this->slug,
             'requirements_count' => $this->requirements_count,
             'blocked_requirements_count' => $this->blocked_requirements_count,
             'unknowns_count' => $this->unknowns_count,
