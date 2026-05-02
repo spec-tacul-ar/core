@@ -4,182 +4,121 @@
     <x-slot:head>
         @vite(['resources/css/main.css'])
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/resize@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </x-slot:head>
 
     <div
-        x-data="{
-            sidebarOpen: false,
-            sidebarTransition: false,
-            media: null,
-            isMobile: window.matchMedia('(max-width: 767px)').matches,
-            closeSidebar() {
-                this.sidebarTransition = true;
-                this.sidebarOpen = false;
-                setTimeout(() => this.sidebarTransition = false, 200);
-            },
-            toggleSidebar() {
-                this.sidebarTransition = true;
-                this.sidebarOpen = ! this.sidebarOpen;
-                setTimeout(() => this.sidebarTransition = false, 200);
-            },
-        }"
-        x-init="
-            media = window.matchMedia('(max-width: 767px)');
-            const updateMedia = () => {
-                isMobile = media.matches;
-
-                if (! isMobile) {
-                    sidebarOpen = false;
-                }
-            };
-            media.addEventListener('change', updateMedia);
-            updateMedia();
-        "
-        @keydown.escape.window="closeSidebar()"
+        x-data="{ is_open: false, is_mobile: false }"
+        x-resize.document="is_mobile = window.getComputedStyle($refs.burger).display !== 'none'"
         class="min-h-screen bg-white text-gray-800">
+
         <header class="fixed inset-x-0 top-0 z-20 flex h-16 items-center border-b border-gray-100 bg-white">
             <a href="/" class="flex h-full shrink-0 items-center justify-center px-4 md:w-(--sidebar-width) md:border-r md:border-gray-100">
-                <img src="/images/logo.svg" alt="{{ config('app.name') }}" class="h-8 w-auto mt-1">
+                <img src="/images/logo.svg" alt="Spectacular" class="h-8 w-auto mt-1">
             </a>
 
-            <div class="flex w-full items-center justify-end gap-2 px-4">
-                <a href="/app" class="font-display hidden items-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-black md:flex">
-                    Open App
+            <div class="flex w-full items-center justify-end gap-4 px-4">
+                <a href="https://www.github.com/syntheticminds/spectacular">
+                    <span class="sr-only">GitHub</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current size-6">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                    </svg>
                 </a>
 
-                <button
-                    type="button"
-                    aria-label="Toggle documentation menu"
-                    :aria-expanded="sidebarOpen.toString()"
-                    class="-mr-2 flex size-10 items-center justify-center rounded-lg text-gray-700 transition hover:bg-gray-100 md:hidden"
-                    @click="toggleSidebar()">
+                <a href="/app" class="btn btn-primary hidden md:flex">Open App</a>
 
-                    <span class="sr-only" x-text="sidebarOpen ? 'Close documentation menu' : 'Open documentation menu'"></span>
+                <button x-ref="burger" type="button" class="-mr-2 flex size-10 items-center justify-center rounded-lg text-gray-700 transition hover:bg-gray-100 md:hidden" @click="is_open = !is_open">                    
                     <span class="relative block size-5">
-                        <span
-                            class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition"
-                            :class="sidebarOpen ? 'rotate-45' : '-translate-y-2'"></span>
-                        <span
-                            class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition"
-                            :class="sidebarOpen ? 'opacity-0' : 'opacity-100'"></span>
-                        <span
-                            class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition"
-                            :class="sidebarOpen ? '-rotate-45' : 'translate-y-2'"></span>
+                        <span class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition" :class="is_open ? 'rotate-45' : '-translate-y-2'"></span>
+                        <span class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition" :class="is_open ? 'opacity-0' : 'opacity-100'"></span>
+                        <span class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition" :class="is_open ? '-rotate-45' : 'translate-y-2'"></span>
                     </span>
                 </button>
             </div>
         </header>
 
         <div class="flex">
-            <button
-                type="button"
-                aria-label="Close documentation menu"
-                x-cloak
-                x-show="sidebarOpen && isMobile"
-                x-transition.opacity
-                class="fixed inset-x-0 bottom-0 top-16 z-20 bg-gray-950/20 md:hidden"
-                @click="closeSidebar()">
-            </button>
-
-            <aside
-                x-cloak
-                x-trap.noscroll="sidebarOpen && isMobile"
-                class="fixed bottom-0 left-0 top-16 z-30 w-80 max-w-[calc(100vw-2rem)] shrink-0 md:translate-x-0"
+            <div
+                @click="is_open = false"
+                class="transition-color duration-250"
                 :class="[
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-                    sidebarTransition ? 'transition-transform duration-200' : '',
+                    is_mobile ? 'fixed inset-0' : 'hidden',
+                    is_open ? 'bg-black/20 pointer-events-auto' : 'bg-black/0 pointer-events-none',
                 ]">
 
-                <div class="h-full overflow-y-auto border-r border-gray-100 bg-white px-6 py-8">
-                    <a href="/app" class="font-display mb-8 flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-black md:hidden">
-                        Open App
-                    </a>
+                {{-- Backdrop --}}
+            </div>
+
+            <aside
+                class="fixed bottom-0 left-0 top-16 z-30 w-(--sidebar-width) max-w-full shrink-0 md:translate-x-0"
+                :class="[
+                    is_open ? 'translate-x-0' : '-translate-x-full',
+                    is_mobile ? 'transition-transform' : 'transition-none',
+                ]"
+                x-trap.noscroll="is_open && is_mobile"
+                x-cloak>
+
+                <div class="h-full overflow-y-auto border-r border-gray-100 bg-white p-8">
+                    <a href="/app" class="btn btn-primary mb-8 md:hidden">Open App</a>
 
                     <nav class="space-y-8">
-                        <x-docs.sidebar-section>
-                            <x-docs.sidebar-link href="/docs">
-                                Introduction
-
-                                <x-slot:anchors>
-                                    <a href="#what-spectacular-is" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">What Spectacular is</a>
-                                    <a href="#methodology" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Methodology</a>
-                                    <a href="#core-model" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">The core model</a>
-                                </x-slot:anchors>
+                        <x-docs.sidebar-group>
+                            <x-docs.sidebar-link title="Introduction" path="/docs">
+                                <x-docs.sidebar-sublink fragment="#what-spectacular-is">What Spectacular is</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="#methodology">Methodology</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="#core-model">The core model</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link href="/docs/get-started">
-                                Get started
-
-                                <x-slot:anchors>
-                                    <a href="#cloud" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Cloud</a>
-                                    <a href="#self-hosting" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Self-hosting</a>
-                                </x-slot:anchors>
+                            <x-docs.sidebar-link title="Get started" path="/docs/get-started">
+                                <x-docs.sidebar-sublink fragment="#cloud">Cloud</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="#self-hosting">Self-hosting</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
-                        </x-docs.sidebar-section>
+                        </x-docs.sidebar-group>
 
-                        <x-docs.sidebar-section title="Building Specs">
-                            <x-docs.sidebar-link href="/docs/projects">
-                                Projects
-
-                                <x-slot:anchors>
-                                    <a href="#creating-projects" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Creating projects</a>
-                                    <a href="#organising" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Organising</a>
-                                    <a href="#exporting" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Exporting</a>
-                                    <a href="#deleting" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Deleting</a>
-                                </x-slot:anchors>
+                        <x-docs.sidebar-group title="Core Concepts">
+                            <x-docs.sidebar-link title="Projects" path="/docs/projects">
+                                <x-docs.sidebar-sublink fragment="creating-projects">Creating projects</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="organising">Organising</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="exporting">Exporting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="deleting">Deleting</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link href="/docs/users-and-features">
-                                Users &amp; features
-
-                                <x-slot:anchors>
-                                    <a href="#users" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Users</a>
-                                    <a href="#features" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Features</a>
-                                    <a href="#using-them-together" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Using them together</a>
-                                </x-slot:anchors>
+                            <x-docs.sidebar-link title="Users & features" path="/docs/users-and-features">
+                                <x-docs.sidebar-sublink fragment="users">Users</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="features">Features</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="using-them-together">Using them together</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link href="/docs/requirements">
-                                Requirements
-
-                                <x-slot:anchors>
-                                    <a href="#writing-requirements" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Writing requirements</a>
-                                    <a href="#tasks" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Tasks</a>
-                                    <a href="#unknowns" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Unknowns</a>
-                                    <a href="#filtering" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Filtering</a>
-                                </x-slot:anchors>
+                            <x-docs.sidebar-link title="Requirements" path="/docs/requirements">
+                                <x-docs.sidebar-sublink fragment="writing-requirements">Writing requirements</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="tasks">Tasks</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="unknowns">Unknowns</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="filtering">Filtering</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
-                        </x-docs.sidebar-section>
+                        </x-docs.sidebar-group>
 
-                        <x-docs.sidebar-section title="Collaboration">
-                            <x-docs.sidebar-link href="/docs/roles">
-                                Roles
-
-                                <x-slot:anchors>
-                                    <a href="#owner" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Owner</a>
-                                    <a href="#editor" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Editor</a>
-                                    <a href="#viewer" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Viewer</a>
-                                    <a href="#leaving-a-project" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Leaving a project</a>
-                                </x-slot:anchors>
+                        <x-docs.sidebar-group title="Collaborating">
+                            <x-docs.sidebar-link title="Roles" path="/docs/roles">
+                                <x-docs.sidebar-sublink fragment="owner">Owner</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="editor">Editor</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="viewer">Viewer</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="leaving-a-project">Leaving a project</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link href="/docs/invitations">
-                                Invitations
-
-                                <x-slot:anchors>
-                                    <a href="#sending-invitations" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Sending invitations</a>
-                                    <a href="#accepting-invitations" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Accepting invitations</a>
-                                    <a href="#managing-invitations" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Managing invitations</a>
-                                    <a href="#choosing-the-right-role" class="block px-3 py-1 text-sm text-gray-500 transition hover:text-gray-950">Choosing the right role</a>
-                                </x-slot:anchors>
+                            <x-docs.sidebar-link title="Invitations" path="/docs/invitations">
+                                <x-docs.sidebar-sublink fragment="sending-invitations">Sending invitations</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="accepting-invitations">Accepting invitations</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="managing-invitations">Managing invitations</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="choosing-the-right-role">Choosing the right role</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
-                        </x-docs.sidebar-section>
+                        </x-docs.sidebar-group>
                     </nav>
                 </div>
             </aside>
 
-            <main class="mx-auto mt-16 w-full max-w-4xl px-4 py-10 md:ml-80 md:px-10 lg:ml-80">
+            <main class="mx-auto mt-16 w-full max-w-4xl px-4 py-8 md:ml-(--sidebar-width) md:px-8">
                 {{ $slot }}
             </main>
         </div>

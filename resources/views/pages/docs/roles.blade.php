@@ -17,4 +17,6 @@
         <h2 id="leaving-a-project">Leaving a project</h2>
         <p>Collaborators can leave a project. Owners can leave only when another owner remains, preventing a project from being left without an administrator.</p>
     </article>
+
+    <x-docs.next-link href="/docs/invitations">Invitations</x-docs.next-link>
 </x-layout.docs>

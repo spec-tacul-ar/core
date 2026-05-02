@@ -32,4 +32,6 @@ php artisan serve</code></pre>
 
         <pre><code>docker compose up --build</code></pre>
     </article>
+
+    <x-docs.next-link href="/docs/projects">Projects</x-docs.next-link>
 </x-layout.docs>

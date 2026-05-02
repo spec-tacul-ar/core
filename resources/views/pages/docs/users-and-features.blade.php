@@ -20,4 +20,6 @@
 Users: Customer, Staff
 Requirement: Staff can mark an invoice as paid</code></pre>
     </article>
+
+    <x-docs.next-link href="/docs/requirements">Requirements</x-docs.next-link>
 </x-layout.docs>

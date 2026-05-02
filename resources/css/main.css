@@ -1,12 +1,20 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/forms";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../views/components/**/*.blade.php';
 @source '../views/pages/**/*.blade.php';
 
+@theme {
+    --sidebar-width: 320px;
+    --main-width: 896px;
+    --sidepanel-width: 512px;
+    --font-display: "Funnel Sans", sans-serif;
+}
+
 @font-face {
   font-family: 'Funnel Sans';
-  src: url('/fonts/FunnelSans-VariableFont_wght.woff2') format('woff2');
+  src: url('../../public/fonts/FunnelSans-VariableFont_wght.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -14,23 +22,51 @@
 
 @font-face {
   font-family: 'Funnel Sans';
-  src: url('/fonts/FunnelSans-Italic-VariableFont_wght.woff2') format('woff2');
+  src: url('../../public/fonts/FunnelSans-Italic-VariableFont_wght.woff2') format('woff2');
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility container {
+  @apply mx-auto px-4 max-w-6xl;
 }
 
 [x-cloak] {
     display: none !important;
 }
 
-@theme {
-    --sidebar-width: 320px;
-    --font-display: "Funnel Sans", sans-serif;
-}
+@layer components {
+    .btn {
+        @apply flex font-display justify-center items-center gap-2 uppercase text-sm rounded-xl text-lg text-center hover:ring-2 disabled:hover:ring-0 transition duration-500 disabled:opacity-50 disabled:cursor-not-allowed p-2 px-4 print:hidden;
+    }
 
-@utility container {
-  @apply mx-auto px-4 max-w-6xl;
+    .btn.btn-sm {
+        @apply text-sm p-1 px-2;
+    }
+
+    .btn.btn-primary {
+        @apply bg-gray-800 text-white ring-gray-800 hover:bg-black hover:ring-2 hover:ring-gray-800 hover:disabled:ring-0 hover:disabled:bg-gray-800;
+    }
+
+    .btn.btn-primary-outline {
+        @apply border border-gray-800 text-gray-800 ring-inset hover:ring;
+    }
+
+    .btn.btn-danger {
+        @apply bg-red-400 text-white ring-red-400 hover:bg-red-500 hover:ring-2 hover:ring-red-500 hover:disabled:ring-0 hover:disabled:bg-red-400;
+    }
+
+    .btn.btn-danger-outline {
+        @apply border border-red-400 text-red-400 ring-red-400 ring-inset hover:ring;
+    }
 }
 
 .prose {
@@ -74,10 +110,6 @@
        @apply list-disc list-inside ml-4 not-last:mb-4;
     }
 
-    li p {
-        @apply inline; /* Fixes TipTap putting <li> content in a <p> */
-    }
-
     ol {
        @apply list-decimal list-inside ml-4 not-last:mb-4;
     }
@@ -92,5 +124,5 @@
 }
 
 .link {
-    @apply text-gray-900 hover:underline;
+    @apply text-gray-500 underline hover:text-black transition-all duration-500;
 }

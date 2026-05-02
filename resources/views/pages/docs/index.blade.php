@@ -16,18 +16,7 @@
 
         <h2 id="methodology">Methodology</h2>
         <p>Spectacular treats the specification as the durable source of product intent, not as a one-off document written before development begins. Start with behaviour, make uncertainty visible, keep implementation close to the requirement, and maintain the spec as the product changes.</p>
-
-        <h2 id="core-model">The core model</h2>
-
-        <pre><code>Project
-  Users
-  Features
-    Requirements
-      Tasks
-      Unknowns
-  Feedback
-  Exports</code></pre>
-
-        <p>Users are the audience types inside the specification. People with access to the app are collaborators with project roles.</p>
     </article>
+
+    <x-docs.next-link href="/docs/get-started">Get started</x-docs.next-link>
 </x-layout.docs>

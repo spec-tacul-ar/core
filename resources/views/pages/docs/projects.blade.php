@@ -17,4 +17,6 @@
         <h2 id="deleting">Deleting</h2>
         <p>Deleting a project removes the specification and its related content. Treat deletion as an administrative action and export or back up anything that needs to be retained.</p>
     </article>
+
+    <x-docs.next-link href="/docs/users-and-features">Users &amp; features</x-docs.next-link>
 </x-layout.docs>

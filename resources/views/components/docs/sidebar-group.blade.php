@@ -2,7 +2,7 @@
 
 <section>
     @if ($title)
-        <h2 class="font-display mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">{{ $title }}</h2>
+        <h2 class="font-display mb-2 text-xs font-semibold uppercase text-gray-400">{{ $title }}</h2>
     @endif
 
     <div class="space-y-1">

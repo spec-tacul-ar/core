@@ -17,7 +17,11 @@ class MakeFolioPagesCachable
         $response = $next($request);
 
         $response->headers->remove('Set-Cookie');
-        $response->headers->set('Cache-Control', 'public, max-age=' . 60 * 60);
+
+        // Don't do browser caching in development
+        if (!app()->environment('local')) {
+            $response->headers->set('Cache-Control', 'public, max-age=' . 60 * 60);
+        }
 
         return $response;
     }
