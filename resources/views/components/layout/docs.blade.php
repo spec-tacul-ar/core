@@ -14,7 +14,7 @@
         class="min-h-screen bg-white text-gray-800">
 
         <header class="fixed inset-x-0 top-0 z-20 flex h-16 items-center border-b border-gray-100 bg-white">
-            <a href="/" class="flex h-full shrink-0 items-center justify-center px-4 md:w-(--sidebar-width) md:border-r md:border-gray-100">
+            <a href="/" class="flex h-full shrink-0 items-center justify-center px-4 xl:w-(--sidebar-width) xl:border-r xl:border-gray-100">
                 <img src="/images/logo.svg" alt="Spectacular" class="h-8 w-auto mt-1">
             </a>
 
@@ -27,9 +27,9 @@
                     </svg>
                 </a>
 
-                <a href="/app" class="btn btn-primary hidden md:flex">Open App</a>
+                <a href="/app" class="btn btn-primary hidden xl:flex">Open App</a>
 
-                <button x-ref="burger" type="button" class="-mr-2 flex size-10 items-center justify-center rounded-lg text-gray-700 transition hover:bg-gray-100 md:hidden" @click="is_open = !is_open">                    
+                <button x-ref="burger" type="button" class="-mr-2 flex size-10 items-center justify-center rounded-lg text-gray-700 transition hover:bg-gray-100 xl:hidden" @click="is_open = !is_open">
                     <span class="relative block size-5">
                         <span class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition" :class="is_open ? 'rotate-45' : '-translate-y-2'"></span>
                         <span class="absolute left-0 top-1/2 h-0.5 w-full rounded bg-current transition" :class="is_open ? 'opacity-0' : 'opacity-100'"></span>
@@ -52,7 +52,7 @@
             </div>
 
             <aside
-                class="fixed bottom-0 left-0 top-16 z-30 w-(--sidebar-width) max-w-full shrink-0 md:translate-x-0"
+                class="fixed bottom-0 left-0 top-16 z-30 w-(--sidebar-width) max-w-full shrink-0 xl:translate-x-0"
                 :class="[
                     is_open ? 'translate-x-0' : '-translate-x-full',
                     is_mobile ? 'transition-transform' : 'transition-none',
@@ -61,19 +61,21 @@
                 x-cloak>
 
                 <div class="h-full overflow-y-auto border-r border-gray-100 bg-white p-8">
-                    <a href="/app" class="btn btn-primary mb-8 md:hidden">Open App</a>
+                    <a href="/app" class="btn btn-primary mb-8 xl:hidden">Open App</a>
 
                     <nav class="space-y-8">
                         <x-docs.sidebar-group>
                             <x-docs.sidebar-link title="Introduction" path="/docs">
-                                <x-docs.sidebar-sublink fragment="#what-spectacular-is">What Spectacular is</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="#methodology">Methodology</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="#core-model">The core model</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="who-is-spectacular-for">Who is Spectacular for?</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="methodology">Methodology</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="how-to-use-spectacular-well">How to use Spectacular</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="spectacular-and-ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link title="Get started" path="/docs/get-started">
-                                <x-docs.sidebar-sublink fragment="#cloud">Cloud</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="#self-hosting">Self-hosting</x-docs.sidebar-sublink>
+                            <x-docs.sidebar-link title="Get Started" path="/docs/get-started">
+                                <x-docs.sidebar-sublink fragment="cloud">Cloud</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="self-hosting">Self-hosting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="solo-mode">Solo mode</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 
@@ -118,7 +120,7 @@
                 </div>
             </aside>
 
-            <main class="mx-auto mt-16 w-full max-w-4xl px-4 py-8 md:ml-(--sidebar-width) md:px-8">
+            <main class="mx-auto mt-16 w-full max-w-4xl px-4 py-8 xl:ml-(--sidebar-width) xl:px-8">
                 {{ $slot }}
             </main>
         </div>

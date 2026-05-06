@@ -52,6 +52,10 @@
         @apply text-sm p-1 px-2;
     }
 
+    .btn.btn-lg {
+        @apply text-lg p-3 px-6;
+    }
+
     .btn.btn-primary {
         @apply bg-gray-800 text-white ring-gray-800 hover:bg-black hover:ring-2 hover:ring-gray-800 hover:disabled:ring-0 hover:disabled:bg-gray-800;
     }
@@ -78,7 +82,7 @@
         @apply bg-gray-100 p-1 rounded;
     }
 
-    a {
+    a:not(.btn) {
         @apply text-gray-500 underline hover:text-black transition-all duration-500;
     }
 
@@ -107,11 +111,11 @@
     }
 
     ul {
-       @apply list-disc list-inside ml-4 not-last:mb-4;
+       @apply list-disc list-inside ml-4 space-y-1 not-last:mb-4;
     }
 
     ol {
-       @apply list-decimal list-inside ml-4 not-last:mb-4;
+       @apply list-decimal list-inside ml-4 space-y-1 not-last:mb-4;
     }
 
     pre {
@@ -120,6 +124,26 @@
 
     hr {
         @apply text-gray-200 my-4 last:mb-0;
+    }
+
+    table {
+        @apply border-separate border-spacing-1 not-last:mb-4;
+    }
+
+    thead th {
+        @apply bg-gray-200;
+    }
+
+    tbody th {
+        @apply bg-gray-100;
+    }
+
+    tbody tr td {
+        @apply bg-gray-50;
+    }
+
+    th, td {
+        @apply p-2;
     }
 }
 

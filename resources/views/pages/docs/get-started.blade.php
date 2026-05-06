@@ -1,36 +1,137 @@
-<x-layout.docs title="Get started">
+<x-layout.docs title="Get Started">
     <article class="prose max-w-none">
         <header class="not-prose mb-10 border-b border-gray-100 pb-8">
-            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Get started</h1>
-            <p class="max-w-2xl text-lg leading-8 text-gray-500">Choose Spectacular Cloud for a managed service, or self-host the Laravel application with PHP or Docker.</p>
+            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Get Started</h1>
+            <p class="max-w-2xl text-lg leading-8 text-gray-500">Choose Spectacular Cloud for a managed service, or self-host with PHP or Docker.</p>
         </header>
 
-        <h2 id="cloud">Cloud</h2>
-        <p>Spectacular Cloud is the simplest way to start. Hosting, updates, backups, and operational maintenance are handled for you, so the team can focus on writing and reviewing specifications.</p>
-        <p>Use Cloud when you want shared access without running infrastructure, or when stakeholders need a stable place to review projects immediately.</p>
+        <p>You can start using Spectacular in two ways:</p>
 
-        <h2 id="self-hosting">Self-hosting</h2>
-        <p>Self-hosting gives you control over deployment, data storage, and configuration. It is best for teams already comfortable maintaining Laravel applications or internal Docker services.</p>
+        <ol>
+            <li>Use the hosted cloud version</li>
+            <li>Self-host the open-source application</li>
+        </ol>
 
-        <h3 id="php">PHP</h3>
-        <p>The PHP installation runs Spectacular directly as a Laravel application.</p>
-        <ul>
-            <li>PHP 8.2 or newer.</li>
-            <li>Composer 2.</li>
-            <li>Node.js and npm.</li>
-            <li>PHP extensions: BCMath, PDO, SQLite/PDO SQLite, and Zip.</li>
-            <li>Git and unzip.</li>
-        </ul>
+        <table class="table-fixed w-full">
+            <thead>
+                <tr>
+                    <th class="bg-transparent"></th>
+                    <th>Cloud</th>
+                    <th>Self-hosted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="text-left font-normal">
+                        <strong>Full featured</strong><br>
+                        Our commitment to open-source means the self-hosted version has all the core features of the cloud solution.
+                    </th>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-left font-normal">
+                        <strong>Unlimited projects</strong><br>
+                        Premium subscribers get unlimited projects (subject to fair usage).
+                    </th>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-left font-normal">
+                        <strong>Instant setup</strong><br>
+                        Simply register on the cloud platform and you're ready to go.
+                    </th>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-red-600 inline-block fill-current size-6">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-left font-normal">
+                        <strong>Automatic updates</strong><br>
+                        The cloud platform is actively maintained with frequent security and feature updates.
+                    </th>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-red-600 inline-block fill-current size-6">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-left font-normal">
+                        <strong>Complete control</strong><br>
+                        Self-hosting allows you to modify the code and data is stored on your own infrastructure.
+                    </th>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-red-600 inline-block fill-current size-6">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </td>
+                    <td class="text-center align-middle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>For nearly everyone, Spectacular Cloud is the best place to start. Self-hosting is primarily for development, customisation or those that need complete ownership of their data for compliance reasons.</p>
+
+        <h2 id="cloud">Spectacular Cloud</h2>
+
+        <p>Simply register at <a href="https://spec.tacul.ar">spec.tacul.ar</a> and get started!</p>
+
+        <a href="https://spec.tacul.ar/app/register" class="btn btn-lg btn-primary max-w-64 mb-4 mx-auto">Create an account</a>
+
+        <h2 id="self-hosting">Self-host</h2>
+
+        <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://spec.tacul.ar">https://github.com/syntheticminds/spectacular</a></p>
+
+        <p>Spectacular is a Laravel and Vue application. Getting started has been made to be easy. If you can host Laravel applications, you can use the following commands to get started quickly.</p>
 
         <pre><code>git clone https://github.com/syntheticminds/spectacular.git
 cd spectacular
 composer setup
 php artisan serve</code></pre>
 
-        <h3 id="docker">Docker</h3>
-        <p>Docker is the quickest self-hosted path when you do not want to install PHP, Composer, and Node directly. The supplied Compose file builds the app and serves it on port 8000.</p>
+        <h3>Docker</h3>
 
-        <pre><code>docker compose up --build</code></pre>
+        <p>To make it easy for those without PHP available, a Spectacular instance can be run with Docker. After cloning the repository, run:</p>
+
+        <pre><code>docker compose up</code></pre>
+
+        <h2 id="solo-mode">Solo mode</h2>
+
+        <p>To get your started as quick as possible, Spectacular will run in <em>solo</em> mode by default. It streamlines the experience for single users. You can disable it by removing <code>SPECTACULAR_MODE=solo</code> from the .env file.</p>
     </article>
 
     <x-docs.next-link href="/docs/projects">Projects</x-docs.next-link>
