@@ -1,9 +1,6 @@
 <x-layout.docs title="Invitations">
-    <article class="prose max-w-none">
-        <header class="not-prose mb-10 border-b border-gray-100 pb-8">
-            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Invitations</h1>
-            <p class="max-w-2xl text-lg leading-8 text-gray-500">Invitations give people access to a project with an appropriate role.</p>
-        </header>
+    <article class="prose">
+        <h1>Invitations</h1>
 
         <h2 id="sending-invitations">Sending invitations</h2>
         <p>Project owners can invite collaborators from the People panel. Enter an email address, choose a role, and send the invitation.</p>

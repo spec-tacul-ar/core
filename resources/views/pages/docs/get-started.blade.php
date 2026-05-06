@@ -1,16 +1,8 @@
 <x-layout.docs title="Get Started">
-    <article class="prose max-w-none">
-        <header class="not-prose mb-10 border-b border-gray-100 pb-8">
-            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Get Started</h1>
-            <p class="max-w-2xl text-lg leading-8 text-gray-500">Choose Spectacular Cloud for a managed service, or self-host with PHP or Docker.</p>
-        </header>
+    <article class="prose">
+        <h1>Get Started</h1>
 
-        <p>You can start using Spectacular in two ways:</p>
-
-        <ol>
-            <li>Use the hosted cloud version</li>
-            <li>Self-host the open-source application</li>
-        </ol>
+        <p>You can start using Spectacular in two ways: the hosted cloud version or installing the open-source application.</p>
 
         <table class="table-fixed w-full">
             <thead>

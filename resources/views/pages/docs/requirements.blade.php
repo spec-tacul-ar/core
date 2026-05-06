@@ -1,9 +1,6 @@
 <x-layout.docs title="Requirements">
-    <article class="prose max-w-none">
-        <header class="not-prose mb-10 border-b border-gray-100 pb-8">
-            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Requirements</h1>
-            <p class="max-w-2xl text-lg leading-8 text-gray-500">Requirements are the specific behaviours that make a feature implementable and reviewable.</p>
-        </header>
+    <article class="prose">
+        <h1>Requirements</h1>
 
         <h2 id="writing-requirements">Writing requirements</h2>
         <p>Write requirement titles as concise behaviour statements. Add detail in the description, including rules, constraints, edge cases, and examples that a reviewer or developer needs to understand.</p>

@@ -1,11 +1,6 @@
 <x-layout.docs title="Documentation">
-    <article class="prose max-w-none">
-        <header class="not-prose mb-10 border-b border-gray-100 pb-8">
-            <h1 class="font-display mb-4 text-5xl font-semibold leading-tight text-gray-950">Introduction</h1>
-            <p class="max-w-2xl text-lg leading-8 text-gray-500">
-                Spectacular is a specification-first workspace for planning and building software.
-            </p>
-        </header>
+    <article class="prose">
+        <h1>Introduction</h1>
 
         <p>Spectacular helps teams work around a living functional specification: a clear, structured description of what the software should do, who it is for, what is still unknown, and what work remains before the it can be shipped.</p>
 
@@ -13,7 +8,7 @@
 
         <p>Spectacular gives requirements a single home everyone can work from.</p>
 
-        <p>Instead of treating the specification as a document you write once and forget, Spectacular treats it as an active part of the delivery process. As the project changes, the specification changes with it. This is not waterfall; requirements can and should be clarified, discussed and revisited through to development and boyond.</p>
+        <p>Instead of treating the specification as a document you write once and forget, Spectacular treats it as an active part of the delivery process. As the project changes, the specification changes with it. This is not waterfall; requirements can and should be clarified, discussed and revisited through to development and beyond.</p>
 
         <p>Use Spectacular when you want an answer to the question: What are we building, exactly?</p>
 

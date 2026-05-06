@@ -44,10 +44,6 @@
   @apply mx-auto px-4 max-w-6xl;
 }
 
-[x-cloak] {
-    display: none !important;
-}
-
 @layer components {
     .btn {
         @apply flex font-display justify-center items-center gap-2 uppercase text-sm rounded-xl text-lg text-center hover:ring-2 disabled:hover:ring-0 transition duration-500 disabled:opacity-50 disabled:cursor-not-allowed p-2 px-4 print:hidden;

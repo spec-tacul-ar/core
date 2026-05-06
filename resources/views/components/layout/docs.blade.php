@@ -81,7 +81,7 @@
 
                         <x-docs.sidebar-group title="Core Concepts">
                             <x-docs.sidebar-link title="Projects" path="/docs/projects">
-                                <x-docs.sidebar-sublink fragment="creating-projects">Creating projects</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink fragment="fields">Fields</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink fragment="organising">Organising</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink fragment="exporting">Exporting</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink fragment="deleting">Deleting</x-docs.sidebar-sublink>
