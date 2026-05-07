@@ -2,10 +2,7 @@
 
 <x-layout :title="$title . ' - ' . config('app.name')">
     <x-slot:head>
-        @vite(['resources/css/docs.css'])
-        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/resize@3.x.x/dist/cdn.min.js"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        @vite(['resources/js/docs.js'])
     </x-slot:head>
 
     <div
