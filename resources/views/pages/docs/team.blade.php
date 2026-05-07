@@ -21,7 +21,7 @@
 
         <h2 id="invitations">Invitations</h2>
 
-        <p>Project owners can invite collaborators from the team panel. Enter an email address, choose a role, and send the invitation. They will receive an email inviting them to join the project or register for an account if they don't already have one. Their invitation will be waiting for them when they first log in.</p>
+        <p>Project owners can invite collaborators from the team panel. Enter an email address, choose a role, and send the invitation. Invitees will receive an email inviting them to join the project or register for an account if they don't already have one. Their invitation will be waiting for them when they first log in.</p>
 
         <p>Pending invitations can be revoked at any time by the owners. Remove invitations when access is no longer needed or when an email address was entered incorrectly.</p>
 

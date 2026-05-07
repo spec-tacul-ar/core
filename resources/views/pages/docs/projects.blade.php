@@ -15,21 +15,21 @@
             <li>Who is contributing to the specification?</li>
         </ul>
 
-        <p>Remember that Spectacular project is not a filing cabinet: it is a discovery tool. Use writing the specification as an opportunity to find gaps in knowledge. Keep these thoughts in mind:</p>
+        <p>Remember that a Spectacular project is not a filing cabinet: it is a discovery tool. Use writing the specification as an opportunity to find gaps in knowledge. Keep these thoughts in mind:</p>
 
         <ul>
             <li>Which users haven't we thought of?</li>
             <li>Which features have been implied but not written down?</li>
             <li>Which requirements depend on unmade decisions?</li>
             <li>Which edge cases have no agreed behaviour?</li>
-            <li>Which tasks have being planned before the requirement is clear?</li>
+            <li>Which tasks have been planned before the requirement is clear?</li>
             <li>Which assumptions would be most expensive if wrong?</li>
         </ul>
 
         <p>The earlier these questions are captured, the cheaper they are to resolve.</p>
 
         <x-docs.tip>
-            While it's tempting to thrash-out a specification in no time using AI, you are outsourcing your thinking and may miss critical requirements. The AI doesn't <em>understand</em> motivations like humans do and will make odd judgements.
+            While it's tempting to thrash out a specification in no time using AI, you are outsourcing your thinking and may miss critical requirements. AI doesn't <em>understand</em> motivations like humans do and will make odd judgements.
         </x-docs.tip>
 
         <h2 id="fields">Fields</h2>
@@ -72,7 +72,7 @@
 
         <h2 id="organising">Organising</h2>
 
-        <p>As your specification grows, you'll find better ways to arrange it. Clicking the <em>Organise</em> button in the navbar to reveal a sidebar that lists the project's users and features. Features can be further expanded to reveal their requirements. Requirements can also be reorganised and even dragged to other features.</p>
+        <p>As your specification grows, you'll find better ways to arrange it. Click the <em>Organise</em> button in the navbar to reveal a sidebar that lists the project's users and features. Features can be further expanded to reveal their requirements. Requirements can also be reorganised and even dragged to other features.</p>
 
         <h2 id="exporting">Exporting</h2>
 
@@ -90,7 +90,7 @@
 
         <h2 id="deleting">Deleting</h2>
 
-        <p>A project can be deleted from the edit sidepanel. Beware that this is an irreversable action - Spectacular does not keep copies of your projects once deleted. Be sure to export your data if there is a possibility that you might want to recover it.</p>
+        <p>A project can be deleted from the edit side panel. Beware that this is an irreversible action: Spectacular does not keep copies of your projects once deleted. Be sure to export your data if there is a possibility that you might want to recover it.</p>
     </article>
 
     <x-docs.next-link href="/docs/users-and-features">Users &amp; features</x-docs.next-link>

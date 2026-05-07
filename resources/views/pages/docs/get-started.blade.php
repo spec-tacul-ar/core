@@ -2,7 +2,7 @@
     <article class="prose">
         <h1>Get Started</h1>
 
-        <p>You can start using Spectacular in two ways: the hosted cloud version or installing the open-source application.</p>
+        <p>You can start using Spectacular in two ways: by using the hosted cloud version or by installing the open-source application.</p>
 
         <table class="table-fixed w-full">
             <thead>
@@ -80,7 +80,7 @@
                 <tr>
                     <th class="text-left font-normal">
                         <strong>Complete control</strong><br>
-                        Self-hosting allows you to modify the code and data is stored on your own infrastructure.
+                        Self-hosting allows you to modify the code and your data is stored on your own infrastructure.
                     </th>
                     <td class="text-center align-middle">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-red-600 inline-block fill-current size-6">
@@ -96,7 +96,7 @@
             </tbody>
         </table>
 
-        <p>For nearly everyone, Spectacular Cloud is the best place to start. Self-hosting is primarily for development, customisation or those that need complete ownership of their data for compliance reasons.</p>
+        <p>For nearly everyone, Spectacular Cloud is the best place to start. Self-hosting is primarily for development, customisation, or teams that need complete ownership of their data for compliance reasons.</p>
 
         <h2 id="cloud">Spectacular Cloud</h2>
 
@@ -108,7 +108,7 @@
 
         <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://spec.tacul.ar">https://github.com/syntheticminds/spectacular</a></p>
 
-        <p>Spectacular is a Laravel and Vue application. Getting started has been made to be easy. If you can host Laravel applications, you can use the following commands to get started quickly.</p>
+        <p>Spectacular is a Laravel and Vue application. Getting started has been made easy. If you can host Laravel applications, you can use the following commands to get started quickly.</p>
 
         <pre><code>git clone https://github.com/syntheticminds/spectacular.git
 cd spectacular

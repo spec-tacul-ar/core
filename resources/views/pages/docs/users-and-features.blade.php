@@ -8,9 +8,9 @@
 
         <p>A user is anyone or anything that interacts with the system. Use users to make the specification less abstract. Software rarely exists in isolation. It exists because someone needs to do something.</p>
 
-        <p>Users are not personas that might emerge during research and discovery. They are purely role-based, behavior-orientated and not necessarily human. Think of user roles like administrators, automated systems like payment providers, and AI agents.</p>
+        <p>Users are not personas that might emerge during research and discovery. They are purely role-based, behaviour-orientated and not necessarily human. Think of user roles like administrators, automated systems like payment providers, and AI agents.</p>
 
-        <x-docs.tip>If you find yourself adding too many users, you might want to think about creating a new user that encompasses others.</x-doc.tip>
+        <x-docs.tip>If you find yourself adding too many users, you might want to think about creating a new user that encompasses others.</x-docs.tip>
 
         <h3>Fields</h3>
 
@@ -36,11 +36,11 @@
 
         <h4>Summary</h4>
 
-        <p>Summarise the duties are of this user, how they interact with the system and their motivations.</p>
+        <p>Summarise the duties of this user, how they interact with the system, and their motivations.</p>
         
         <x-docs.examples>
             <x-slot:good>
-                <x-docs.example>An annonymous visitor is one who has not authenticated with the system. They will therefore not have access to the members only area but can still access a limited number of resources.</x-docs.example>
+                <x-docs.example>An anonymous visitor is one who has not authenticated with the system. They will therefore not have access to the members-only area but can still access a limited number of resources.</x-docs.example>
             </x-slot:good>
         </x-docs.examples>
 
@@ -49,7 +49,7 @@
 
         <h2 id="features">Features</h2>
 
-        <p>A feature is a large area capability or product value. They should be broad enough to group several related user stories, but not so broad that they become vague containers for the whole product.</p>
+        <p>A feature is a large capability area or product value. It should be broad enough to group several related user stories, but not so broad that it becomes a vague container for the whole product.</p>
 
         <h3>Fields</h3>
 
@@ -73,7 +73,7 @@
 
         <h4>Summary</h4>
         
-        <p>A heading for this group of requirements. This is a good place to add information about motiviation, high-level implementation details and explicitly defining anything that's out of scope.</p>
+        <p>A heading for this group of requirements. This is a good place to add information about motivation, high-level implementation details, and anything that's explicitly out of scope.</p>
         
         <x-docs.examples>
             <x-slot:good>

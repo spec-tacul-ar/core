@@ -2,13 +2,13 @@
     <article class="prose">
         <h1>Introduction</h1>
 
-        <p>Spectacular helps teams work around a living functional specification: a clear, structured description of what the software should do, who it is for, what is still unknown, and what work remains before the it can be shipped.</p>
+        <p>Spectacular helps teams work around a living functional specification: a clear, structured description of what the software should do, who it is for, what is still unknown, and what work remains before it can be shipped.</p>
 
-        <p>Slack, Jira, Confluence, etc. are great tools but requirements can be scattered amongst threads, tickets and emails. Too often, developers (and now AI agents) are expected to infer requirements from these fragments which leads to misinterpretation and churn.</p>
+        <p>Slack, Jira, Confluence, etc. are great tools, but requirements can be scattered amongst threads, tickets, and emails. Too often, developers (and now AI agents) are expected to infer requirements from these fragments, which leads to misinterpretation and churn.</p>
 
         <p>Spectacular gives requirements a single home everyone can work from.</p>
 
-        <p>Instead of treating the specification as a document you write once and forget, Spectacular treats it as an active part of the delivery process. As the project changes, the specification changes with it. This is not waterfall; requirements can and should be clarified, discussed and revisited through to development and beyond.</p>
+        <p>Instead of treating the specification as a document you write once and forget, Spectacular treats it as an active part of the delivery process. As the project changes, the specification changes with it. This is not waterfall; requirements can and should be clarified, discussed, and revisited through to development and beyond.</p>
 
         <p>Use Spectacular when you want an answer to the question: What are we building, exactly?</p>
 

@@ -2,10 +2,7 @@
     <article class="prose">
         <h1>Requirements</h1>
 
-        <p>Requirements are the core entities in a Spectacular specifications. In other places, they might be called user stories. They describe the specific user needs or system interactions that contribute to the parent feature.</p>
-
-        <p>Requirements are not tasks</p>
-        <p>Requirements are not acceptance criteria.</p>
+        <p>Requirements are the core entities in Spectacular specifications. In other places, they might be called user stories. They describe the specific user needs or system interactions that contribute to the parent feature.</p>
 
         <p>How granlar you are with your requirements is up to you but a general rule of thumb is that a developer should be able to implement a requirement within a day.</p>
 
@@ -13,7 +10,7 @@
 
         <h3>Title</h3>
         
-        <p>This succinctly describes what can be achieved thanks to this requirement. Some like to add the motivation to the end of the user story name but we recommend you add this to the description.</p>
+        <p>This succinctly describes what can be achieved thanks to this requirement. Some like to add the motivation to the end of the user story name, but we recommend adding this to the description.</p>
         
         <p>You can specify which types of users are able to utilise the functionality defined in this requirement.</p>
         
@@ -35,13 +32,13 @@
 
         <h3>Description</h3>
 
-        <p>Use this field to give more detail about this requirement and an acceptance criteria. It's a rich-text field so you can make it as detailed as needed.</p>
+        <p>Use this field to give more detail about this requirement and its acceptance criteria. It's a rich text field, so you can make it as detailed as needed.</p>
 
         <p>Try to include:</p>
         <ul>
             <li>Motivation for why the user might need this ability.</li>
-            <li>Extra details about how the use interacts with this part of the system.</li>
-            <li>Define functionality you wish to exclude from the requirements. For instance, you might want to make it clear that the user login requirement does not include a <em>remember me</em> function.</li>
+            <li>Extra details about how the user interacts with this part of the system.</li>
+            <li>Functionality you wish to exclude from the requirement. For instance, you might want to make it clear that the user login requirement does not include a <em>remember me</em> function.</li>
         </ul>
 
         {{-- TODO Much more advice here. --}}
@@ -83,16 +80,16 @@
 
         <p>Tasks are the real steps needed to complete the requirement. Tasks are optional because the implementation of a requirement can be trivial or self-evident.</p>
 
-        <p>Remeber that tasks can be reorganised and removed when editing requirements, should you need to.</p>
+        <p>Remember that tasks can be reorganised and removed when editing requirements, should you need to.</p>
 
         <h4>Name</h4>
 
-        <p>A succient description of what needs to be done.</p>
+        <p>A succinct description of what needs to be done.</p>
 
         <x-docs.examples>
             <x-slot:good>
                 <x-docs.example>Create a new database migration.</x-docs.example>
-                <x-docs.example>Import existing users data the new database.</x-docs.example>
+                <x-docs.example>Import existing user data into the new database.</x-docs.example>
                 <x-docs.example>Point the legacy systems to the new database.</x-docs.example>
             </x-slot:good>
 
@@ -104,9 +101,9 @@
 
         <h4>Estimate</h4>
 
-        <p>The number of hours this tasks is expected to consume. These are summed to give a time estimates for the parent requirement, feature and project.</p>
+        <p>The number of hours this task is expected to consume. These are summed to give time estimates for the parent requirement, feature, and project.</p>
 
-        <p>Estimates are defined in quarter hour increments. For instance, <em>0.75</em> is three quarters of an hour. You may use zero hours for trivial tasks.</p>
+        <p>Estimates are defined in quarter-hour increments. For instance, <em>0.75</em> is three-quarters of an hour. You may use zero hours for trivial tasks.</p>
 
         <h4>Is complete</h4>
 
@@ -131,7 +128,7 @@
 
         <h2 id="resolving-unknowns">Resolving unknowns</h2>
 
-        <p>Each unknown can be quickly marked as resolved using its dropdown menu. This will show a modal where you can add append the clarification to the requirement description.</p>
+        <p>Each unknown can be quickly marked as resolved using its dropdown menu. This will show a modal where you can append the clarification to the requirement description.</p>
 
         <h2 id="set-status">Set status</h2>
 
