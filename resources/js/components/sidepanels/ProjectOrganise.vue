@@ -1,5 +1,5 @@
 <template>
-    <SidepanelLayout>
+    <SidepanelLayout help="/docs/projects#organising">
         <template #buttons>
             <SpinnerButton type="submit" class="btn btn-primary" :loading="is_waiting" @click="submit">Save</SpinnerButton>
         </template>

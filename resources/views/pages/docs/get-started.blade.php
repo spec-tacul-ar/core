@@ -104,7 +104,7 @@
 
         <a href="https://spec.tacul.ar/app/register" class="btn btn-lg btn-primary max-w-64 mb-4 mx-auto">Create an account</a>
 
-        <h2 id="self-hosting">Self-host</h2>
+        <h2 id="self-hosted">Self-hosted</h2>
 
         <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://spec.tacul.ar">https://github.com/syntheticminds/spectacular</a></p>
 

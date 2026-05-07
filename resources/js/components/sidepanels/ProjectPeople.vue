@@ -1,5 +1,5 @@
 <template>
-    <SidepanelLayout>
+    <SidepanelLayout help="/docs/team">
         <template #toolbar>
             <Tooltip v-if="can_leave" text="Leave project">
                 <button type="button" class="p-2" @click="leave">

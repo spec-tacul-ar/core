@@ -20,7 +20,7 @@
         <div class="flex w-full items-center justify-end gap-2 px-4">
             <slot name="menu"></slot>
             
-            <UserMenu v-if="settings.mode !== 'solo'" />
+            <UserMenu />
         </div>
     </nav>
 
@@ -92,11 +92,13 @@
 </template>
 
 <script>
+import HelpLink from '@/components/HelpLink.vue';
 import UserMenu from '@/components/navigation/UserMenu.vue';
 import { useModalStore } from '@/stores';
 
 export default {
     components: {
+        HelpLink,
         UserMenu,
     },
     computed: {
@@ -169,7 +171,6 @@ export default {
         };
     },
     inheritAttrs: false,
-    inject: ['settings'],
     methods: {
         closeSidebar() {
             this.show_sidebar = false;

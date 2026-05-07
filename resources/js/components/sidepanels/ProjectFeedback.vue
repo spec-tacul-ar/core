@@ -1,5 +1,5 @@
 <template>
-    <SidepanelLayout>
+    <SidepanelLayout help="/docs/feedback">
         <template #toolbar>
             <RouterLink v-if="commentable" :to="{ name: 'projects.feedback' }" title="Feedback" class="flex items-center gap-2 p-2 -ml-2 text-indigo-600 mr-auto">
                 <IconSet name="chevron-left" />

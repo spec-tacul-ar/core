@@ -1,5 +1,5 @@
 <template>
-    <SidepanelLayout>
+    <SidepanelLayout help="/docs/projects">
         <template #toolbar>
             <Tooltip text="Delete project">
                 <button type="button" class="p-2" @click="openProjectDeleteModal()">

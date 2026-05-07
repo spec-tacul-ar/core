@@ -93,5 +93,5 @@
         <p>A project can be deleted from the edit side panel. Beware that this is an irreversible action: Spectacular does not keep copies of your projects once deleted. Be sure to export your data if there is a possibility that you might want to recover it.</p>
     </article>
 
-    <x-docs.next-link href="/docs/users-and-features">Users &amp; features</x-docs.next-link>
+    <x-docs.next-link href="/docs/users">Users</x-docs.next-link>
 </x-layout.docs>

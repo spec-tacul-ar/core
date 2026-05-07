@@ -76,7 +76,7 @@
             </x-slot:bad>
         </x-docs.examples>
 
-        <h3>Tasks</h3>
+        <h3 id="tasks">Tasks</h3>
 
         <p>Tasks are the real steps needed to complete the requirement. Tasks are optional because the implementation of a requirement can be trivial or self-evident.</p>
 
@@ -109,7 +109,9 @@
 
         <p>Check this box if a task has been completed. When all tasks have been marked as complete, the requirement itself is automatically marked as complete.</p>
 
-        <h3>Unknowns</h3>
+        <p>As the build progresses, you can mark tasks as complete. When all tasks are completed in a requirement, the requirement itself is marked as complete. In the requirement's dropdown menu, you will find an option to complete all tasks at once.</p>
+
+        <h3 id="unknowns">Unknowns</h3>
 
         <p>This is a very powerful feature that lets you note talking points directly on the specification. Unlike blockers, Unknowns are for documenting ambiguities that should be resolved before the work can even commence.</p>
 
@@ -126,15 +128,11 @@
             </x-slot:bad>
         </x-docs.examples>
 
-        <h2 id="resolving-unknowns">Resolving unknowns</h2>
+        <h4 id="resolving-unknowns">Resolving unknowns</h4>
 
         <p>Each unknown can be quickly marked as resolved using its dropdown menu. This will show a modal where you can append the clarification to the requirement description.</p>
 
-        <h2 id="set-status">Set status</h2>
-
-        <p>As the build progresses, you can mark tasks as complete. When all tasks are completed in a requirement, the requirement itself is marked as complete. In the requirement's dropdown menu, you will find an option to complete all tasks at once.</p>
-
-        <h2 id="deleting">Deleting</h2>
+        <h2 id="deleting">Deleting requirements</h2>
 
         <p>Requirements can be deleted using the item in the requirement's dropdown menu.</p>
     </article>

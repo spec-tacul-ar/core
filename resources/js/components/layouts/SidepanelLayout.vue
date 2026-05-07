@@ -5,6 +5,12 @@
                 <slot name="toolbar"></slot>
             </div>
 
+            <Tooltip v-if="help" text="Help">
+                <a :href="help" target="_blank" class="block p-2">
+                    <IconSet name="help" class="size-6" />
+                </a>
+            </Tooltip>
+
             <button type="button" class="block p-2 -mr-2" @click="$emit('close')">
                 <IconSet name="x-lg" class="size-6" />
             </button>
@@ -27,10 +33,12 @@
 
 <script>
 import IconSet from '@/components/IconSet.vue';
+import Tooltip from '@/components/Tooltip.vue';
 
 export default {
     components: {
         IconSet,
+        Tooltip,
     },
     computed: {
         has_buttons() {
@@ -43,7 +51,10 @@ export default {
         if (element) {
             element.focus();
         }
-    }
+    },
+    props: {
+        help: String,
+    },
 };
 
 </script>

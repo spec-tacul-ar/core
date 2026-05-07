@@ -68,44 +68,36 @@
                             <x-docs.sidebar-link label="Introduction" href="/docs">
                                 <x-docs.sidebar-sublink href="/docs#who-is-spectacular-for">Who is Spectacular for?</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs#methodology">Methodology</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs#how-to-use-spectacular-well">How to use Spectacular</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs#spectacular-and-ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs#ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
                             <x-docs.sidebar-link label="Get Started" href="/docs/get-started">
                                 <x-docs.sidebar-sublink href="/docs/get-started#cloud">Cloud</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/get-started#self-hosting">Self-hosting</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/get-started#solo-mode">Solo mode</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/get-started#self-hosted">Self-hosted</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 
                         <x-docs.sidebar-group label="Core Concepts">
                             <x-docs.sidebar-link label="Projects" href="/docs/projects">
-                                <x-docs.sidebar-sublink href="/docs/projects#fields">Fields</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/projects#organising">Organising</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/projects#exporting">Exporting</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/projects#filtering">Filtering</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/projects#deleting">Deleting</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link label="Users & features" href="/docs/users-and-features">
-                                <x-docs.sidebar-sublink href="/docs/users-and-features#users">Users</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/users-and-features#features">Features</x-docs.sidebar-sublink>
-                            </x-docs.sidebar-link>
+                            <x-docs.sidebar-link label="Users" href="/docs/users"></x-docs.sidebar-link>
+
+                            <x-docs.sidebar-link label="Features" href="/docs/features"></x-docs.sidebar-link>
 
                             <x-docs.sidebar-link label="Requirements" href="/docs/requirements">
-                                <x-docs.sidebar-sublink href="/docs/requirements#fields">Fields</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/requirements#resolving-unknowns">Resolving unknowns</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/requirements#set-status">Set status</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/requirements#deleting">Deleting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/requirements#tasks">Tasks</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/requirements#unknowns">Unknowns</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 
                         <x-docs.sidebar-group label="Collaborating">
                             <x-docs.sidebar-link label="Team" href="/docs/team">
-                                <x-docs.sidebar-sublink href="/docs/team#owner">Roles</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/team#roles">Roles</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/team#invitations">Invitations</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink href="/docs/team#leaving-a-project">Leaving a project</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
                             <x-docs.sidebar-link label="Feedback" href="/docs/feedback"></x-docs.sidebar-link>

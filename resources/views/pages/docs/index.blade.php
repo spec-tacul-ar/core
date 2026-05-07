@@ -31,8 +31,6 @@
 
         <p>The specification is to act as the single source of truth. It is a living document that must be maintained. If it's not in the specification, it shouldn't get built. You can still use GitHub Issues, Linear, Jira, Slack, Notion, etc., but newly discovered requirements must feed back into the specification.</p>
 
-        <h2 id="how-to-use-spectacular-well">How to use Spectacular well</h2>
-
         <p>Before writing requirements, identify the people or systems involved. Then describe the features those users need. Only then break each feature into requirements.</p>
 
         <p>A good workflow is:</p>
@@ -48,7 +46,7 @@
 
         <p>The goal is not to create an impressive document. The goal is to create a specification that is complete, unambigous and suitable for all involved.</p>
 
-        <h2 id="spectacular-and-ai-assisted-development">Spectacular and AI-assisted development</h2>
+        <h2 id="ai-assisted-development">Spectacular and AI-assisted development</h2>
 
         <p>AI coding tools are most useful when they are given clear, structured context. Agents struggle and hallucinate intent without clear instructions leading to frustration and burning tokens unnecessarily. The explicit and structured specification provided by Spectacular help these agents make informed decisions.</p>
 

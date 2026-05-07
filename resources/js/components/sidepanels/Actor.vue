@@ -1,5 +1,5 @@
 <template>
-    <SidepanelLayout>
+    <SidepanelLayout help="/docs/users">
         <template #buttons>
             <div class="flex items-center gap-4">
                 <SpinnerButton type="submit" class="btn btn-primary" :loading="is_waiting" @click="submit">Save</SpinnerButton>
