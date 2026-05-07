@@ -2,26 +2,144 @@
     <article class="prose">
         <h1>Requirements</h1>
 
-        <h2 id="writing-requirements">Writing requirements</h2>
-        <p>Write requirement titles as concise behaviour statements. Add detail in the description, including rules, constraints, edge cases, and examples that a reviewer or developer needs to understand.</p>
+        <p>Requirements are the core entities in a Spectacular specifications. In other places, they might be called user stories. They describe the specific user needs or system interactions that contribute to the parent feature.</p>
 
-        <h2 id="tasks">Tasks</h2>
-        <p>Tasks break a requirement into implementation steps. Add them when the work is understood well enough to estimate. Task estimates roll up to the requirement, feature, and project summaries.</p>
+        <p>Requirements are not tasks</p>
+        <p>Requirements are not acceptance criteria.</p>
 
-        <pre><code>Requirement: Customer can reset their password
-Tasks:
-- Request reset link
-- Validate token
-- Save new password
-- Confirm completion</code></pre>
+        <p>How granlar you are with your requirements is up to you but a general rule of thumb is that a developer should be able to implement a requirement within a day.</p>
 
-        <h2 id="unknowns">Unknowns</h2>
-        <p>Unknowns capture questions that need a decision. They keep ambiguity visible and attached to the relevant requirement. If an unknown prevents implementation, mark the requirement as blocked and explain why.</p>
+        <h2 id="fields">Fields</h2>
 
-        <h2 id="filtering">Filtering</h2>
-        <p>The filter sidebar helps readers focus on requirements by status, user, or feature. Use it to review blocked items, unknowns, completed work, estimated work, or requirements for a specific audience.</p>
+        <h3>Title</h3>
+        
+        <p>This succinctly describes what can be achieved thanks to this requirement. Some like to add the motivation to the end of the user story name but we recommend you add this to the description.</p>
+        
+        <p>You can specify which types of users are able to utilise the functionality defined in this requirement.</p>
+        
+        <p>For instance, you may want to make it clear that only administrators are allowed to ban users.</p>
 
-        <blockquote>Use tasks for known work. Use unknowns for decisions or information the team does not have yet.</blockquote>
+        <x-docs.examples>
+            <x-slot:good>
+                <x-docs.example>Visitors can see the latest news items on the homepage.</x-docs.example>
+                <x-docs.example>Staff can submit new sales reports.</x-docs.example>
+                <x-docs.example>Managers can compile a roster of volunteers.</x-docs.example>
+            </x-slot:good>
+
+            <x-slot:bad>
+                <x-docs.example>Users can news.</x-docs.example>
+                <x-docs.example>Staff can submit new sales reports on the last Friday of the month if requested by management. This can be achieved through the dashboard.</x-docs.example>
+                <x-docs.example>Supervisors, administrators, agents, team coordinators and team leads can compile a roster of volunteers.</x-docs.example>
+            </x-slot:bad>
+        </x-docs.examples>
+
+        <h3>Description</h3>
+
+        <p>Use this field to give more detail about this requirement and an acceptance criteria. It's a rich-text field so you can make it as detailed as needed.</p>
+
+        <p>Try to include:</p>
+        <ul>
+            <li>Motivation for why the user might need this ability.</li>
+            <li>Extra details about how the use interacts with this part of the system.</li>
+            <li>Define functionality you wish to exclude from the requirements. For instance, you might want to make it clear that the user login requirement does not include a <em>remember me</em> function.</li>
+        </ul>
+
+        {{-- TODO Much more advice here. --}}
+
+        <h3>Source</h3>
+
+        <p>Use this field to note where the requirement has come from. This is particularly useful when someone queries how something got into the specification. Be sure to keep adding to it as more information comes in.</p>
+
+        <x-docs.examples>
+            <x-slot:good>
+                <x-docs.example>Project kickoff meeting</x-docs.example>
+                <x-docs.example>Email from Jane, 14th Jan 2022</x-docs.example>
+                <x-docs.example>Focus group notes ({{ now()->subMonths(2)->format('F Y') }})</x-docs.example>
+            </x-slot:good>
+
+            <x-slot:bad>
+                <x-docs.example>Meeting</x-docs.example>
+                <x-docs.example>Sandra's email</x-docs.example>
+            </x-slot:bad>
+        </x-docs.examples>
+
+        <h3>Blocked</h3>
+
+        <p>Check this if something is holding up the completion of the requirement and give a reason why.</p>
+
+        <x-docs.examples>
+            <x-slot:good>
+                <x-docs.example>API keys provided by client do not work.</x-docs.example>
+                <x-docs.example>Need legacy export format before proceeding.</x-docs.example>
+                <x-docs.example>Need further clarification on questions below.</x-docs.example>
+            </x-slot:good>
+
+            <x-slot:bad>
+                <x-docs.example>Not working</x-docs.example>
+            </x-slot:bad>
+        </x-docs.examples>
+
+        <h3>Tasks</h3>
+
+        <p>Tasks are the real steps needed to complete the requirement. Tasks are optional because the implementation of a requirement can be trivial or self-evident.</p>
+
+        <p>Remeber that tasks can be reorganised and removed when editing requirements, should you need to.</p>
+
+        <h4>Name</h4>
+
+        <p>A succient description of what needs to be done.</p>
+
+        <x-docs.examples>
+            <x-slot:good>
+                <x-docs.example>Create a new database migration.</x-docs.example>
+                <x-docs.example>Import existing users data the new database.</x-docs.example>
+                <x-docs.example>Point the legacy systems to the new database.</x-docs.example>
+            </x-slot:good>
+
+            <x-slot:bad>
+                <x-docs.example>Make this work</x-docs.example>
+                <x-docs.example>Fix this</x-docs.example>
+            </x-slot:bad>
+        </x-docs.examples>
+
+        <h4>Estimate</h4>
+
+        <p>The number of hours this tasks is expected to consume. These are summed to give a time estimates for the parent requirement, feature and project.</p>
+
+        <p>Estimates are defined in quarter hour increments. For instance, <em>0.75</em> is three quarters of an hour. You may use zero hours for trivial tasks.</p>
+
+        <h4>Is complete</h4>
+
+        <p>Check this box if a task has been completed. When all tasks have been marked as complete, the requirement itself is automatically marked as complete.</p>
+
+        <h3>Unknowns</h3>
+
+        <p>This is a very powerful feature that lets you note talking points directly on the specification. Unlike blockers, Unknowns are for documenting ambiguities that should be resolved before the work can even commence.</p>
+
+        <x-docs.examples>
+            <x-slot:good>
+                <x-docs.example>How long should it wait until a reminder notification is sent?</x-docs.example>
+                <x-docs.example>What happens if the user is not authenticated for this action?</x-docs.example>
+                <x-docs.example>Is there a limit to the number of seats a customer can reserve?</x-docs.example>
+            </x-slot:good>
+
+            <x-slot:bad>
+                <x-docs.example>This doesn't make sense.</x-docs.example>
+                <x-docs.example>We can't start until we have the legacy DB connection details.</x-docs.example>
+            </x-slot:bad>
+        </x-docs.examples>
+
+        <h2 id="resolving-unknowns">Resolving unknowns</h2>
+
+        <p>Each unknown can be quickly marked as resolved using its dropdown menu. This will show a modal where you can add append the clarification to the requirement description.</p>
+
+        <h2 id="set-status">Set status</h2>
+
+        <p>As the build progresses, you can mark tasks as complete. When all tasks are completed in a requirement, the requirement itself is marked as complete. In the requirement's dropdown menu, you will find an option to complete all tasks at once.</p>
+
+        <h2 id="deleting">Deleting</h2>
+
+        <p>Requirements can be deleted using the item in the requirement's dropdown menu.</p>
     </article>
 
     <x-docs.next-link href="/docs/roles">Roles</x-docs.next-link>

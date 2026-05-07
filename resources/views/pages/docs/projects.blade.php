@@ -29,7 +29,7 @@
         <p>The earlier these questions are captured, the cheaper they are to resolve.</p>
 
         <x-docs.tip>
-            While it's tempting to thrash-out a specification in no time using AI, you are outsourcing your thinking and may miss critical requirements. The AI doesn't actually <em>understand</em> anything and it wasn't at any of the meetings.
+            While it's tempting to thrash-out a specification in no time using AI, you are outsourcing your thinking and may miss critical requirements. The AI doesn't <em>understand</em> motivations like humans do and will make odd judgements.
         </x-docs.tip>
 
         <h2 id="fields">Fields</h2>
@@ -40,17 +40,17 @@
 
         <x-docs.examples>
             <x-slot:good>
-                <x-docs.example type="good">Acme Customer Portal</x-docs.example>
-                <x-docs.example type="good">Advent's Onboarding System</x-docs.example>
-                <x-docs.example type="good">Internal Support Dashboard</x-docs.example>
-                <x-docs.example type="good">Mobile App v2</x-docs.example>
+                <x-docs.example>Acme Customer Portal</x-docs.example>
+                <x-docs.example>Advent's Onboarding System</x-docs.example>
+                <x-docs.example>Internal Support Dashboard</x-docs.example>
+                <x-docs.example>Mobile App v2</x-docs.example>
             </x-slot:good>
             
             <x-slot:bad>
-                <x-docs.example type="bad">New app</x-docs.example>
-                <x-docs.example type="bad">Stuff to build</x-docs.example>
-                <x-docs.example type="bad">MVP</x-docs.example>
-                <x-docs.example type="bad">Client project</x-docs.example>
+                <x-docs.example>New app</x-docs.example>
+                <x-docs.example>Stuff to build</x-docs.example>
+                <x-docs.example>MVP</x-docs.example>
+                <x-docs.example>Client project</x-docs.example>
             </x-slot:bad>
         </x-docs.examples>
 
@@ -79,6 +79,14 @@
         <p>The <em>Export</em> button in the navbar reveals the options to download your project as HTML, Markdown and JSON. These links are only available to collaborators.</p>
 
         <p>If you're running Spectacular locally, you can copy the link to the Markdown export and provide it directly to your AI coding agent.</p>
+
+        <h2 id="filtering">Filtering</h2>
+
+        <p>When specifications get large, it's helpful to be able to drill down to the requirements you need for the day. Clicking the filter button in the navbar will reveal a sidebar with a number of filter options.</p>
+
+        <p>In addition to hiding certain features, you can create combinations of requirement status and user fields. Each section can be reset with a button press.</p>
+
+        <x-docs.tip>If you find you're suddenly missing a lot of requirements, you've probably left a filter on.</x-docs.tip>
 
         <h2 id="deleting">Deleting</h2>
 

@@ -1,8 +1,8 @@
-@props(['title' => null])
+@props(['label' => null])
 
 <section>
-    @if ($title)
-        <h2 class="font-display mb-2 text-xs font-semibold uppercase text-gray-400">{{ $title }}</h2>
+    @if ($label)
+        <h2 class="font-display mb-2 text-xs font-semibold uppercase text-gray-400">{{ $label }}</h2>
     @endif
 
     <div class="space-y-1">

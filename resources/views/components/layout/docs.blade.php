@@ -2,7 +2,7 @@
 
 <x-layout :title="$title . ' - ' . config('app.name')">
     <x-slot:head>
-        @vite(['resources/css/main.css'])
+        @vite(['resources/css/docs.css'])
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/resize@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -65,56 +65,50 @@
 
                     <nav class="space-y-8">
                         <x-docs.sidebar-group>
-                            <x-docs.sidebar-link title="Introduction" path="/docs">
-                                <x-docs.sidebar-sublink fragment="who-is-spectacular-for">Who is Spectacular for?</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="methodology">Methodology</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="how-to-use-spectacular-well">How to use Spectacular</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="spectacular-and-ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
+                            <x-docs.sidebar-link label="Introduction" href="/docs">
+                                <x-docs.sidebar-sublink href="/docs#who-is-spectacular-for">Who is Spectacular for?</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs#methodology">Methodology</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs#how-to-use-spectacular-well">How to use Spectacular</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs#spectacular-and-ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link title="Get Started" path="/docs/get-started">
-                                <x-docs.sidebar-sublink fragment="cloud">Cloud</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="self-hosting">Self-hosting</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="solo-mode">Solo mode</x-docs.sidebar-sublink>
+                            <x-docs.sidebar-link label="Get Started" href="/docs/get-started">
+                                <x-docs.sidebar-sublink href="/docs/get-started#cloud">Cloud</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/get-started#self-hosting">Self-hosting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/get-started#solo-mode">Solo mode</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 
-                        <x-docs.sidebar-group title="Core Concepts">
-                            <x-docs.sidebar-link title="Projects" path="/docs/projects">
-                                <x-docs.sidebar-sublink fragment="fields">Fields</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="organising">Organising</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="exporting">Exporting</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="deleting">Deleting</x-docs.sidebar-sublink>
+                        <x-docs.sidebar-group label="Core Concepts">
+                            <x-docs.sidebar-link label="Projects" href="/docs/projects">
+                                <x-docs.sidebar-sublink href="/docs/projects#fields">Fields</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/projects#organising">Organising</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/projects#exporting">Exporting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/projects#filtering">Filtering</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/projects#deleting">Deleting</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link title="Users & features" path="/docs/users-and-features">
-                                <x-docs.sidebar-sublink fragment="users">Users</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="features">Features</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="using-them-together">Using them together</x-docs.sidebar-sublink>
+                            <x-docs.sidebar-link label="Users & features" href="/docs/users-and-features">
+                                <x-docs.sidebar-sublink href="/docs/users-and-features#users">Users</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/users-and-features#features">Features</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link title="Requirements" path="/docs/requirements">
-                                <x-docs.sidebar-sublink fragment="writing-requirements">Writing requirements</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="tasks">Tasks</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="unknowns">Unknowns</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="filtering">Filtering</x-docs.sidebar-sublink>
+                            <x-docs.sidebar-link label="Requirements" href="/docs/requirements">
+                                <x-docs.sidebar-sublink href="/docs/requirements#fields">Fields</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/requirements#resolving-unknowns">Resolving unknowns</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/requirements#set-status">Set status</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/requirements#deleting">Deleting</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 
-                        <x-docs.sidebar-group title="Collaborating">
-                            <x-docs.sidebar-link title="Roles" path="/docs/roles">
-                                <x-docs.sidebar-sublink fragment="owner">Owner</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="editor">Editor</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="viewer">Viewer</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="leaving-a-project">Leaving a project</x-docs.sidebar-sublink>
+                        <x-docs.sidebar-group label="Collaborating">
+                            <x-docs.sidebar-link label="Team" href="/docs/team">
+                                <x-docs.sidebar-sublink href="/docs/team#owner">Roles</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/team#invitations">Invitations</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/team#leaving-a-project">Leaving a project</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
-                            <x-docs.sidebar-link title="Invitations" path="/docs/invitations">
-                                <x-docs.sidebar-sublink fragment="sending-invitations">Sending invitations</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="accepting-invitations">Accepting invitations</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="managing-invitations">Managing invitations</x-docs.sidebar-sublink>
-                                <x-docs.sidebar-sublink fragment="choosing-the-right-role">Choosing the right role</x-docs.sidebar-sublink>
-                            </x-docs.sidebar-link>
+                            <x-docs.sidebar-link label="Feedback" href="/docs/feedback"></x-docs.sidebar-link>
                         </x-docs.sidebar-group>
                     </nav>
                 </div>
