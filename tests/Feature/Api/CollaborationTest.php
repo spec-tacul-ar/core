@@ -418,7 +418,7 @@ class CollaborationTest extends TestCase
         $this->actingAs($recipient);
 
         $this->get(URL::signedRoute('invitations.accept', $invitation))
-            ->assertRedirect('/projects/' . $project->sqid);
+            ->assertRedirect($project->url);
 
         $this->assertTrue($recipient->fresh()->hasVerifiedEmail());
         $this->assertDatabaseHas('contributors', [
