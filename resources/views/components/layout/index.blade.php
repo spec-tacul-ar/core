@@ -13,7 +13,7 @@
         <meta name="apple-mobile-web-app-title" content="Spectacular" />
         <link rel="manifest" href="/site.webmanifest" />
         <title>{{ $title }}</title>
-        {{ $head }}
+        {{ $head ?? '' }}
     </head>
     <body>
         {{ $slot }}
