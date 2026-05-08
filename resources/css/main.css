@@ -7,8 +7,6 @@
 
 @theme {
     --sidebar-width: 320px;
-    --main-width: 896px;
-    --sidepanel-width: 512px;
     --font-display: "Funnel Sans", sans-serif;
 }
 
@@ -33,19 +31,97 @@
   font-display: swap;
 }
 
-@layer base {
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
-  }
-}
-
 @utility container {
   @apply mx-auto px-4 max-w-6xl;
 }
 
-[x-cloak] {
-    display: none !important;
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+
+    [id] {
+        scroll-margin-top: 5rem;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .prose {
+        p:not(:last-child) {
+            @apply not-last:mb-4;
+        }
+
+        code:not(pre code) {
+            @apply bg-gray-100 p-1 rounded;
+        }
+
+        a:not(.btn) {
+            @apply text-gray-500 underline hover:text-black transition-all duration-500;
+        }
+
+        h1 {
+            @apply font-display font-semibold text-4xl not-last:mb-4;
+        }
+
+        h2 {
+            @apply font-display font-semibold text-3xl not-last:mb-4;
+        }
+
+        h3 {
+            @apply font-display font-semibold text-2xl not-last:mb-4;
+        }
+
+        h4 {
+            @apply font-display font-semibold text-xl not-last:mb-2;
+        }
+
+        h5 {
+            @apply font-display font-semibold text-lg not-last:mb-2;
+        }
+
+        blockquote {
+            @apply border-l-4 border-gray-200 pl-4 text-lg not-last:mb-4;
+        }
+
+        ul {
+           @apply list-disc ml-8 space-y-1 not-last:mb-4;
+        }
+
+        ol {
+           @apply list-decimal ml-8 space-y-1 not-last:mb-4;
+        }
+
+        pre {
+            @apply bg-gray-100 p-4 rounded not-last:mb-4;
+        }
+
+        hr {
+            @apply text-gray-200 my-4 last:mb-0;
+        }
+
+        table {
+            @apply border-separate border-spacing-1 not-last:mb-4;
+        }
+
+        thead th {
+            @apply bg-gray-200;
+        }
+
+        tbody th {
+            @apply bg-gray-100;
+        }
+
+        tbody tr td {
+            @apply bg-gray-50;
+        }
+
+        th, td {
+            @apply p-2;
+        }
+    }
 }
 
 @layer components {
@@ -76,82 +152,8 @@
     .btn.btn-danger-outline {
         @apply border border-red-400 text-red-400 ring-red-400 ring-inset hover:ring;
     }
-}
 
-.prose {
-    p:not(:last-child) {
-        @apply not-last:mb-4;
-    }
-
-    code:not(pre code) {
-        @apply bg-gray-100 p-1 rounded;
-    }
-
-    a:not(.btn) {
+    .link {
         @apply text-gray-500 underline hover:text-black transition-all duration-500;
     }
-
-    h1 {
-        @apply font-display font-semibold text-4xl not-last:mb-4;
-    }
-
-    h2 {
-        @apply font-display font-semibold text-3xl not-last:mb-4;
-    }
-
-    h3 {
-        @apply font-display font-semibold text-2xl not-last:mb-4;
-    }
-
-    h4 {
-        @apply font-display font-semibold text-xl not-last:mb-4;
-    }
-
-    h5 {
-        @apply font-display font-semibold text-lg not-last:mb-4;
-    }
-
-    blockquote {
-        @apply border-l-4 border-gray-200 pl-4 text-lg not-last:mb-4;
-    }
-
-    ul {
-       @apply list-disc list-inside ml-4 space-y-1 not-last:mb-4;
-    }
-
-    ol {
-       @apply list-decimal list-inside ml-4 space-y-1 not-last:mb-4;
-    }
-
-    pre {
-        @apply bg-gray-100 p-4 rounded not-last:mb-4;
-    }
-
-    hr {
-        @apply text-gray-200 my-4 last:mb-0;
-    }
-
-    table {
-        @apply border-separate border-spacing-1 not-last:mb-4;
-    }
-
-    thead th {
-        @apply bg-gray-200;
-    }
-
-    tbody th {
-        @apply bg-gray-100;
-    }
-
-    tbody tr td {
-        @apply bg-gray-50;
-    }
-
-    th, td {
-        @apply p-2;
-    }
-}
-
-.link {
-    @apply text-gray-500 underline hover:text-black transition-all duration-500;
 }

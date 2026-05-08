@@ -1,5 +1,3 @@
-import '../css/docs.css';
-
 import Alpine from 'alpinejs';
 import focus from '@alpinejs/focus';
 import resize from '@alpinejs/resize';

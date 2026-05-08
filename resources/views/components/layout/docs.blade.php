@@ -2,7 +2,7 @@
 
 <x-layout :title="$title . ' - ' . config('app.name')">
     <x-slot:head>
-        @vite(['resources/js/docs.js'])
+        @vite(['resources/css/main.css', 'resources/js/main.js'])
     </x-slot:head>
 
     <div
