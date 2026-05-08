@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Middleware\MakeFolioPagesCachable;
+use App\Http\Middleware\DecodeSqids;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\DecodeSqids;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,10 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
-        $middleware->redirectGuestsTo(fn () => url(config('spectacular.path') . '/login'));
+        $middleware->redirectGuestsTo(fn() => url(config('spectacular.path') . '/login'));
         $middleware->alias([
             'sqids' => DecodeSqids::class,
         ]);
+
+        $middleware->prependToGroup('web', MakeFolioPagesCachable::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -32,7 +32,6 @@ class AddUnknown
         return [
             'name' => ['required', 'string', 'max:250'],
             'requirement_id' => ['required', 'integer', new Authorised('update', Requirement::class)],
-
         ];
     }
 

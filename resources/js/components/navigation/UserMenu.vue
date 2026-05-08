@@ -4,13 +4,13 @@
             <button type="button" class="flex gap-2 items-center p-2 -mr-2" @click="toggle">
                 <IconSet name="person-circle" class="size-6 shrink-0" />
 
-                <span v-if="account" class="hidden lg:block whitespace-nowrap">{{ account.name }}</span>
+                <span v-if="!is_solo && account" class="hidden lg:block whitespace-nowrap">{{ account.name }}</span>
             </button>
         </template>
 
-        <DropdownMenuItem :to="{ name: 'account.settings' }" icon="settings">Settings</DropdownMenuItem>
-
-        <DropdownMenuItem @click="logout()" icon="logout">Log out</DropdownMenuItem>
+        <DropdownMenuItem href="/docs" target="_blank" icon="documentation">Documentation</DropdownMenuItem>
+        <DropdownMenuItem v-if="!is_solo" :to="{ name: 'account.settings' }" icon="settings">Settings</DropdownMenuItem>
+        <DropdownMenuItem v-if="!is_solo" @click="logout()" icon="logout">Log out</DropdownMenuItem>
     </DropdownMenu>
 </template>
 
@@ -29,10 +29,14 @@ export default {
         IconSet,
     },
     computed: {
-        account: () => useAuthStore().account
+        account: () => useAuthStore().account,
+        is_solo() {
+            return this.settings.mode === 'solo';
+        },
     },
     inject: [
         'api',
+        'settings',
     ],
     methods: {
         logout() {

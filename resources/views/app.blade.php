@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <title>{{ config('app.name') }}</title>
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-title" content="Spectacular" />
-        <link rel="manifest" href="/site.webmanifest" />
-
+<x-layout>
+    <x-slot:head>
         <script>
             window.Spectacular = {
                 mode: {{ Js::from(config('spectacular.mode')) }},
@@ -75,16 +64,15 @@
                 display: none;
             }
         </style>
-    </head>
-    <body>
-        <noscript>
-            <strong>We're sorry but {{ config('app.name') }} doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-        </noscript>
+    </x-slot:head>
 
-        <div id="splash">
-            <img src="/images/logo.svg" id="logo">
-        </div>
+    <noscript>
+        <strong>We're sorry but {{ config('app.name') }} doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
 
-        <div id="app" class="hide"></div>
-    </body>
-</html>
+    <div id="splash">
+        <img src="/images/logo.svg" id="logo">
+    </div>
+
+    <div id="app" class="hide"></div>
+</x-layout>

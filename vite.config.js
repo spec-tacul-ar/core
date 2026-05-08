@@ -11,6 +11,10 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
+                    if (contains(id, ['/alpinejs/', '/@alpinejs/'])) {
+                        return;
+                    }
+
                     if (contains(id, ['/@tiptap/', '/prosemirror-'])) {
                         return 'vendor-rte';
                     }
@@ -28,6 +32,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/export.css',
                 'resources/js/app.js',
+                'resources/js/docs.js',
             ],
             refresh: true,
         }),
