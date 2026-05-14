@@ -162,6 +162,22 @@ class Project extends Model
         return $this;
     }
 
+    public function archive(): static
+    {
+        $this->archived_at = now();
+        $this->save();
+
+        return $this;
+    }
+
+    public function unarchive(): static
+    {
+        $this->archived_at = null;
+        $this->save();
+
+        return $this;
+    }
+
     public static function import(array $data): static
     {
         // Note: This is only good for importing the demo project at the moment.

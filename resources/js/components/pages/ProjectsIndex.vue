@@ -43,10 +43,18 @@
                 </div>
             </div>
 
-            <Card v-if="projects.isNotEmpty() || invitations.isNotEmpty()" class="divide-y divide-gray-300">
+            <Card v-if="active_projects.isNotEmpty() || invitations.isNotEmpty()" class="divide-y divide-gray-300 mb-8">
                 <InvitationItem v-for="invitation in invitations" :key="invitation.id" :invitation="invitation" />
-                <ProjectItem v-for="project in projects" :key="project.id" :project="project" />
+                <ProjectItem v-for="project in active_projects" :key="project.id" :project="project" />
             </Card>
+
+            <section v-if="archived_projects.isNotEmpty()">
+                <h2 class="text-2xl mb-4 sm:pl-4">Archived projects</h2>
+
+                <Card class="divide-y divide-gray-300">
+                    <ProjectItem v-for="project in archived_projects" :key="project.id" :project="project" />
+                </Card>
+            </section>
         </section>
     </DefaultLayout>
 </template>
@@ -84,6 +92,12 @@ export default {
         };
     },
     computed: {
+        active_projects() {
+            return this.projects.whereNull('archived_at');
+        },
+        archived_projects() {
+            return this.projects.whereNotNull('archived_at');
+        },
         invitations() {
             return Invitation.repository().collection.where('email', useAuthStore().account.email).sortBy('name');
         },
@@ -91,9 +105,7 @@ export default {
             return !!useAuthStore().account.is_email_verified;
         },
         projects() {
-            return Project.repository().collection
-                .sortBy('name')
-                .sortBy(project => project.archived_at ? 1 : 0);
+            return Project.repository().collection.sortBy(project => project.name.toLocaleLowerCase());
         },
     },
     mounted() {

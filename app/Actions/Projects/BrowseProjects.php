@@ -24,6 +24,7 @@ class BrowseProjects
 
         return $query
             ->withCount([
+                'contributors',
                 'requirements',
                 'requirements as blocked_requirements_count' => fn($query) => $query->whereNotNull('blocked_reason'),
                 'unknowns',

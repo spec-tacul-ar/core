@@ -21,6 +21,7 @@ class ProjectResource extends JsonResource
             'blocked_requirements_count' => $this->blocked_requirements_count,
             'unknowns_count' => $this->unknowns_count,
             'tasks_count' => $this->tasks_count,
+            'contributors_count' => $this->contributors_count,
             'requirements_with_tasks_count' => $this->requirements_with_tasks_count,
             'requirements_all_tasks_complete_count' => $this->requirements_all_tasks_complete_count,
             'contributors' => ContributorResource::collection($this->whenLoaded('contributors')),

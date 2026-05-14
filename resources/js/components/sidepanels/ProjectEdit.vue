@@ -99,7 +99,7 @@ export default {
                 .then((result) => {
                     Project.repository().save(result.data);
 
-                    this.$router.push({ name: 'projects.show', params: {project_id: this.project_id}});
+                    this.$router.push({ name: 'projects.index' });
 
                     useAlertsStore().push('Project archived.');
                 })

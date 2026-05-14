@@ -382,6 +382,61 @@ class AccountProjectsTest extends TestCase
         $this->assertSoftDeleted('projects', ['id' => $project->id]);
     }
 
+    public function test_projects_archive_endpoint_requires_owner_role(): void
+    {
+        $project = Project::factory()->create();
+
+        $owner = Account::factory()->create();
+        $viewer = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachContributor($viewer, $project, Role::VIEWER);
+
+        $this->actingAsAccount($owner);
+
+        $response = $this->postJson('/api/projects/' . $project->sqid . '/archive');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.id', $project->sqid);
+        $this->assertNotNull($response->json('data.archived_at'));
+        $this->assertNotNull($project->fresh()->archived_at);
+
+        $project->unarchive();
+
+        $this->actingAsAccount($viewer);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/archive')->assertForbidden();
+        $this->assertNull($project->fresh()->archived_at);
+    }
+
+    public function test_projects_unarchive_endpoint_requires_owner_role(): void
+    {
+        $project = Project::factory()->archived()->create();
+
+        $owner = Account::factory()->create();
+        $viewer = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachContributor($viewer, $project, Role::VIEWER);
+
+        $this->actingAsAccount($owner);
+
+        $response = $this->postJson('/api/projects/' . $project->sqid . '/unarchive');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.id', $project->sqid);
+        $response->assertJsonPath('data.archived_at', null);
+        $this->assertNull($project->fresh()->archived_at);
+
+        $project = $project->fresh();
+        $project->archive();
+
+        $this->actingAsAccount($viewer);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/unarchive')->assertForbidden();
+        $this->assertNotNull($project->fresh()->archived_at);
+    }
+
     public function test_projects_readmark_endpoint_marks_projects_as_read_for_contributors_and_forbids_outsiders(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
