@@ -88,9 +88,17 @@
 
         <x-docs.tip>If you find you're suddenly missing a lot of requirements, you've probably left a filter on.</x-docs.tip>
 
+        <h2 id="archiving">Archiving</h2>
+
+        <p>Owners can archive a project from the edit side panel. Archived projects are moved into their own section on the projects page so you can concentrate on active projects.</p>
+
+        <p>Archived projects are read-only. Collaborators can still view the specification, feedback, and exports, but editing controls and feedback actions are hidden until the project is restored.</p>
+
+        <p>Owners can restore an archived project from the projects page or from the archived notice at the top of the project. Restoring a project moves it back into the active project list and makes editing available again.</p>
+
         <h2 id="deleting">Deleting</h2>
 
-        <p>A project can be deleted from the edit side panel. Beware that this is an irreversible action: Spectacular does not keep copies of your projects once deleted. Be sure to export your data if there is a possibility that you might want to recover it.</p>
+        <p>A project can be deleted from the edit side panel. Archived projects can also be deleted from the notice at the top of the project. Beware that this is an irreversible action: Spectacular does not keep copies of your projects once deleted. Be sure to export your data if there is a possibility that you might want to recover it.</p>
     </article>
 
     <x-docs.next-link href="/docs/users">Users</x-docs.next-link>
