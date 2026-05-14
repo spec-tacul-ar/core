@@ -9,7 +9,7 @@
         <p>Role-based access control is available for when you want to collaborate with others.</p>
 
         <h3>Owners</h3>
-        <p>Owners can do everything in a project, including editing the specification, inviting collaborators, changing roles, exporting, and deleting the project. This role is occupied by product owners and project managers.</p>
+        <p>Owners can do everything in a project, including editing the specification, inviting collaborators, changing roles, exporting, archiving, restoring, and deleting the project. This role is occupied by product owners and project managers.</p>
 
         <p>There must be at least one owner per project. Creating a project automatically sets you as the owner. Owners can remove other owners if they were added to the project after them.</p>
 
