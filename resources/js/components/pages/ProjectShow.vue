@@ -15,7 +15,22 @@
 
         <div v-if="project.archived_at" class="flex items-center gap-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-lg p-4 mb-8 print:hidden">
             <IconSet name="warning" class="size-5 shrink-0" />
-            <p class="font-semibold">This project is archived.</p>
+            <p class="font-semibold mr-auto">This project is archived and cannot be edited.</p>
+
+            <SpinnerButton
+                v-if="project.can_restore"
+                type="button"
+                class="btn btn-primary-outline"
+                :loading="is_restoring"
+                icon="archive"
+                @click="restore">
+                
+                Restore
+            </SpinnerButton>
+
+            <button v-if="project.my_role === 'owner'" type="button" class="btn btn-danger-outline" @click="openProjectDeleteModal">
+                <IconSet name="trash" />
+            </button>
         </div>
         
         <section id="introduction" class="mb-8">
@@ -81,11 +96,14 @@ import FeatureItem from '@/components/items/FeatureItem.vue';
 import IconSet from '@/components/IconSet.vue';
 import RichText from '@/components/RichText.vue';
 import ProjectFilters from '@/components/sidebars/ProjectFilters.vue';
+import ProjectDelete from '@/components/modals/ProjectDelete.vue';
 import ProjectOutline from '@/components/sidebars/ProjectOutline.vue';
 import ProjectShowMenu from "@/components/navigation/ProjectShowMenu.vue";
 import Project from '@/stores/models/Project';
 import SidebarSwitches from "@/components/navigation/SidebarSwitches.vue";
+import SpinnerButton from '@/components/SpinnerButton.vue';
 import ActorItem from '@/components/items/ActorItem.vue';
+import { useAlertsStore, useModalStore } from '@/stores';
 import { inject } from 'vue';
 
 export default {
@@ -98,8 +116,10 @@ export default {
         ProjectShowMenu,
         RichText,
         SidebarSwitches,
+        SpinnerButton,
         ActorItem,
     },
+    inject: ['api'],
     computed: {
         features() {
             return this.project.features.sortBy('id').sortBy('weight');
@@ -113,6 +133,7 @@ export default {
     },
     data() {
         return {
+            is_restoring: false,
             sidebar: 'outline',
         };
     },
@@ -128,6 +149,20 @@ export default {
             }
 
             this.sidebar = next;
+        },
+        openProjectDeleteModal() {
+            useModalStore().open(ProjectDelete, {project: this.project});
+        },
+        restore() {
+            this.is_restoring = true;
+
+            this.api.post('projects/' + this.project.id + '/unarchive')
+                .then((result) => {
+                    Project.repository().save(result.data);
+
+                    useAlertsStore().push('Project restored.');
+                })
+                .finally(() => this.is_restoring = false);
         },
         checkScrollPosition() {
             this.is_scrolled_to_top = window.scrollY === 0;

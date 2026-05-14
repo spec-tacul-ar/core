@@ -64,7 +64,7 @@ export default class Project extends Model {
         return this.my_role === 'owner' && !this.archived_at;
     }
 
-    get can_unarchive() {
+    get can_restore() {
         return this.my_role === 'owner' && this.archived_at;
     }
 
