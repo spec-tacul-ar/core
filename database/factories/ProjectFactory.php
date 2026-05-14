@@ -13,4 +13,11 @@ class ProjectFactory extends Factory
             'description' => '<p>' . implode('</p><p>', $this->faker->paragraphs($this->faker->numberBetween(1, 3))) . '</p>',
         ];
     }
+
+    public function archived(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'archived_at' => now(),
+        ]);
+    }
 }

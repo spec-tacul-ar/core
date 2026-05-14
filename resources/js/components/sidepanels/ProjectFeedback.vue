@@ -22,7 +22,7 @@
 
         <LoadingSpinner label="Loading comments" v-if="this.comments.isEmpty() && is_loading" />
 
-        <form @submit.prevent="submit" class="flex items-end gap-2 mb-4">
+        <form v-if="project.can_comment" @submit.prevent="submit" class="flex items-end gap-2 mb-4">
             <div class="grow">
                 <FormInput type="textarea" label="Message" rows="3" :id="elementId('message')" v-model="form.message" />
             </div>

@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <section v-if="project.my_role === 'owner'">
+        <section v-if="project.can_manage">
             <h3 class="text-3xl font-light mb-4">Invitations</h3>
 
             <form class="mb-4" @submit.prevent="submit()">
@@ -212,7 +212,7 @@ export default {
         UniqueId
     ],
     mounted() {
-        if (this.project.my_role === 'owner') {
+        if (this.project.can_manage) {
             this.api.get('invitations/browse', { query: { project_id: this.project_id } })
                 .then((result) => Invitation.repository().saveMany(result.data))
                 .finally(() => this.is_loading = false);

@@ -59,6 +59,18 @@ export default class Project extends Model {
             viewer: 'Viewer'
         }[this.my_role] ?? null;
     }
+
+    get can_manage() {
+        return this.my_role === 'owner' && !this.archived_at;
+    }
+
+    get can_comment() {
+        return !this.archived_at;
+    }
+
+    get can_write() {
+        return ['editor', 'owner'].includes(this.my_role) && !this.archived_at;
+    }
     
     get total_estimate() {
         return this.features_estimate;

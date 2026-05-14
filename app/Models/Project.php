@@ -26,6 +26,13 @@ class Project extends Model
         'name',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'archived_at' => 'datetime',
+        ];
+    }
+
     protected static function booted(): void
     {
         static::deleting(function ($project) {
@@ -113,6 +120,13 @@ class Project extends Model
         return $query->whereHas('contributors', function ($query) use ($account) {
             return $query->whereBelongsTo($account)->where('role', Role::OWNER);
         });
+    }
+
+    public function scopeArchived($query, bool $archived = true)
+    {
+        return $archived
+            ? $query->whereNotNull('archived_at')
+            : $query->whereNull('archived_at');
     }
 
     /* Helpers */

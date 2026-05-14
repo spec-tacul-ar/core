@@ -6,7 +6,7 @@
             <p v-if="!actor.summary" class="text-gray-400">No description</p>
         </div>
 
-        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" class="d-print-none">
+        <DropdownMenu v-if="project.can_write" class="d-print-none">
             <DropdownMenuItem icon="edit" :to="{name: 'projects.actors.edit', params: { actor_id: actor.id }}" replace>Edit</DropdownMenuItem>
             <DropdownMenuItem icon="trash" @click="openActorDeleteModal" danger replace>Delete</DropdownMenuItem>
         </DropdownMenu>

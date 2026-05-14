@@ -22,7 +22,7 @@
                 <div class="bg-red-400 text-white flex items-center justify-between px-4 py-2" v-if="requirement.is_blocked">
                     <p>{{ requirement.blocked_reason }}</p>
 
-                    <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" ref="dropdown">
+                    <DropdownMenu v-if="project.can_write" ref="dropdown">
                         <DropdownMenuItem icon="unblock" :loading="is_waiting_for_unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
                     </DropdownMenu>
                 </div>

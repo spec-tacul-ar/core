@@ -16,6 +16,7 @@ class ProjectResource extends JsonResource
             'description' => $this->description,
             'name' => $this->name,
             'slug' => $this->slug,
+            'archived_at' => $this->archived_at,
             'requirements_count' => $this->requirements_count,
             'blocked_requirements_count' => $this->blocked_requirements_count,
             'unknowns_count' => $this->unknowns_count,

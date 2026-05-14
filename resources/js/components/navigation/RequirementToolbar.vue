@@ -1,17 +1,17 @@
 <template>
     <div class="flex items-center print:hidden">
-        <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.requirements.edit', params: { requirement_id: requirement.id }}" class="p-2">
+        <RouterLink v-if="project.can_write" :to="{ name: 'projects.requirements.edit', params: { requirement_id: requirement.id }}" class="p-2">
             <IconSet name="edit" />
         </RouterLink>
 
         <DropdownMenu>
-            <DropdownMenuItem v-if="['editor', 'owner'].includes(project.my_role) && requirement.has_tasks && !requirement.is_complete" type="button" :loading="is_waiting_for_complete" icon="check-all" @click.stop="complete()">Complete all tasks</DropdownMenuItem>
-            <DropdownMenuItem v-if="['editor', 'owner'].includes(project.my_role) && requirement.is_blocked" type="button" :loading="is_waiting_for_unblock" icon="unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write && requirement.has_tasks && !requirement.is_complete" type="button" :loading="is_waiting_for_complete" icon="check-all" @click.stop="complete()">Complete all tasks</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write && requirement.is_blocked" type="button" :loading="is_waiting_for_unblock" icon="unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
             <DropdownMenuItem :to="{ name: 'projects.requirements.feedback', params: { requirement_id: requirement.id }}" icon="feedback">Feedback</DropdownMenuItem>
                         
             <slot name="menu" />
             
-            <DropdownMenuItem v-if="['editor', 'owner'].includes(project.my_role)" @click="openRequirementDeleteModal" icon="trash" class="dropdown-item" danger>Delete</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write" @click="openRequirementDeleteModal" icon="trash" class="dropdown-item" danger>Delete</DropdownMenuItem>
         </DropdownMenu>
     </div>
 </template>

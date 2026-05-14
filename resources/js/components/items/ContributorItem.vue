@@ -73,7 +73,7 @@ export default {
     },
     computed: {
         can_edit() {
-            if (this.contributor.project.my_role !== 'owner') {
+            if (!this.contributor.project.can_manage) {
                 return false;
             }
 

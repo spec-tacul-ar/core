@@ -80,6 +80,12 @@ class TestSeeder extends Seeder
             ->create();
 
         Project::factory()
+            ->archived()
+            ->state(['name' => 'Archived Project'])
+            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
+            ->create();
+
+        Project::factory()
             ->state(['name' => 'Two owners'])
             ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
             ->has(Contributor::factory()->state(['role' => Role::OWNER, 'created_at' => now()->addSecond(), 'updated_at' => now()->addSecond()]));

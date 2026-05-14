@@ -11,7 +11,7 @@
             Complete
         </span>
 
-        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)" ref="dropdown">
+        <DropdownMenu v-if="project.can_write" ref="dropdown">
             <DropdownMenuItem
                 :icon="!task.is_complete ? 'check-lg' : 'x-lg'"
                 :loading="is_waiting_for_complete"

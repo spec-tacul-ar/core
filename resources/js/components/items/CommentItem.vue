@@ -26,7 +26,7 @@
         <div class="text-sm text-gray-600 ml-4">
             {{ author }} - {{ date }}
 
-            <template v-if="was_me"> - <button type="button" class="text-red-400" @click="remove">Delete</button></template>
+            <template v-if="was_me && comment.project.can_comment"> - <button type="button" class="text-red-400" @click="remove">Delete</button></template>
         </div>
     </div>
 </template>

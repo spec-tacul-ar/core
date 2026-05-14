@@ -12,12 +12,17 @@
             <ProjectOutline v-if="sidebar === 'outline'" :project="project" class="project-outline" @navigation="navigate" />
             <ProjectFilters v-if="sidebar === 'filters'" :project />
         </template>
+
+        <div v-if="project.archived_at" class="flex items-center gap-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-lg p-4 mb-8 print:hidden">
+            <IconSet name="warning" class="size-5 shrink-0" />
+            <p class="font-semibold">This project is archived.</p>
+        </div>
         
         <section id="introduction" class="mb-8">
             <div class="flex flex-wrap md:flex-nowrap items-center mb-8 sm:pl-8 print:pl-0">
                 <h1 class="font-display font-semibold text-4xl mr-auto">{{ project.name }}</h1>
 
-                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.edit' }" class="btn btn-primary"><IconSet name="edit" /> Edit project</RouterLink>
+                <RouterLink v-if="project.can_write" :to="{ name: 'projects.edit' }" class="btn btn-primary"><IconSet name="edit" /> Edit project</RouterLink>
             </div>
 
             <div v-if="project.description" class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none">
@@ -29,7 +34,7 @@
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
                 <h2 class="text-3xl"><a href="#users">Users</a></h2>
 
-                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.actors.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
+                <RouterLink v-if="project.can_write" :to="{ name: 'projects.actors.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
             </div>
 
             <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4">
@@ -41,7 +46,7 @@
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
                 <h2 class="text-3xl"><a href="#features">Features</a></h2>
 
-                <RouterLink v-if="['editor', 'owner'].includes(project.my_role)" :to="{ name: 'projects.features.create' }" class="btn btn-primary"><IconSet name="plus-lg" /> Add feature</RouterLink>
+                <RouterLink v-if="project.can_write" :to="{ name: 'projects.features.create' }" class="btn btn-primary"><IconSet name="plus-lg" /> Add feature</RouterLink>
             </div>
 
             <FeatureItem :feature="feature" v-for="feature in features" :key="feature.id" />

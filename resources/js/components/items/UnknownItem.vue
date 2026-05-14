@@ -4,7 +4,7 @@
             {{ unknown.name }}
         </p>
 
-        <DropdownMenu v-if="['editor', 'owner'].includes(project.my_role)">
+        <DropdownMenu v-if="project.can_write">
             <DropdownMenuItem icon="check-lg" @click="openUnknownResolveModal">Resolve</DropdownMenuItem>
         </DropdownMenu>
     </div>

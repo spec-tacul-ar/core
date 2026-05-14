@@ -6,6 +6,12 @@
                     <IconSet name="trash" class="text-red-400 size-6" />
                 </button>
             </Tooltip>
+
+            <Tooltip v-if="!project.archived_at" text="Archive project">
+                <button type="button" class="p-2" :disabled="is_archiving" @click="archive()">
+                    <IconSet name="archive" class="text-gray-600 size-6" />
+                </button>
+            </Tooltip>
         </template>
 
         <template #buttons>
@@ -81,10 +87,25 @@ export default {
                 name: project.name,
             },
             errors: {},
+            is_archiving: false,
             is_waiting: false
         };
     },
     methods: {
+        archive() {
+            this.is_archiving = true;
+
+            this.api.post('projects/' + this.project_id + '/archive')
+                .then((result) => {
+                    Project.repository().save(result.data);
+
+                    this.$router.push({ name: 'projects.show', params: {project_id: this.project_id}});
+
+                    useAlertsStore().push('Project archived.');
+                })
+                .catch(error => this.errors = error.body.errors ?? {})
+                .finally(() => this.is_archiving = false);
+        },
         openProjectDeleteModal() {
             useModalStore().open(ProjectDelete, {project: this.project});
         },

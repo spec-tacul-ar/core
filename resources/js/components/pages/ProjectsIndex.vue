@@ -91,7 +91,9 @@ export default {
             return !!useAuthStore().account.is_email_verified;
         },
         projects() {
-            return Project.repository().collection.sortBy('name');
+            return Project.repository().collection
+                .sortBy('name')
+                .sortBy(project => project.archived_at ? 1 : 0);
         },
     },
     mounted() {
