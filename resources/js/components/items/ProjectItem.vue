@@ -99,7 +99,7 @@ export default {
         restore() {
             this.is_restoring = true;
 
-            this.api.post('projects/' + this.project.id + '/unarchive')
+            this.api.post('projects/' + this.project.id + '/restore')
                 .then((result) => {
                     Project.repository().save(result.data);
 

@@ -170,7 +170,7 @@ class Project extends Model
         return $this;
     }
 
-    public function unarchive(): static
+    public function restore(): static
     {
         $this->archived_at = null;
         $this->save();

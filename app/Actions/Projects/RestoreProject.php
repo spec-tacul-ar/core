@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class UnarchiveProject
+class RestoreProject
 {
     use AsAction;
 
@@ -21,12 +21,12 @@ class UnarchiveProject
 
     public static function routes(Router $router): void
     {
-        $router->post('projects/{project}/unarchive', static::class);
+        $router->post('projects/{project}/restore', static::class);
     }
 
     public function handle(Project $project): Project
     {
-        return $project->unarchive();
+        return $project->restore();
     }
 
     public function asController(Project $project): ProjectResource

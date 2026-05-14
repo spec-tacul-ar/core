@@ -401,7 +401,7 @@ class AccountProjectsTest extends TestCase
         $this->assertNotNull($response->json('data.archived_at'));
         $this->assertNotNull($project->fresh()->archived_at);
 
-        $project->unarchive();
+        $project->restore();
 
         $this->actingAsAccount($viewer);
 
@@ -409,7 +409,7 @@ class AccountProjectsTest extends TestCase
         $this->assertNull($project->fresh()->archived_at);
     }
 
-    public function test_projects_unarchive_endpoint_requires_owner_role(): void
+    public function test_projects_restore_endpoint_requires_owner_role(): void
     {
         $project = Project::factory()->archived()->create();
 
@@ -421,7 +421,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($owner);
 
-        $response = $this->postJson('/api/projects/' . $project->sqid . '/unarchive');
+        $response = $this->postJson('/api/projects/' . $project->sqid . '/restore');
 
         $response->assertOk();
         $response->assertJsonPath('data.id', $project->sqid);
@@ -433,7 +433,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/projects/' . $project->sqid . '/unarchive')->assertForbidden();
+        $this->postJson('/api/projects/' . $project->sqid . '/restore')->assertForbidden();
         $this->assertNotNull($project->fresh()->archived_at);
     }
 

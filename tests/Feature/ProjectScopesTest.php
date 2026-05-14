@@ -46,15 +46,15 @@ class ProjectScopesTest extends TestCase
         $this->assertEqualsCanonicalizing([$archivedProject->id], $projects->all());
     }
 
-    public function test_archived_scope_can_return_unarchived_projects(): void
+    public function test_archived_scope_can_return_restored_projects(): void
     {
         Project::factory()->archived()->create();
-        $unarchivedProject = Project::factory()->create(['archived_at' => null]);
+        $restoredProject = Project::factory()->create(['archived_at' => null]);
 
         $projects = Project::query()
             ->archived(false)
             ->pluck('id');
 
-        $this->assertEqualsCanonicalizing([$unarchivedProject->id], $projects->all());
+        $this->assertEqualsCanonicalizing([$restoredProject->id], $projects->all());
     }
 }
