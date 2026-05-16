@@ -79,7 +79,25 @@ class ProjectPolicy
             return Response::denyAsNotFound();
         }
 
-        return $account->owns($project)
+        return !$project->isArchived() && $account->owns($project)
+            ? Response::allow()
+            : Response::deny();
+    }
+
+    /**
+     * Determine whether the Account can comment on the model.
+     *
+     * @param  \App\Models\Account  $account
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function comment(Account $account, Project $project): Response
+    {
+        if ($this->view($account, $project)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        return !$project->isArchived()
             ? Response::allow()
             : Response::deny();
     }

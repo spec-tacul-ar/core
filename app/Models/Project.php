@@ -162,10 +162,17 @@ class Project extends Model
         return $this;
     }
 
+    public function isArchived(): bool
+    {
+        return $this->archived_at !== null;
+    }
+
     public function archive(): static
     {
-        $this->archived_at = now();
-        $this->save();
+        if (!$this->isArchived()) {
+            $this->archived_at = now();
+            $this->save();
+        }
 
         return $this;
     }

@@ -64,6 +64,33 @@ class CollaborationTest extends TestCase
         ]);
     }
 
+    public function test_archived_projects_reject_feedback_changes(): void
+    {
+        $project = Project::factory()->archived()->create();
+        $feature = \App\Models\Feature::factory()->for($project)->create();
+        $account = Account::factory()->create();
+
+        $this->attachContributor($account, $project, Role::EDITOR);
+        $this->actingAsAccount($account);
+
+        $this->postJson('/api/comments/add', [
+            'commentable_id' => $feature->sqid,
+            'commentable_type' => 'feature',
+            'message' => 'Archived comment',
+            'project_id' => $project->sqid,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('project_id');
+
+        $comment = Comment::factory()
+            ->for($account, 'account')
+            ->for($project)
+            ->create();
+
+        $this->postJson('/api/comments/' . $comment->sqid . '/delete')->assertForbidden();
+        $this->assertDatabaseHas('comments', ['id' => $comment->id]);
+    }
+
     public function test_comments_browse_endpoint_allows_viewers_but_not_outsiders(): void
     {
         $project = Project::factory()->create();
@@ -262,6 +289,40 @@ class CollaborationTest extends TestCase
             InvitationForExistingAccount::class,
             fn(InvitationForExistingAccount $notification) => $notification->invitation->is($invitation),
         );
+    }
+
+    public function test_archived_projects_reject_invitation_changes(): void
+    {
+        Notification::fake();
+
+        $project = Project::factory()->archived()->create();
+        $owner = Account::factory()->create();
+        $invitee = Account::factory()->create(['email_verified_at' => now()]);
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/invitations/add', [
+            'email' => 'new-person@example.test',
+            'project_id' => $project->sqid,
+            'role' => Role::VIEWER->value,
+        ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
+
+        $invitation = Invitation::factory()
+            ->for($owner, 'account')
+            ->for($project)
+            ->create(['email' => $invitee->email]);
+
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/delete')->assertForbidden();
+        $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
+
+        $this->actingAsAccount($invitee);
+
+        $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertForbidden();
+        $this->assertDatabaseMissing('contributors', [
+            'account_id' => $invitee->id,
+            'project_id' => $project->id,
+        ]);
     }
 
     public function test_invitations_browse_endpoint_returns_project_and_incoming_invitations_without_leaking_other_projects(): void
@@ -681,5 +742,36 @@ class CollaborationTest extends TestCase
 
         $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
         $this->assertDatabaseHas('contributors', ['id' => $otherViewerContributor->id]);
+    }
+
+    public function test_contributors_can_leave_archived_projects_without_managing_other_contributors(): void
+    {
+        $project = Project::factory()->archived()->create();
+
+        $owner = Account::factory()->create();
+        $otherOwner = Account::factory()->create();
+        $viewer = Account::factory()->create();
+
+        $ownerContributor = $this->attachContributor($owner, $project, Role::OWNER);
+        $otherOwnerContributor = $this->attachContributor($otherOwner, $project, Role::OWNER);
+        $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
+
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/contributors/' . $ownerContributor->sqid . '/delete')->assertNoContent();
+
+        $this->assertDatabaseMissing('contributors', ['id' => $ownerContributor->id]);
+        $this->assertDatabaseHas('contributors', ['id' => $viewerContributor->id]);
+
+        $this->actingAsAccount($otherOwner);
+
+        $this->postJson('/api/contributors/' . $otherOwnerContributor->sqid . '/delete')->assertForbidden();
+        $this->assertDatabaseHas('contributors', ['id' => $otherOwnerContributor->id]);
+
+        $this->actingAsAccount($viewer);
+
+        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
+        $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
     }
 }

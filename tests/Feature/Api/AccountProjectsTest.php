@@ -363,6 +363,40 @@ class AccountProjectsTest extends TestCase
         ]);
     }
 
+    public function test_archived_projects_reject_project_and_child_updates(): void
+    {
+        $project = Project::factory()->archived()->create(['name' => 'Before']);
+        $feature = Feature::factory()->for($project)->create(['name' => 'Feature before', 'weight' => 1]);
+        $owner = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/edit', [
+            'name' => 'After',
+        ])->assertForbidden();
+
+        $this->postJson('/api/projects/' . $project->sqid . '/organise', [
+            'features' => [
+                ['id' => $feature->sqid, 'weight' => 22],
+            ],
+        ])->assertForbidden();
+
+        $this->postJson('/api/features/' . $feature->sqid . '/edit', [
+            'name' => 'Feature after',
+        ])->assertForbidden();
+
+        $this->assertDatabaseHas('projects', [
+            'id' => $project->id,
+            'name' => 'Before',
+        ]);
+        $this->assertDatabaseHas('features', [
+            'id' => $feature->id,
+            'name' => 'Feature before',
+            'weight' => 1,
+        ]);
+    }
+
     public function test_projects_delete_endpoint_requires_owner_role(): void
     {
         $project = Project::factory()->create();
@@ -407,6 +441,21 @@ class AccountProjectsTest extends TestCase
 
         $this->postJson('/api/projects/' . $project->sqid . '/archive')->assertForbidden();
         $this->assertNull($project->fresh()->archived_at);
+    }
+
+    public function test_projects_archive_endpoint_preserves_existing_archive_date(): void
+    {
+        $archivedAt = now()->subDay()->startOfSecond();
+        $project = Project::factory()->create(['archived_at' => $archivedAt]);
+        $owner = Account::factory()->create();
+
+        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/archive')
+            ->assertOk();
+
+        $this->assertTrue($project->fresh()->archived_at->equalTo($archivedAt));
     }
 
     public function test_projects_restore_endpoint_requires_owner_role(): void

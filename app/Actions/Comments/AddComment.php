@@ -32,7 +32,7 @@ class AddComment
     public function asController(Request $request): CommentResource
     {
         $validated = $request->validate([
-            'project_id' => ['required', 'integer', new Authorised('view', Project::class)],
+            'project_id' => ['required', 'integer', new Authorised('comment', Project::class)],
             'commentable_type' => ['nullable', 'in:feature,requirement'],
             'commentable_id' => ['nullable', new Commentable()],
             'message' => ['required', 'string', 'max:5000'],
