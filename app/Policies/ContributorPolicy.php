@@ -44,6 +44,10 @@ class ContributorPolicy
             return Response::denyAsNotFound();
         }
 
+        if ($contributor->project->isArchived()) {
+            return Response::deny();
+        }
+
         $owners = $contributor->project->contributors()
             ->where('role', Role::OWNER)
             ->get();
@@ -89,6 +93,10 @@ class ContributorPolicy
 
         // If I'm not in this project, reject.
         if (!$me) {
+            return Response::deny();
+        }
+
+        if ($contributor->project->isArchived() && $contributor->isNot($me)) {
             return Response::deny();
         }
 

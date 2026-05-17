@@ -153,6 +153,10 @@ class Account extends Authenticatable
     public function canEdit(Model $model, ?string $via = null)
     {
         if ($model instanceof Project) {
+            if ($model->isArchived()) {
+                return false;
+            }
+
             return Contributor::query()
                 ->whereBelongsTo($this)
                 ->whereBelongsTo($model)
@@ -165,6 +169,7 @@ class Account extends Authenticatable
         }
 
         return $this->projects()
+            ->whereNull('projects.archived_at')
             ->wherePivotIn('role', [Role::EDITOR, Role::OWNER])
             ->whereRelation($via, $model->getQualifiedKeyName(), $model->id)
             ->exists();

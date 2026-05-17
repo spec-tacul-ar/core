@@ -45,6 +45,10 @@ class InvitationPolicy
             return Response::denyAsNotFound();
         }
 
+        if ($invitation->project->isArchived()) {
+            return Response::deny();
+        }
+
         return $account->email === $invitation->email && $account->hasVerifiedEmail()
             ? Response::allow()
             : Response::deny();
@@ -61,6 +65,10 @@ class InvitationPolicy
     {
         if ($this->view($account, $invitation)->denied()) {
             return Response::denyAsNotFound();
+        }
+
+        if ($invitation->project->isArchived()) {
+            return Response::deny();
         }
 
         if ($account->owns($invitation, 'invitations')) {

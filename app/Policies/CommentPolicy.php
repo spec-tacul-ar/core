@@ -43,6 +43,10 @@ class CommentPolicy
             return Response::denyAsNotFound();
         }
 
+        if ($comment->project->isArchived()) {
+            return Response::deny();
+        }
+
         return $comment->authorIs($account)
             ? Response::allow()
             : Response::deny();
