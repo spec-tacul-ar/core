@@ -286,12 +286,14 @@ class AccountProjectsTest extends TestCase
 
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'description' => 'Updated description',
+            'hide_estimates' => true,
             'name' => 'After',
         ])->assertOk();
 
         $this->assertDatabaseHas('projects', [
             'id' => $project->id,
             'description' => 'Updated description',
+            'hide_estimates' => true,
             'name' => 'After',
         ]);
 
@@ -300,6 +302,29 @@ class AccountProjectsTest extends TestCase
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'name' => 'Blocked',
         ])->assertForbidden();
+    }
+
+    public function test_projects_read_endpoint_hides_estimates_from_viewers_when_enabled(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $fixture['project']->update(['hide_estimates' => true]);
+        $fixture['task']->update(['estimate' => 2.5]);
+
+        $editor = Account::factory()->create();
+        $this->attachContributor($editor, $fixture['project'], Role::EDITOR);
+
+        $this->actingAsAccount($fixture['account']);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1')
+            ->assertOk()
+            ->assertJsonPath('data.hide_estimates', true)
+            ->assertJsonPath('data.features.0.requirements.0.tasks.0.estimate', null);
+
+        $this->actingAsAccount($editor);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1')
+            ->assertOk()
+            ->assertJsonPath('data.features.0.requirements.0.tasks.0.estimate', 2.5);
     }
 
     public function test_projects_organise_endpoint_allows_editors_and_forbids_viewers(): void

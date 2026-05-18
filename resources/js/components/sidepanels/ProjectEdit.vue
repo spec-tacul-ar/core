@@ -47,6 +47,14 @@
                     </ul>
                 </template>
             </FormRichText>
+
+            <div class="mb-4">
+                <FormInput type="checkbox" :id="elementId('hide_estimates')" label="Hide estimates" :error="errors.hide_estimates" v-model="form.hide_estimates">
+                    <template v-slot:help>
+                        <p>Hides estimates from viewers in the app. Exports will not include estimates for anyone.</p>
+                    </template>
+                </FormInput>
+            </div>
         </form>
     </SidepanelLayout>
 </template>
@@ -84,6 +92,7 @@ export default {
         return {
             form: {
                 description: project.description,
+                hide_estimates: project.hide_estimates,
                 name: project.name,
             },
             errors: {},

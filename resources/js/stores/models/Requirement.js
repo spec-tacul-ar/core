@@ -29,6 +29,10 @@ export default class Requirement extends Model {
         return this.tasks.isNotEmpty();
     }
 
+    get has_estimates() {
+        return this.tasks.some(task => task.estimate !== null);
+    }
+
     get is_complete() {
         return this.has_tasks && this.tasks.every(task => task.is_complete);
     }
@@ -82,7 +86,7 @@ export default class Requirement extends Model {
             return true;
         }
 
-        if (typeof filters.statuses.estimated === 'boolean' && this.tasks_estimate > 0 !== filters.statuses.estimated) {
+        if (typeof filters.statuses.estimated === 'boolean' && this.has_estimates !== filters.statuses.estimated) {
             return true;
         }
 

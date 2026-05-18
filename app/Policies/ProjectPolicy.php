@@ -48,6 +48,19 @@ class ProjectPolicy
             : Response::deny();
     }
 
+    public function viewEstimates(Account $account, Project $project): Response
+    {
+        if ($this->view($account, $project)->denied()) {
+            return Response::denyAsNotFound();
+        }
+
+        if (!$project->hide_estimates) {
+            return Response::allow();
+        }
+
+        return $this->update($account, $project);
+    }
+
     /**
      * Determine whether the Account can delete the model.
      *

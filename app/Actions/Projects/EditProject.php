@@ -14,7 +14,7 @@ use App\Rules\SluggableName as SluggableNameRule;
 class EditProject
 {
     use AsAction;
-    
+
     public function authorize(ActionRequest $request): GateResponse
     {
         return Gate::inspect('update', $request->route('project'));
@@ -29,6 +29,7 @@ class EditProject
     {
         return [
             'description' => ['nullable', 'string', 'max:10000'],
+            'hide_estimates' => ['sometimes', 'boolean'],
             'name' => ['sometimes', 'string', 'max:250', new SluggableNameRule()],
         ];
     }

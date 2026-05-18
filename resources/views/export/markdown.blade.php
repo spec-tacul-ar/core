@@ -27,7 +27,7 @@
 {{----}}{{----}}{{----}}@if ($requirement->tasks->isNotEmpty())
 {{----}}{{----}}{{----}}{{----}}##### Tasks
 {{----}}{{----}}{{----}}{{----}}@foreach ($requirement->tasks as $task)
-{{----}}{{----}}{{----}}{{----}}{{----}}* {{ Str::escapeMarkdown($task->name) }}{{ $task->estimate !== null ? ' [Estimate: ' . $task->estimate . 'h]' : null }}{{ $task->is_complete ? ' [Complete]' : null }}
+{{----}}{{----}}{{----}}{{----}}{{----}}* {{ Str::escapeMarkdown($task->name) }}{{ !$project->hide_estimates && $task->estimate !== null ? ' [Estimate: ' . $task->estimate . 'h]' : null }}{{ $task->is_complete ? ' [Complete]' : null }}
 {{----}}{{----}}{{----}}{{----}}@endforeach
 {{----}}{{----}}{{----}}{{----}}
 {{----}}{{----}}{{----}}@endif
@@ -41,7 +41,7 @@
 {{----}}{{----}}@endforeach
 {{----}}@endforeach
 @endif
-@if ($project->total_estimate > 0)
+@if (!$project->hide_estimates && $project->total_estimate > 0)
 {{----}}## Summary
 {{----}}| Feature | Estimate |
 {{----}}| :--- | ---: |

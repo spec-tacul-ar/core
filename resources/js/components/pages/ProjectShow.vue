@@ -68,8 +68,8 @@
         </section>
 
         <div v-if="project.total_estimate > 0" class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none">
-            <section>
-                <h2 class="text-3xl mb-4"><a href="#features">Summary</a></h2>
+            <section id="summary">
+                <h2 class="text-3xl mb-4"><a href="#summary">Summary</a></h2>
 
                 <table class="w-full">
                     <tbody>

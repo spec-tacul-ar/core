@@ -86,7 +86,7 @@
                                                     @foreach ($requirement->tasks as $task)
                                                         <li>
                                                             {{ $task->name }}
-                                                            @if ($task->estimate)
+                                                            @if (!$project->hide_estimates && $task->estimate)
                                                                 <span class="estimate">{{ $task->estimate }}</span>
                                                             @endif
                                                             @if ($task->is_complete)
@@ -106,7 +106,7 @@
             </div>
         @endif
 
-        @if ($project->total_estimate > 0)
+        @if (!$project->hide_estimates && $project->total_estimate > 0)
             <h2>Summary</h2>
 
             <table>

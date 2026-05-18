@@ -75,7 +75,7 @@ export default class Project extends Model {
     get can_write() {
         return ['editor', 'owner'].includes(this.my_role) && !this.archived_at;
     }
-    
+
     get total_estimate() {
         return this.features_estimate;
     }

@@ -14,6 +14,7 @@ class ProjectResource extends JsonResource
             'actors' => ActorResource::collection($this->whenLoaded('actors')),
             'features' => FeatureResource::collection($this->whenLoaded('features')),
             'description' => $this->description,
+            'hide_estimates' => $this->hide_estimates,
             'name' => $this->name,
             'slug' => $this->slug,
             'archived_at' => $this->archived_at,

@@ -172,6 +172,35 @@ class ExportAuthorizationTest extends TestCase
         $this->assertSame(2, substr_count($content, 'Second estimated feature'));
     }
 
+    public function test_project_exports_hide_estimates_when_project_hides_estimates(): void
+    {
+        $account = Account::factory()->create();
+        $project = Project::factory()->create(['hide_estimates' => true]);
+        $this->attachContributor($account, $project, Role::OWNER);
+
+        $feature = Feature::factory()->for($project)->create(['name' => 'Hidden estimate feature']);
+        $requirement = Requirement::factory()->for($feature)->create(['name' => 'ship export']);
+        Task::factory()->for($requirement)->create(['name' => 'Hidden estimate task', 'estimate' => 2.5]);
+
+        $this->actingAsAccount($account);
+
+        $this->getJson('/api/export/' . $project->sqid . '/json')
+            ->assertOk()
+            ->assertJsonPath('features.0.requirements.0.tasks.0.estimate', null);
+
+        $this->get('/api/export/' . $project->sqid . '/html')
+            ->assertOk()
+            ->assertSeeText('Hidden estimate task')
+            ->assertDontSeeText('Summary')
+            ->assertDontSeeText('2.5');
+
+        $this->get('/api/export/' . $project->sqid . '/markdown')
+            ->assertOk()
+            ->assertSeeText('Hidden estimate task')
+            ->assertDontSeeText('Estimate: 2.5h')
+            ->assertDontSeeText('## Summary');
+    }
+
     private function buildExportData(Project $project): void
     {
         $actor = Actor::factory()->for($project)->create(['name' => 'Export Actor']);

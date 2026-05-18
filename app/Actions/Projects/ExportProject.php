@@ -88,7 +88,7 @@ class ExportProject
                 ->sortBy('created_at')
                 ->sortBy('weight')
                 ->values()
-                ->map(fn ($actor) => [
+                ->map(fn($actor) => [
                     'id' => $actor->uuid,
                     'name' => $actor->name,
                     'summary' => $actor->summary,
@@ -99,55 +99,51 @@ class ExportProject
                 ->sortBy('created_at')
                 ->sortBy('weight')
                 ->values()
-                ->map(function ($feature) {
-                    return [
-                        'id' => $feature->uuid,
-                        'name' => $feature->name,
-                        'description' => $feature->description,
-                        'weight' => $feature->weight,
-                        'requirements' => $feature->requirements
-                            ->sortBy('created_at')
-                            ->sortBy('weight')
-                            ->values()
-                            ->map(function ($requirement) {
-                                return [
-                                    'id' => $requirement->uuid,
-                                    'name' => $requirement->name,
-                                    'description' => $requirement->description,
-                                    'blocked_reason' => $requirement->blocked_reason,
-                                    'source' => $requirement->source,
-                                    'reference' => $requirement->reference,
-                                    'weight' => $requirement->weight,
-                                    'tasks' => $requirement->tasks
-                                        ->sortBy('created_at')
-                                        ->sortBy('weight')
-                                        ->values()
-                                        ->map(fn ($task) => [
-                                            'id' => $task->uuid,
-                                            'name' => $task->name,
-                                            'estimate' => $task->estimate,
-                                            'is_complete' => (bool) $task->is_complete,
-                                            'weight' => $task->weight,
-                                        ])
-                                        ->all(),
-                                    'unknowns' => $requirement->unknowns
-                                        ->sortBy('created_at')
-                                        ->values()
-                                        ->map(fn ($unknown) => [
-                                            'id' => $unknown->uuid,
-                                            'name' => $unknown->name,
-                                        ])
-                                        ->all(),
-                                    'assignments' => $requirement->assignments->map(fn ($assignment) => [
-                                        'id' => $assignment->uuid,
-                                        'actor_id' => $assignment->actor->uuid,
-                                    ])
-                                    ->all(),
-                                ];
-                            })
+                ->map(fn($feature) => [
+                    'id' => $feature->uuid,
+                    'name' => $feature->name,
+                    'description' => $feature->description,
+                    'weight' => $feature->weight,
+                    'requirements' => $feature->requirements
+                        ->sortBy('created_at')
+                        ->sortBy('weight')
+                        ->values()
+                        ->map(fn($requirement) => [
+                            'id' => $requirement->uuid,
+                            'name' => $requirement->name,
+                            'description' => $requirement->description,
+                            'blocked_reason' => $requirement->blocked_reason,
+                            'source' => $requirement->source,
+                            'reference' => $requirement->reference,
+                            'weight' => $requirement->weight,
+                            'tasks' => $requirement->tasks
+                                ->sortBy('created_at')
+                                ->sortBy('weight')
+                                ->values()
+                                ->map(fn($task) => [
+                                    'id' => $task->uuid,
+                                    'name' => $task->name,
+                                    'estimate' => $project->hide_estimates ? null : $task->estimate,
+                                    'is_complete' => (bool) $task->is_complete,
+                                    'weight' => $task->weight,
+                                ])
+                                ->all(),
+                            'unknowns' => $requirement->unknowns
+                                ->sortBy('created_at')
+                                ->values()
+                                ->map(fn($unknown) => [
+                                    'id' => $unknown->uuid,
+                                    'name' => $unknown->name,
+                                ])
+                                ->all(),
+                            'assignments' => $requirement->assignments->map(fn($assignment) => [
+                                'id' => $assignment->uuid,
+                                'actor_id' => $assignment->actor->uuid,
+                            ])
                             ->all(),
-                    ];
-                })
+                        ])
+                        ->all(),
+                ])
                 ->all(),
         ];
     }

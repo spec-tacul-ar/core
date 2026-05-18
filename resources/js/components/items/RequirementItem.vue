@@ -45,7 +45,7 @@
             
             <div class="flex justify-between items-center bg-gray-200 rounded-b-xl px-4 py-2">
                 <div class="text-sm text-gray-400"><strong>Ref:</strong> {{ requirement.reference }}</div>
-                <div v-if="requirement.has_tasks"><strong>Total:</strong> {{ requirement.tasks_estimate }}h</div>
+                <div v-if="requirement.has_estimates"><strong>Total:</strong> {{ requirement.tasks_estimate }}h</div>
             </div>
         </div>
     </article>

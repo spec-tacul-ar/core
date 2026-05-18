@@ -23,6 +23,7 @@ class Project extends Model
 
     protected $fillable = [
         'description',
+        'hide_estimates',
         'name',
     ];
 
@@ -30,6 +31,7 @@ class Project extends Model
     {
         return [
             'archived_at' => 'datetime',
+            'hide_estimates' => 'boolean',
         ];
     }
 
