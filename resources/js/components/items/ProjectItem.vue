@@ -11,8 +11,6 @@
 
                 {{ project.name }}
             </RouterLink>
-            
-            <p v-if="project.archived_at" class="text-sm text-gray-500">Archived {{ archived_at }} ago</p>
         </div>
 
         <div class="relative z-10 ml-auto text-right">
@@ -47,16 +45,7 @@
                     </Tooltip>
                 </template>
 
-                <SpinnerButton
-                    v-if="project.can_restore"
-                    type="button"
-                    class="relative z-10 btn btn-primary-outline"
-                    :loading="is_restoring"
-                    icon="archive"
-                    @click.stop="restore">
-
-                    Restore
-                </SpinnerButton>
+                <p v-if="project.archived_at" class="text-sm text-gray-500 whitespace-nowrap">Archived {{ archived_at }}</p>
             </div>
 
             <p v-if="!project.archived_at" class="text-sm text-gray-500 mt-2">Updated {{ updated_at }} ago</p>
@@ -66,26 +55,17 @@
 
 <script>
 import IconSet from '@/components/IconSet.vue';
-import Project from '@/stores/models/Project';
-import SpinnerButton from '@/components/SpinnerButton.vue';
 import Tooltip from '@/components/Tooltip.vue';
-import { formatDistance } from 'date-fns';
-import { useAlertsStore } from '@/stores';
+import { format, formatDistance } from 'date-fns';
 
 export default {
     components: {
         IconSet,
-        SpinnerButton,
         Tooltip,
-    },
-    data() {
-        return {
-            is_restoring: false,
-        };
     },
     computed: {
         archived_at() {
-            return formatDistance(this.project.archived_at, new Date());
+            return format(Date.parse(this.project.archived_at), 'PP');
         },
         solo_mode() {
             return this.settings.mode === 'solo';
@@ -94,22 +74,7 @@ export default {
             return formatDistance(this.project.updated_at, new Date());
         },
     },
-    inject: ['api', 'settings'],
-    methods: {
-        restore() {
-            this.is_restoring = true;
-
-            this.api.post('projects/' + this.project.id + '/restore')
-                .then((result) => {
-                    Project.repository().save(result.data);
-
-                    this.$router.push({ name: 'projects.show', params: {project_id: this.project.id}});
-
-                    useAlertsStore().push('Project restored.');
-                })
-                .finally(() => this.is_restoring = false);
-        },
-    },
+    inject: ['settings'],
     props: [
         'project'
     ],

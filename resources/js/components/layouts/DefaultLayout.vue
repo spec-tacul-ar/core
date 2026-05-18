@@ -6,7 +6,16 @@
             show_sidepanel ? 'md:right-(--sidepanel-width)' : '',
         ]">
 
+        <a
+            v-if="is_projects_index"
+            href="/"
+            class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r">
+
+            <img src="/images/logo.svg" class="h-8 w-auto mt-1" />
+        </a>
+
         <RouterLink
+            v-else
             :to="{name: 'projects.index'}"
             class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r">
 
@@ -144,6 +153,9 @@ export default {
         },
         is_apple() {
             return /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+        },
+        is_projects_index() {
+            return this.$route.name === 'projects.index';
         },
         has_sidepanel_route() {
             const components = this.$route.matched.at(-1).components;
