@@ -70,6 +70,12 @@
 
         <p>This is a rich text field so feel free to add as much details as you think might be needed. It's a good place to mention things that are not within scope.</p>
 
+        <h3>Hide estimates</h3>
+
+        <p>Enable <em>Hide estimates</em> when viewers should be able to read the specification without seeing task estimates, requirement totals, feature totals, or the project summary estimate. Editors and owners can still see estimates while working in the project.</p>
+
+        <p>Exports are more restrictive: when this setting is enabled, HTML, Markdown, and JSON exports do not include estimates for anyone. This prevents them leaking when shared.</p>
+
         <h2 id="organising">Organising</h2>
 
         <p>As your specification grows, you'll find better ways to arrange it. Click the <em>Organise</em> button in the navbar to reveal a sidebar that lists the project's users and features. Features can be further expanded to reveal their requirements. Requirements can also be reorganised and even dragged to other features.</p>
