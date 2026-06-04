@@ -31,6 +31,8 @@ class RestoreProject
 
     public function asController(Project $project): ProjectResource
     {
-        return new ProjectResource($this->handle($project));
+        $project = $this->handle($project);
+
+        return new ProjectResource($project);
     }
 }

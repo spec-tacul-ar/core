@@ -4,28 +4,41 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Mode
+    | Disable Registration
     |--------------------------------------------------------------------------
     |
-    | This determines whether authentication and collaboration features are
-    | enabled. The default .env file sets this to solo mode.
+    | Use this to disable registration. Accounts can still be created using an
+    | Artisan command.
     |
     */
 
-    'mode' => env('SPECTACULAR_MODE', 'team'),
+    'registration' => env('SPECTACULAR_REGISTRATION', true),
 
     /*
     |--------------------------------------------------------------------------
-    | Application path
+    | Disable Verification
     |--------------------------------------------------------------------------
     |
-    | Changing this value will move the application away from the root URL.
-    | This is useful if you want to have a custom landing page. Make sure
-    | there's no trailing slash.
+    | Use this to disable email verification.
     |
     */
 
-    'path' => env('SPECTACULAR_PATH', 'app'),
+    'verification' => env('SPECTACULAR_EMAIL_VERIFICATION', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Socialite Providers
+    |--------------------------------------------------------------------------
+    |
+    | List the OAuth providers that should be available on the frontend.
+    |
+    */
+
+    'socialite' => [
+        'google' => !empty(env('GOOGLE_CLIENT_ID')),
+        'github' => !empty(env('GITHUB_CLIENT_ID')),
+        'linkedin-openid' => !empty(env('LINKEDIN_CLIENT_ID')),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -33,7 +46,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Resource IDs are converted to short alphanumeric strings like YouTube
-    | IDs for readability. If you're hosting Spectacular publically, you should
+    | IDs for readability. If you're hosting Spectacular publicly, you should
     | provide your own shuffled alphabet in the .env file so IDs are less
     | predictable.
     |

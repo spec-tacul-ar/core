@@ -10,19 +10,20 @@ class RequirementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'created_at' => $this->created_at,
-            'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
-            'blocked_reason' => $this->blocked_reason,
-            'description' => $this->description,
             'id' => $this->sqid,
             'name' => $this->name,
+            'description' => $this->description,
+            'blocked_reason' => $this->blocked_reason,
             'feature_id' => $this->feature_sqid,
-            'unknowns' => UnknownResource::collection($this->whenLoaded('unknowns')),
             'reference' => $this->reference,
             'source' => $this->source,
-            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
             'weight' => $this->weight,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+
+            'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
+            'unknowns' => UnknownResource::collection($this->whenLoaded('unknowns')),
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
         ];
     }
 }

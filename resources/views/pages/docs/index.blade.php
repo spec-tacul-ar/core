@@ -40,7 +40,7 @@
             <li>Define the major features of the product</li>
             <li>Break each feature into requirements (user stories)</li>
             <li>Capture unknowns where further discovery is required</li>
-            <li>Invite collaborators to provide feedback, estimate effort and update progress</li>
+            <li>Invite collaborators to provide feedback and update progress</li>
             <li>Maintain the document throughout development and beyond.</li>
         </ol>
 

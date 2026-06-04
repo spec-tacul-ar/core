@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\Role;
-use App\Rules\QuarterHour as QuarterHourRule;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,10 +19,10 @@ class Project extends Model
     use HasRelationships;
     use Traits\HasSqid;
     use Traits\Revisionable;
+    use Traits\TracksActivity;
 
     protected $fillable = [
         'description',
-        'hide_estimates',
         'name',
     ];
 
@@ -31,15 +30,16 @@ class Project extends Model
     {
         return [
             'archived_at' => 'datetime',
-            'hide_estimates' => 'boolean',
         ];
     }
 
     protected static function booted(): void
     {
+        static::saved(fn($requirement) => $requirement->trackActivity());
+
         static::deleting(function ($project) {
             $project->comments->each->delete();
-            $project->contributors->each->delete();
+            $project->collaborations->each->delete();
             $project->features()->withTrashed()->get()->each->forceDelete();
             $project->invitations->each->delete();
             $project->actors()->withTrashed()->get()->each->forceDelete();
@@ -48,11 +48,21 @@ class Project extends Model
 
     /* Relations */
 
-    public function accounts()
+    public function collaborators()
     {
-        return $this->belongsToMany(Account::class, 'contributors')
-            ->withPivot('role')
+        return $this->belongsToMany(Account::class, 'collaborations')
+            ->withPivot('role', 'read_at')
             ->withTimestamps();
+    }
+
+    public function actors(): HasMany
+    {
+        return $this->hasMany(Actor::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasManyThrough(Assignment::class, Actor::class);
     }
 
     public function comments()
@@ -60,32 +70,19 @@ class Project extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function contributors()
+    public function collaborations()
     {
-        return $this->hasMany(Contributor::class);
+        return $this->hasMany(Collaboration::class);
     }
 
     public function features(): HasMany
     {
-        return $this->hasMany(Feature::class);
+        return $this->hasMany(Feature::class)->chaperone();
     }
 
     public function invitations()
     {
         return $this->hasMany(Invitation::class);
-    }
-
-    public function me()
-    {
-        return $this->hasOne(Contributor::class)->ofMany(
-            ['id' => 'min'],
-            fn($query) => $query->where('account_id', auth()->id()),
-        );
-    }
-
-    public function readmark()
-    {
-        return $this->hasOne(Readmark::class)->where('account_id', auth()->id());
     }
 
     public function requirements(): HasManyThrough
@@ -103,23 +100,11 @@ class Project extends Model
         return $this->hasManyDeep(Task::class, [Feature::class, Requirement::class]);
     }
 
-    public function actors(): HasMany
-    {
-        return $this->hasMany(Actor::class);
-    }
-
     /* Scopes */
-
-    public function scopeWithMe($query)
-    {
-        $query->with(['contributors' => function ($query) {
-            $query->where('account_id', auth()->id());
-        }]);
-    }
 
     public function scopeOwnedBy($query, Account $account)
     {
-        return $query->whereHas('contributors', function ($query) use ($account) {
+        return $query->whereHas('collaborations', function ($query) use ($account) {
             return $query->whereBelongsTo($account)->where('role', Role::OWNER);
         });
     }
@@ -133,33 +118,9 @@ class Project extends Model
 
     /* Helpers */
 
-    public function loadAll(): static
+    public function addCollaboration(Account $account, Role $role): static
     {
-        return $this->load([
-            'contributors.account',
-            'features',
-            'features.requirements',
-            'features.requirements.assignments.actor',
-            'features.requirements.tasks',
-            'features.requirements.unknowns',
-            'readmark',
-            'actors',
-        ]);
-    }
-
-    public function featuresEstimate(): Attribute
-    {
-        return new Attribute(fn() => $this->features->sum('requirements_estimate'));
-    }
-
-    public function totalEstimate(): Attribute
-    {
-        return new Attribute(fn() => $this->features_estimate);
-    }
-
-    public function addContributor(Account $account, Role $role): static
-    {
-        $this->contributors()->make(['role' => $role])->account()->associate($account)->save();
+        $this->collaborations()->make(['role' => $role])->account()->associate($account)->save();
 
         return $this;
     }
@@ -213,7 +174,6 @@ class Project extends Model
             'features.*.requirements.*.weight' => ['nullable', 'integer'],
             'features.*.requirements.*.tasks' => ['sometimes', 'array'],
             'features.*.requirements.*.tasks.*.name' => ['required', 'string'],
-            'features.*.requirements.*.tasks.*.estimate' => ['nullable', new QuarterHourRule()],
             'features.*.requirements.*.tasks.*.is_complete' => ['boolean'],
             'features.*.requirements.*.tasks.*.weight' => ['nullable', 'integer'],
             'features.*.requirements.*.unknowns' => ['sometimes', 'array'],
@@ -257,7 +217,6 @@ class Project extends Model
                     foreach ($requirement_data['tasks'] ?? [] as $task_data) {
                         $requirement_model->tasks()->create([
                             'name' => $task_data['name'],
-                            'estimate' => $task_data['estimate'] ?? null,
                             'is_complete' => $task_data['is_complete'] ?? false,
                             'weight' => $task_data['weight'] ?? null,
                         ]);
@@ -293,7 +252,7 @@ class Project extends Model
     protected function url(): Attribute
     {
         return Attribute::make(
-            get: fn() => url(config('spectacular.path') . '/projects/' . $this->getRouteKey()),
+            get: fn() => url('app/projects/' . $this->getRouteKey()),
         );
     }
 }

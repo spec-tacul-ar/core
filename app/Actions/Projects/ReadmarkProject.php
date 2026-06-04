@@ -9,7 +9,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Models\Account;
 use App\Models\Project;
+use Carbon\Carbon;
 
 class ReadmarkProject
 {
@@ -25,13 +27,19 @@ class ReadmarkProject
         $router->post('projects/{project}/readmark', static::class);
     }
 
+    public function handle(Account $account, Project $project): Carbon
+    {
+        $timestamp = now();
+
+        $account->markAsRead($project, $timestamp);
+
+        return $timestamp;
+    }
+
     public function asController(Request $request, Project $project): JsonResource
     {
-        $readmark = $request->user()->markAsRead($project);
+        $timestamp = $this->handle($request->user(), $project);
 
-        return new JsonResource([
-            'id' => $project->sqid,
-            'readmark' => $readmark->updated_at,
-        ]);
+        return new JsonResource($timestamp);
     }
 }

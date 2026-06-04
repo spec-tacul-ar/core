@@ -10,7 +10,6 @@ use App\Models\Task;
 use App\Models\Unknown;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -19,7 +18,7 @@ class RevisionableUuidTest extends TestCase
     use BuildsApiFixtures;
     use RefreshDatabase;
 
-    public function test_revisionable_models_generate_uuids(): void
+    public function test_revisionable_models_use_integer_primary_keys_and_generate_uuids(): void
     {
         $project = Project::factory()->create();
         $actor = Actor::factory()->for($project)->create();
@@ -32,7 +31,8 @@ class RevisionableUuidTest extends TestCase
         $unknown = Unknown::factory()->for($requirement)->create();
 
         foreach ([$project, $actor, $feature, $requirement, $assignment, $task, $unknown] as $model) {
-            $this->assertTrue(Str::isUuid($model->uuid));
+            $this->assertIsInt($model->getKey());
+            $this->assertNotNull($model->uuid);
         }
     }
 
@@ -49,7 +49,7 @@ class RevisionableUuidTest extends TestCase
         ]);
 
         $request = Request::create('/');
-        $request->setUserResolver(fn () => $account);
+        $request->setUserResolver(fn() => $account);
 
         $payload = (new ProjectResource($project))
             ->response($request)
@@ -64,5 +64,25 @@ class RevisionableUuidTest extends TestCase
         $this->assertArrayNotHasKey('uuid', $data['features'][0]['requirements'][0]['assignments'][0]);
         $this->assertArrayNotHasKey('uuid', $data['features'][0]['requirements'][0]['tasks'][0]);
         $this->assertArrayNotHasKey('uuid', $data['features'][0]['requirements'][0]['unknowns'][0]);
+    }
+
+    public function test_models_serialize_raw_ids_before_identifier_obfuscation(): void
+    {
+        $project = Project::factory()->create();
+        $feature = $project->features()->create(['name' => 'Raw identifiers']);
+
+        $raw = $feature->toArray();
+
+        $this->assertSame($feature->id, $raw['id']);
+        $this->assertSame($project->id, $raw['project_id']);
+        $this->assertArrayNotHasKey('sqid', $raw);
+        $this->assertArrayNotHasKey('project_sqid', $raw);
+
+        $obfuscated = $feature->obfuscateIdentifiers($raw);
+
+        $this->assertSame($feature->sqid, $obfuscated['id']);
+        $this->assertSame($project->sqid, $obfuscated['project_id']);
+        $this->assertArrayNotHasKey('sqid', $obfuscated);
+        $this->assertArrayNotHasKey('project_sqid', $obfuscated);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Actions\Projects;
 
-use Illuminate\Auth\Access\Response as GateResponse;
-use Illuminate\Support\Facades\Gate;
 use App\Enums\Role;
 use App\Http\Resources\ProjectResource;
+use App\Models\Account;
 use App\Models\Project;
-use App\Rules\SluggableName as SluggableNameRule;
+use Illuminate\Auth\Access\Response as GateResponse;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -26,7 +26,7 @@ class DemoProject
         $router->post('projects/demo', static::class);
     }
 
-    public function handle(array $validated): Project
+    public function handle(Account $account): Project
     {
         $json = file_get_contents(resource_path('example_project.json'));
 
@@ -34,15 +34,15 @@ class DemoProject
 
         $project = Project::import($data, false);
 
-        if (config('spectacular.mode') !== 'solo') {
-            $project->addContributor(auth()->user(), Role::OWNER);
-        }
+        $project->addCollaboration($account, Role::OWNER);
 
         return $project;
     }
 
     public function asController(ActionRequest $request): ProjectResource
     {
-        return new ProjectResource($this->handle($request->validated()));
+        $project = $this->handle($request->user());
+
+        return new ProjectResource($project);
     }
 }

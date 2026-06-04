@@ -3,6 +3,7 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../views/components/**/*.blade.php';
+@source '../views/mcp/**/*.blade.php';
 @source '../views/pages/**/*.blade.php';
 
 @theme {

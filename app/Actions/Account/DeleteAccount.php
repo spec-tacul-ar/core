@@ -2,7 +2,7 @@
 
 namespace App\Actions\Account;
 
-use Illuminate\Http\Request;
+use App\Models\Account;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
@@ -24,14 +24,14 @@ class DeleteAccount
         ];
     }
 
-    public function handle(Request $request): void
+    public function handle(Account $account): void
     {
-        $request->user()->delete();
+        $account->delete();
     }
 
     public function asController(ActionRequest $request): Response
     {
-        $this->handle($request);
+        $this->handle($request->user());
 
         return response()->noContent();
     }

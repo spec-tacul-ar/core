@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use App\Casts\AsSqid;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\Scopes\WeightedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Feature extends Model
 {
     use HasFactory;
     use Traits\HasSqid;
     use Traits\Revisionable;
+    use Traits\TracksActivity;
 
     protected $casts = [
         'is_percentage' => 'boolean',
@@ -29,13 +31,29 @@ class Feature extends Model
 
     protected static function booted(): void
     {
+        static::addGlobalScope(new WeightedScope());
+
+        static::saved(fn($feature) => $feature->trackActivity());
+        static::deleted(function ($feature) {
+            if (! $feature->isForceDeleting()) {
+                $feature->trackActivity();
+            }
+        });
+
         static::deleting(function ($feature) {
+            $feature->comments()->delete();
             $feature->requirements->each->delete();
         });
 
         static::forceDeleting(function ($feature) {
+            $feature->comments()->delete();
             $feature->requirements()->withTrashed()->get()->each->forceDelete();
         });
+    }
+
+    protected function handleActivity()
+    {
+        $this->project->trackActivity();
     }
 
     /* Relations */
@@ -45,15 +63,14 @@ class Feature extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
     public function requirements(): HasMany
     {
-        return $this->hasMany(Requirement::class);
+        return $this->hasMany(Requirement::class)->chaperone();
     }
 
-    /* Attributes */
-
-    public function requirementsEstimate(): Attribute
-    {
-        return new Attribute(fn() => $this->requirements->sum('tasks_estimate'));
-    }
 }

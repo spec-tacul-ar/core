@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use InvalidArgumentException;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
-use App\Enums\Role;
 
-class Account extends Authenticatable
+class Account extends Authenticatable implements MustVerifyEmail, OAuthenticatable
 {
     use HasApiTokens;
     use HasFactory;
@@ -28,7 +30,8 @@ class Account extends Authenticatable
         'email',
         'email_verified_at',
         'password',
-        'timezone',
+        'socialite_provider',
+        'socialite_provider_id',
     ];
 
     protected $hidden = [
@@ -47,7 +50,6 @@ class Account extends Authenticatable
             $account->projects()->detach();
             $account->comments()->delete();
             $account->invitations()->delete();
-            $account->readmarks()->delete();
         });
     }
 
@@ -64,15 +66,35 @@ class Account extends Authenticatable
         return static::firstWhere('email', $email);
     }
 
-    public function markEmailAsVerified()
+    public static function findBySocial(string $provider, string $provider_id)
     {
-        $verified = parent::markEmailAsVerified();
+        return static::firstWhere([
+            'socialite_provider' => $provider,
+            'socialite_provider_id' => $provider_id,
+        ]);
+    }
 
-        if ($verified) {
-            event(new Verified($this));
+    public function hasVerifiedEmail(): bool
+    {
+        if (!config('spectacular.verification')) {
+            return true;
         }
 
-        return $verified;
+        return $this->email_verified_at !== null;
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        if (!config('spectacular.verification')) {
+            return;
+        }
+
+        $this->notify(new VerifyEmail());
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'sqid';
     }
 
     /* Relations */
@@ -82,9 +104,9 @@ class Account extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function contributors()
+    public function collaborations()
     {
-        return $this->hasMany(Contributor::class);
+        return $this->hasMany(Collaboration::class);
     }
 
     public function invitations()
@@ -94,22 +116,9 @@ class Account extends Authenticatable
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'contributors')
-            ->withPivot('role')
+        return $this->belongsToMany(Project::class, 'collaborations')
+            ->withPivot('role', 'read_at')
             ->withTimestamps();
-    }
-
-    public function ownedProjects()
-    {
-        return $this->belongsToMany(Project::class, 'contributors')
-            ->withPivot('role')
-            ->withTimestamps()
-            ->wherePivot('role', Role::OWNER);
-    }
-
-    public function readmarks()
-    {
-        return $this->hasMany(Readmark::class);
     }
 
     /* Helpers */
@@ -120,25 +129,18 @@ class Account extends Authenticatable
             $timestamp = now();
         }
 
-        $readmark = $this->readmarks()->whereBelongsTo($project)->first();
-
-        if (!$readmark) {
-            $readmark = $this->readmarks()->make()->forProject($project);
-        }
-
-        $readmark->updated_at = $timestamp;
-        $readmark->save();
-
-        return $readmark;
+        $this->projects()->updateExistingPivot($project, [
+            'read_at' => $timestamp,
+        ]);
     }
 
     public function canView(Model $model, ?string $via = null)
     {
         if ($model instanceof Project) {
-            return Contributor::query()
-                ->whereBelongsTo($this)
-                ->whereBelongsTo($model)
-                ->exists();
+            return $model->collaborations
+                ->where('account_id', $this->getKey())
+                ->where('project_id', $model->getKey())
+                ->isNotEmpty();
         }
 
         if ($via === null) {
@@ -157,11 +159,11 @@ class Account extends Authenticatable
                 return false;
             }
 
-            return Contributor::query()
-                ->whereBelongsTo($this)
-                ->whereBelongsTo($model)
-                ->whereIn('role', [Role::EDITOR, Role::OWNER])
-                ->exists();
+            return $model->collaborations
+                ->where('account_id', $this->getKey())
+                ->where('project_id', $model->getKey())
+                ->whereIn('role', [Role::EDITOR, Role::OWNER], true)
+                ->isNotEmpty();
         }
 
         if ($via === null) {
@@ -178,11 +180,11 @@ class Account extends Authenticatable
     public function owns(Model $model, ?string $via = null)
     {
         if ($model instanceof Project) {
-            return Contributor::query()
-                ->whereBelongsTo($this)
-                ->whereBelongsTo($model)
+            return $model->collaborations
+                ->where('account_id', $this->getKey())
+                ->where('project_id', $model->getKey())
                 ->where('role', Role::OWNER)
-                ->exists();
+                ->isNotEmpty();
         }
 
         if ($via === null) {

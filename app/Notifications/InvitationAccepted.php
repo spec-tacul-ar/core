@@ -7,13 +7,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
-use App\Models\Contributor;
+use App\Models\Collaboration;
 
 class InvitationAccepted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Contributor $contributor)
+    public function __construct(public Collaboration $collaboration)
     {
         //
     }
@@ -27,7 +27,7 @@ class InvitationAccepted extends Notification implements ShouldQueue
     {
         return new MailMessage()
             ->subject('Invitation accepted')
-            ->line(Str::escapeMarkdown($this->contributor->account->name) . ' has accepted your invitation to collaborate on ' . Str::escapeMarkdown($this->contributor->project->name) . '.');
+            ->line(Str::escapeMarkdown($this->collaboration->account->name) . ' has accepted your invitation to collaborate on ' . Str::escapeMarkdown($this->collaboration->project->name) . '.');
     }
 
     public function toArray(object $notifiable): array

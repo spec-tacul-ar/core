@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\MakeCachable;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Folio\Folio;
 

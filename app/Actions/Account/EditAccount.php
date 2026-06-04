@@ -2,11 +2,11 @@
 
 namespace App\Actions\Account;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\AccountResource;
+use App\Models\Account;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Http\Resources\AccountResource;
 
 class EditAccount
 {
@@ -24,10 +24,8 @@ class EditAccount
         ];
     }
 
-    public function handle(Request $request, array $validated)
+    public function handle(Account $account, array $validated)
     {
-        $account = $request->user();
-
         $account->update($validated);
 
         return $account;
@@ -35,6 +33,8 @@ class EditAccount
 
     public function asController(ActionRequest $request): AccountResource
     {
-        return new AccountResource($this->handle($request, $request->validated()));
+        $account = $this->handle($request->user(), $request->validated());
+
+        return new AccountResource($account);
     }
 }

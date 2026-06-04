@@ -13,16 +13,22 @@ class Unknown extends Model
     use Traits\HasSqid;
     use Traits\Revisionable;
 
-    protected $fillable = [
-        'requirement_id',
-        'name',
-    ];
-
     protected function casts(): array
     {
         return [
             'requirement_sqid' => AsSqid::class,
         ];
+    }
+
+    protected $fillable = [
+        'requirement_id',
+        'name',
+    ];
+
+    protected static function booted(): void
+    {
+        static::saved(fn($unknown) => $unknown->requirement->trackActivity());
+        static::deleted(fn($unknown) => $unknown->requirement->trackActivity());
     }
 
     /* Relations */

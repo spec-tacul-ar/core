@@ -10,7 +10,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Account;
 use App\Models\Comment;
-use App\Models\Contributor;
+use App\Models\Collaboration;
 use App\Models\Invitation;
 
 class TestSeeder extends Seeder
@@ -34,16 +34,16 @@ class TestSeeder extends Seeder
             ->state(['email' => 'other.user@example.com'])
             ->create();
 
-        $unverified_account = Account::factory()
+        $unverified = Account::factory()
             ->state(['email' => 'unverified@example.com'])
             ->unverified()
             ->create();
 
         $project = Project::factory()
             ->state(['name' => 'My Project'])
-            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
-            ->has(Contributor::factory()->state(['role' => Role::EDITOR]))
-            ->has(Contributor::factory()->state(['role' => Role::VIEWER]))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::EDITOR]))
+            ->has(Collaboration::factory()->state(['role' => Role::VIEWER]))
             ->has(Invitation::factory()->state(['role' => Role::OWNER])->for($account))
             ->has(Invitation::factory()->state(['role' => Role::EDITOR])->for($account))
             ->has(Invitation::factory()->state(['role' => Role::VIEWER])->for($account))
@@ -69,26 +69,39 @@ class TestSeeder extends Seeder
 
         Project::factory()
             ->state(['name' => 'Other Project'])
-            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($other_account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER])->for($other_account))
             ->has(Invitation::factory()->state(['email' => $account->email, 'role' => Role::OWNER])->for($other_account))
-            ->has(Invitation::factory()->state(['email' => $unverified_account->email, 'role' => Role::OWNER])->for($other_account))
+            ->has(Invitation::factory()->state(['email' => $unverified->email, 'role' => Role::OWNER])->for($other_account))
             ->create();
 
         Project::factory()
             ->state(['name' => 'Empty Project'])
-            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER])->for($account))
             ->create();
 
         Project::factory()
             ->archived()
             ->state(['name' => 'Archived Project'])
-            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER])->for($account))
             ->create();
 
         Project::factory()
-            ->state(['name' => 'Two owners'])
-            ->has(Contributor::factory()->state(['role' => Role::OWNER])->for($account))
-            ->has(Contributor::factory()->state(['role' => Role::OWNER, 'created_at' => now()->addSecond(), 'updated_at' => now()->addSecond()]));
+            ->state(['name' => 'Two Owners'])
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER, 'created_at' => now()->addSecond(), 'updated_at' => now()->addSecond()]))
+            ->create();
+
+        Project::factory()
+            ->state(['name' => 'Editor Project'])
+            ->has(Collaboration::factory()->state(['role' => Role::EDITOR])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER, 'created_at' => now()->addSecond(), 'updated_at' => now()->addSecond()]))
+            ->create();
+
+        Project::factory()
+            ->state(['name' => 'Viewer Project'])
+            ->has(Collaboration::factory()->state(['role' => Role::VIEWER])->for($account))
+            ->has(Collaboration::factory()->state(['role' => Role::OWNER, 'created_at' => now()->addSecond(), 'updated_at' => now()->addSecond()]))
+            ->create();
 
         // Feature comment
         Comment::factory()

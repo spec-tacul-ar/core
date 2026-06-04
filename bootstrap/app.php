@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Middleware\MakeFolioPagesCachable;
 use App\Http\Middleware\DecodeSqids;
+use App\Http\Middleware\MakeFolioPagesCachable;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,13 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->statefulApi();
-        $middleware->redirectGuestsTo(fn() => url(config('spectacular.path') . '/login'));
-        $middleware->alias([
-            'sqids' => DecodeSqids::class,
-        ]);
-
+        $middleware->alias(['sqids' => DecodeSqids::class]);
         $middleware->prependToGroup('web', MakeFolioPagesCachable::class);
+        $middleware->redirectGuestsTo(fn() => url('app/login'));
+        $middleware->throttleApi('api');
+
+        $middleware->web(append: [
+            CreateFreshApiToken::class, // Make sure this is always appended last.
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

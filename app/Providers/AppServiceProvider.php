@@ -5,32 +5,38 @@ namespace App\Providers;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\Requirement;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Scopes\WithoutHistoryScope;
+use App\Policies\TokenPolicy;
+use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Http\Request;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
+use Laravel\Passport\Token;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->singleton(WithoutHistoryScope::class);
     }
 
     public function boot(): void
     {
-        Auth::viaRequest('solo', function (Request $request) {
-            if (config('spectacular.mode') === 'solo') {
-                return new Account([
-                    'id' => 0,
-                    'name' => 'Solo User',
-                    'email' => 'solo@spectacular',
-                    'email_verified_at' => now(),
-                ]);
-            }
+        Auth::provider('eloquent', function ($app, array $config) {
+            return new class ($app['hash'], $config['model']) extends EloquentUserProvider {
+                public function retrieveById($identifier)
+                {
+                    try {
+                        return $this->createModel()->resolveRouteBinding($identifier);
+                    } catch (ModelNotFoundException $exception) {
+                        return null;
+                    }
+                }
+            };
         });
 
         Blueprint::macro('revisionable', function (): void {
@@ -39,12 +45,13 @@ class AppServiceProvider extends ServiceProvider
             $this->binary('history')->nullable();
         });
 
-        Gate::before(function (Account $account) {
-            // Allow solo users to bypass policies
-            if (config('spectacular.mode') === 'solo') {
-                return true;
-            }
+        Passport::authorizationView(function ($parameters) {
+            return view('mcp.authorize', $parameters);
         });
+
+        Passport::cookie('spectacular_token');
+
+        Gate::policy(Token::class, TokenPolicy::class);
 
         Relation::enforceMorphMap([
             'account' => Account::class,

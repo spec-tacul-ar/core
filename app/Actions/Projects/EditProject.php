@@ -29,7 +29,6 @@ class EditProject
     {
         return [
             'description' => ['nullable', 'string', 'max:10000'],
-            'hide_estimates' => ['sometimes', 'boolean'],
             'name' => ['sometimes', 'string', 'max:250', new SluggableNameRule()],
         ];
     }
@@ -43,6 +42,8 @@ class EditProject
 
     public function asController(ActionRequest $request, Project $project): ProjectResource
     {
-        return new ProjectResource($this->handle($project, $request->validated()));
+        $project = $this->handle($project, $request->validated());
+
+        return new ProjectResource($project);
     }
 }

@@ -11,7 +11,6 @@ use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\Actor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
 
@@ -43,12 +42,12 @@ class AccountProjectsTest extends TestCase
         $account = Account::factory()->create();
 
         $ownedProject = Project::factory()->create();
-        $this->attachContributor($account, $ownedProject, Role::OWNER);
+        $this->attachCollaboration($account, $ownedProject, Role::OWNER);
 
         $sharedOwner = Account::factory()->create();
         $sharedProject = Project::factory()->create();
-        $this->attachContributor($sharedOwner, $sharedProject, Role::OWNER);
-        $this->attachContributor($account, $sharedProject, Role::VIEWER);
+        $this->attachCollaboration($sharedOwner, $sharedProject, Role::OWNER);
+        $this->attachCollaboration($account, $sharedProject, Role::VIEWER);
 
         $this->actingAsAccount($account);
 
@@ -61,7 +60,7 @@ class AccountProjectsTest extends TestCase
         $this->assertDatabaseMissing('accounts', ['id' => $account->id]);
         $this->assertSoftDeleted('projects', ['id' => $ownedProject->id]);
         $this->assertDatabaseHas('projects', ['id' => $sharedProject->id]);
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $account->id,
             'project_id' => $sharedProject->id,
         ]);
@@ -75,8 +74,15 @@ class AccountProjectsTest extends TestCase
         $beta = Project::factory()->create(['name' => 'Beta']);
         $hidden = Project::factory()->create(['name' => 'Hidden']);
 
-        $this->attachContributor($account, $alpha, Role::OWNER);
-        $this->attachContributor($account, $beta, Role::VIEWER);
+        $this->attachCollaboration($account, $alpha, Role::OWNER);
+        $this->attachCollaboration($account, $beta, Role::VIEWER);
+
+        $account->markAsRead($alpha, now()->subMinutes(5));
+        $readmark = $account->collaborations()->whereBelongsTo($alpha)->firstOrFail();
+
+        $otherAccount = Account::factory()->create();
+        $this->attachCollaboration($otherAccount, $alpha, Role::VIEWER);
+        $otherAccount->markAsRead($alpha, now()->subMinute());
 
         $feature = Feature::factory()->for($alpha)->create();
         $blockedRequirement = Requirement::factory()->for($feature)->create(['blocked_reason' => 'Waiting on vendor']);
@@ -90,7 +96,7 @@ class AccountProjectsTest extends TestCase
 
         $this->actingAsAccount($account);
 
-        $response = $this->getJson('/api/projects/browse');
+        $response = $this->getJson('/api/projects');
 
         $response->assertOk();
         $response->assertJsonPath('data.0.name', 'Alpha');
@@ -100,59 +106,37 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('data.0.tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
         $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
-        $response->assertJsonPath('data.0.contributors.0.account_id', $account->sqid);
-        $response->assertJsonMissingPath('data.0.contributors.0.account_name');
+        $response->assertJsonPath('data.0.read_at', $readmark->read_at->toJSON());
+        $response->assertJsonPath('data.0.collaborations.0.account_id', $account->sqid);
+        $response->assertJsonMissingPath('data.0.collaborations.0.account_name');
         $response->assertJsonPath('data.1.name', 'Beta');
         $response->assertJsonPath('meta.total', 2);
     }
 
-    public function test_projects_browse_endpoint_does_not_include_solo_projects_for_real_accounts(): void
+    public function test_projects_browse_endpoint_does_not_include_projects_without_collaborations(): void
     {
         $account = Account::factory()->create();
 
         $owned = Project::factory()->create(['name' => 'Owned']);
-        $solo = Project::factory()->create(['name' => 'Solo']);
+        $unshared = Project::factory()->create(['name' => 'Unshared']);
 
-        $this->attachContributor($account, $owned, Role::OWNER);
+        $this->attachCollaboration($account, $owned, Role::OWNER);
 
         $this->actingAsAccount($account);
 
-        $response = $this->getJson('/api/projects/browse');
+        $response = $this->getJson('/api/projects');
 
         $response->assertOk();
         $response->assertJsonPath('meta.total', 1);
         $response->assertJsonPath('data.0.name', 'Owned');
-        $response->assertJsonMissing(['name' => 'Solo']);
-    }
-
-    public function test_projects_browse_endpoint_does_not_include_contributor_projects_in_solo_mode(): void
-    {
-        config(['spectacular.mode' => 'solo']);
-
-        $solo = Project::factory()->create(['name' => 'Solo']);
-        $owned = Project::factory()->create(['name' => 'Owned']);
-
-        $this->attachContributor(Account::factory()->create(), $owned, Role::OWNER);
-
-        Sanctum::actingAs(new Account([
-            'id' => 0,
-            'name' => 'Default',
-            'email' => 'solo@spectacular',
-        ]));
-
-        $response = $this->getJson('/api/projects/browse');
-
-        $response->assertOk();
-        $response->assertJsonPath('meta.total', 1);
-        $response->assertJsonPath('data.0.name', $solo->name);
-        $response->assertJsonMissing(['name' => $owned->name]);
+        $response->assertJsonMissing(['name' => $unshared->name]);
     }
 
     public function test_projects_add_endpoint_creates_a_project_and_attaches_the_authenticated_account_as_owner(): void
     {
         $account = $this->actingAsAccount();
 
-        $response = $this->postJson('/api/projects/add', [
+        $response = $this->postJson('/api/projects', [
             'features' => ['Authentication'],
             'name' => 'Roadmap',
             'actors' => ['Operators'],
@@ -163,21 +147,21 @@ class AccountProjectsTest extends TestCase
 
         $project = Project::query()->where('name', 'Roadmap')->firstOrFail();
 
-        $this->assertDatabaseHas('contributors', [
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'role' => Role::OWNER->value,
         ]);
-        $this->assertDatabaseHas('contributors', [
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
         ]);
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'created_at' => null,
         ]);
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'updated_at' => null,
@@ -192,27 +176,7 @@ class AccountProjectsTest extends TestCase
         ]);
     }
 
-    public function test_projects_demo_endpoint_leaves_demo_projects_unclaimed_in_solo_mode(): void
-    {
-        config(['spectacular.mode' => 'solo']);
-
-        Sanctum::actingAs(new Account([
-            'id' => 0,
-            'name' => 'Default',
-            'email' => 'solo@spectacular',
-        ]));
-
-        $response = $this->postJson('/api/projects/demo');
-
-        $response->assertCreated();
-
-        $project = (new Project())->resolveRouteBinding($response->json('data.id'));
-
-        $this->assertDatabaseHas('projects', ['id' => $project->id]);
-        $this->assertDatabaseMissing('contributors', ['project_id' => $project->id]);
-    }
-
-    public function test_projects_demo_endpoint_sets_contributor_timestamps_for_real_accounts(): void
+    public function test_projects_demo_endpoint_sets_collaboration_timestamps_for_real_accounts(): void
     {
         $account = $this->actingAsAccount();
 
@@ -222,31 +186,31 @@ class AccountProjectsTest extends TestCase
 
         $project = (new Project())->resolveRouteBinding($response->json('data.id'));
 
-        $this->assertDatabaseHas('contributors', [
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'role' => Role::OWNER->value,
         ]);
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'created_at' => null,
         ]);
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $account->id,
             'project_id' => $project->id,
             'updated_at' => null,
         ]);
     }
 
-    public function test_projects_read_endpoint_returns_hydrated_data_to_contributors_and_forbids_outsiders(): void
+    public function test_projects_read_endpoint_returns_hydrated_data_to_collaborations_and_forbids_outsiders(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $fixture['account']->markAsRead($fixture['project'], now()->subMinute());
 
         $this->actingAsAccount($fixture['account']);
 
-        $response = $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1');
+        $response = $this->getJson('/api/projects/' . $fixture['project']->sqid . '?hydrated=1');
 
         $response->assertOk();
         $response->assertJsonPath('data.id', $fixture['project']->sqid);
@@ -256,20 +220,20 @@ class AccountProjectsTest extends TestCase
         $response->assertJsonPath('data.features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->sqid);
         $response->assertJsonPath('data.features.0.requirements.0.tasks.0.id', $fixture['task']->sqid);
         $response->assertJsonPath('data.features.0.requirements.0.unknowns.0.id', $fixture['unknown']->sqid);
-        $response->assertJsonPath('data.contributors.0.account_name', $fixture['account']->name);
-        $response->assertJsonPath('data.readmark', $fixture['account']->readmarks()->first()->updated_at->toJSON());
+        $response->assertJsonMissingPath('data.collaborations.0.account_name');
+        $response->assertJsonPath('data.read_at', $fixture['collaboration']->fresh()->read_at->toJSON());
 
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read')->assertNotFound();
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '')->assertNotFound();
     }
 
-    public function test_projects_read_endpoint_returns_not_found_for_malformed_sqids(): void
+    public function test_projects_read_endpoint_returns_not_found_for_malformed_ids(): void
     {
         $this->actingAsAccount();
 
-        $this->getJson('/api/projects/not-a-sqid/read')->assertNotFound();
+        $this->getJson('/api/projects/not-an-id')->assertNotFound();
     }
 
     public function test_projects_edit_endpoint_allows_editors_and_forbids_viewers(): void
@@ -279,21 +243,19 @@ class AccountProjectsTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'description' => 'Updated description',
-            'hide_estimates' => true,
             'name' => 'After',
         ])->assertOk();
 
         $this->assertDatabaseHas('projects', [
             'id' => $project->id,
             'description' => 'Updated description',
-            'hide_estimates' => true,
             'name' => 'After',
         ]);
 
@@ -302,29 +264,6 @@ class AccountProjectsTest extends TestCase
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'name' => 'Blocked',
         ])->assertForbidden();
-    }
-
-    public function test_projects_read_endpoint_hides_estimates_from_viewers_when_enabled(): void
-    {
-        $fixture = $this->createProjectFixture(Role::VIEWER);
-        $fixture['project']->update(['hide_estimates' => true]);
-        $fixture['task']->update(['estimate' => 2.5]);
-
-        $editor = Account::factory()->create();
-        $this->attachContributor($editor, $fixture['project'], Role::EDITOR);
-
-        $this->actingAsAccount($fixture['account']);
-
-        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1')
-            ->assertOk()
-            ->assertJsonPath('data.hide_estimates', true)
-            ->assertJsonPath('data.features.0.requirements.0.tasks.0.estimate', null);
-
-        $this->actingAsAccount($editor);
-
-        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/read?hydrated=1')
-            ->assertOk()
-            ->assertJsonPath('data.features.0.requirements.0.tasks.0.estimate', 2.5);
     }
 
     public function test_projects_organise_endpoint_allows_editors_and_forbids_viewers(): void
@@ -337,8 +276,8 @@ class AccountProjectsTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
 
@@ -373,7 +312,7 @@ class AccountProjectsTest extends TestCase
         $feature = Feature::factory()->for($project)->create(['weight' => 1]);
         $editor = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/projects/' . $project->sqid . '/organise', [
@@ -394,7 +333,7 @@ class AccountProjectsTest extends TestCase
         $feature = Feature::factory()->for($project)->create(['name' => 'Feature before', 'weight' => 1]);
         $owner = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
         $this->actingAsAccount($owner);
 
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
@@ -429,8 +368,8 @@ class AccountProjectsTest extends TestCase
         $owner = Account::factory()->create();
         $editor = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/projects/' . $project->sqid . '/delete')->assertForbidden();
@@ -441,6 +380,24 @@ class AccountProjectsTest extends TestCase
         $this->assertSoftDeleted('projects', ['id' => $project->id]);
     }
 
+    public function test_projects_delete_endpoint_hard_deletes_nested_specification_items(): void
+    {
+        $fixture = $this->createProjectFixture();
+
+        $fixture['requirement']->delete();
+
+        $this->actingAsAccount($fixture['account']);
+        $this->postJson('/api/projects/' . $fixture['project']->sqid . '/delete')->assertNoContent();
+
+        $this->assertSoftDeleted('projects', ['id' => $fixture['project']->id]);
+        $this->assertDatabaseMissing('features', ['id' => $fixture['feature']->id]);
+        $this->assertDatabaseMissing('requirements', ['id' => $fixture['requirement']->id]);
+        $this->assertDatabaseMissing('assignments', ['id' => $fixture['assignment']->id]);
+        $this->assertDatabaseMissing('tasks', ['id' => $fixture['task']->id]);
+        $this->assertDatabaseMissing('unknowns', ['id' => $fixture['unknown']->id]);
+        $this->assertDatabaseMissing('actors', ['id' => $fixture['projectActor']->id]);
+    }
+
     public function test_projects_archive_endpoint_requires_owner_role(): void
     {
         $project = Project::factory()->create();
@@ -448,8 +405,8 @@ class AccountProjectsTest extends TestCase
         $owner = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
 
@@ -474,7 +431,7 @@ class AccountProjectsTest extends TestCase
         $project = Project::factory()->create(['archived_at' => $archivedAt]);
         $owner = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
         $this->actingAsAccount($owner);
 
         $this->postJson('/api/projects/' . $project->sqid . '/archive')
@@ -490,8 +447,8 @@ class AccountProjectsTest extends TestCase
         $owner = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
 
@@ -511,24 +468,25 @@ class AccountProjectsTest extends TestCase
         $this->assertNotNull($project->fresh()->archived_at);
     }
 
-    public function test_projects_readmark_endpoint_marks_projects_as_read_for_contributors_and_forbids_outsiders(): void
+    public function test_projects_readmark_endpoint_marks_projects_as_read_for_collaborations_and_forbids_outsiders(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
 
         $this->actingAsAccount($fixture['account']);
 
-        $response = $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark');
+        $response = $this->postJson('/api/projects/' . $fixture['project']->getRouteKey() . '/readmark');
 
         $response->assertOk();
-        $response->assertJsonPath('data.id', $fixture['project']->sqid);
-        $this->assertDatabaseHas('readmarks', [
+        $this->assertNotNull($response->json('data'));
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $fixture['account']->id,
             'project_id' => $fixture['project']->id,
         ]);
+        $this->assertNotNull($fixture['collaboration']->fresh()->read_at);
 
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->postJson('/api/projects/' . $fixture['project']->sqid . '/readmark')->assertNotFound();
+        $this->postJson('/api/projects/' . $fixture['project']->getRouteKey() . '/readmark')->assertNotFound();
     }
 }

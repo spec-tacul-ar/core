@@ -40,6 +40,8 @@ class EditUnknown
 
     public function asController(ActionRequest $request, Unknown $unknown): UnknownResource
     {
-        return new UnknownResource($this->handle($unknown, $request->validated()));
+        $unknown = $this->handle($unknown, $request->validated());
+
+        return new UnknownResource($unknown);
     }
 }

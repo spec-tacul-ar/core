@@ -14,7 +14,6 @@ use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\Actor;
 use App\Rules\Authorised;
-use App\Rules\QuarterHour as QuarterHourRule;
 use App\Rules\SharesRelation;
 
 class EditRequirement
@@ -53,7 +52,6 @@ class EditRequirement
             'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Task::class)],
-            'tasks.*.estimate' => ['nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
             'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
@@ -113,6 +111,8 @@ class EditRequirement
 
     public function asController(ActionRequest $request, Requirement $requirement): RequirementResource
     {
-        return new RequirementResource($this->handle($requirement, $request->validated()));
+        $requirement = $this->handle($requirement, $request->validated());
+
+        return new RequirementResource($requirement);
     }
 }

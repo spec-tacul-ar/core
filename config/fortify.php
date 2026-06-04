@@ -73,11 +73,7 @@ return [
     |
     */
 
-    'home' => env('SPECTACULAR_PATH', '/'),
-
-    'redirects' => [
-        'email-verification' => env('SPECTACULAR_PATH', '') . '/account/settings',
-    ],
+    'home' => '/app',
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +86,7 @@ return [
     |
     */
 
-    'prefix' => 'api',
+    'prefix' => '',
 
     'domain' => null,
 
@@ -121,6 +117,7 @@ return [
     'limiters' => [
         'login' => 'login',
         'two-factor' => 'two-factor',
+        'verification' => 'verification',
     ],
 
     /*
@@ -148,16 +145,16 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        env('SPECTACULAR_DISABLE_REGISTRATION') ? null : Features::registration(),
         Features::resetPasswords(),
-        Features::emailVerification(),
+        env('SPECTACULAR_DISABLE_VERIFICATION') ? null : Features::emailVerification(),
         // Features::updateProfileInformation(),
         // Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
-            // 'window' => 0,
-        ]),
+        // Features::twoFactorAuthentication([
+        //     'confirm' => true,
+        //     'confirmPassword' => true,
+        //     // 'window' => 0,
+        // ]),
     ],
 
     /*

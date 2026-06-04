@@ -83,6 +83,8 @@ class OrganiseProject
 
     public function asController(ActionRequest $request, Project $project): JsonResource
     {
-        return new JsonResource($this->handle($project, $request->validated()));
+        $weights = $this->handle($project, $request->validated());
+
+        return new JsonResource($weights);
     }
 }

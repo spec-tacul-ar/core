@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Mcp\Servers;
+
+use App\Mcp\Tools\GetChangesTool;
+use App\Mcp\Tools\GetItemTool;
+use App\Mcp\Tools\GetProjectTool;
+use App\Mcp\Tools\ListProjectsTool;
+use Laravel\Mcp\Server;
+use Laravel\Mcp\Server\Attributes\Instructions;
+use Laravel\Mcp\Server\Attributes\Name;
+use Laravel\Mcp\Server\Attributes\Version;
+
+#[Name('Specifications Server')]
+#[Version('0.0.1')]
+#[Instructions('Provides access to functional specifications.')]
+class SpecificationsServer extends Server
+{
+    protected array $tools = [
+        GetChangesTool::class,
+        GetItemTool::class,
+        GetProjectTool::class,
+        ListProjectsTool::class,
+    ];
+
+    protected array $resources = [
+        //
+    ];
+
+    protected array $prompts = [
+        //
+    ];
+}

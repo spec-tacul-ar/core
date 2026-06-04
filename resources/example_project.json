@@ -1,8 +1,7 @@
 {
     "name": "Example Project",
     "description": "<p>This is the sample project to demonstrate what a specification can look like. It roughly describes the features of Spectacular itself.</p>",
-    "actors":
-    [
+    "actors": [
         {
             "id": 1,
             "name": "Project Managers",
@@ -22,14 +21,12 @@
             "weight": 2
         }
     ],
-    "features":
-    [
+    "features": [
         {
             "name": "Projects",
             "description": "<p>A project encompasses the entire system that is to be created and maintained. </p>",
             "weight": 0,
-            "requirements":
-            [
+            "requirements": [
                 {
                     "name": "create new projects",
                     "description": "<p>A wizard will be presented to help the user scaffold their specification. They will be asked for a name, the users and features.</p><p>When AI features are added, a simple description field will be presented and this can be used to scaffold the specification automatically.</p>",
@@ -37,25 +34,20 @@
                     "source": null,
                     "reference": 1,
                     "weight": 0,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Present a wizard to the user",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Add a plain text description when AI is enabled.",
-                            "estimate": 1,
                             "is_complete": false,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -66,31 +58,25 @@
                     "source": null,
                     "reference": 20,
                     "weight": null,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Show the project",
-                            "estimate": 8,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Show an outline of the specification",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 1
                         },
                         {
                             "name": "In the outline, highly the sections currently in the browser viewport",
-                            "estimate": 4,
                             "is_complete": false,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1,
                         2
                     ]
@@ -102,25 +88,20 @@
                     "source": null,
                     "reference": 2,
                     "weight": 1,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Create a form for editing projects",
-                            "estimate": 1,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Integrate a rich-text editor for formatting text.",
-                            "estimate": 5,
                             "is_complete": true,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -131,19 +112,15 @@
                     "source": null,
                     "reference": 3,
                     "weight": 2,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Show a confirmation modal with checkbox",
-                            "estimate": 1,
                             "is_complete": true,
                             "weight": 0
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -154,35 +131,29 @@
                     "source": null,
                     "reference": 4,
                     "weight": 3,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Allow users and features to be sortable",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Allow requirements to be sorted and moved to other features",
-                            "estimate": 1,
                             "is_complete": true,
                             "weight": 1
                         },
                         {
                             "name": "Remove SortableJS because it's so heavy",
-                            "estimate": 4,
                             "is_complete": false,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [
+                    "unknowns": [
                         {
                             "name": "Can we achieve the same UX without a third-party library?"
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -193,29 +164,24 @@
                     "source": null,
                     "reference": 5,
                     "weight": 4,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Add HTML export",
-                            "estimate": 5,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Add Markdown export",
-                            "estimate": 3,
                             "is_complete": true,
                             "weight": 1
                         },
                         {
                             "name": "Add JSON export",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [
+                    "unknowns": [
                         {
                             "name": "Which other formats will people want?"
                         },
@@ -223,39 +189,9 @@
                             "name": "How might we facilitate customising the HTML styles?"
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         1,
                         2
-                    ]
-                },
-                {
-                    "name": "see a summary of estimates",
-                    "description": "<p>If tasks have been given estimates, these will be show at the bottom of the project to give an estimate of total effort for each feature and the project as a whole.</p>",
-                    "blocked_reason": null,
-                    "source": null,
-                    "reference": 6,
-                    "weight": 5,
-                    "tasks":
-                    [
-                        {
-                            "name": "Show table with totals",
-                            "estimate": 1.75,
-                            "is_complete": true,
-                            "weight": 0
-                        },
-                        {
-                            "name": "Show how far the project is to completion.",
-                            "estimate": 1.5,
-                            "is_complete": false,
-                            "weight": 1
-                        }
-                    ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
-                        1
                     ]
                 },
                 {
@@ -265,16 +201,13 @@
                     "source": null,
                     "reference": 7,
                     "weight": 6,
-                    "tasks":
-                    [],
-                    "unknowns":
-                    [
+                    "tasks": [],
+                    "unknowns": [
                         {
                             "name": "Will users realise they can use the export link in this way?"
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         3
                     ]
                 },
@@ -285,31 +218,25 @@
                     "source": null,
                     "reference": 8,
                     "weight": 7,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Use print styles to hide UI elements",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Change the print font size to allow more requirements per page",
-                            "estimate": 0.5,
                             "is_complete": false,
                             "weight": 1
                         },
                         {
                             "name": "Force subtle background colours for improved clarity",
-                            "estimate": 2,
                             "is_complete": false,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -320,29 +247,24 @@
                     "source": null,
                     "reference": 9,
                     "weight": 8,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Add include and exclude filters for statuses.",
-                            "estimate": 3,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Add include and exclude filters for users.",
-                            "estimate": 0.5,
                             "is_complete": true,
                             "weight": 1
                         },
                         {
                             "name": "Allow features to be included or excluded",
-                            "estimate": 2,
                             "is_complete": true,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [
+                    "unknowns": [
                         {
                             "name": "Do we need to better explain how the filter modes work?"
                         },
@@ -350,8 +272,7 @@
                             "name": "Do we need a \"Clear All\" button too?"
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         1,
                         2
                     ]
@@ -362,8 +283,7 @@
             "name": "Features",
             "description": "<p>Features encapsulate related requirements. Some call these <em>Epics</em>.</p>",
             "weight": 1,
-            "requirements":
-            [
+            "requirements": [
                 {
                     "name": "create new features",
                     "description": "<p>A new feature simply needs a name and an optional rich-text description field.</p>",
@@ -371,25 +291,20 @@
                     "source": null,
                     "reference": 10,
                     "weight": 0,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Build a form for creating features",
-                            "estimate": 0.5,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Reuse the rich-text field",
-                            "estimate": 0.25,
                             "is_complete": true,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -400,25 +315,20 @@
                     "source": null,
                     "reference": 11,
                     "weight": 1,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Reuse the creation form",
-                            "estimate": 0.75,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Show an outline around the active feature",
-                            "estimate": 0.75,
                             "is_complete": true,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -429,23 +339,19 @@
                     "source": null,
                     "reference": 12,
                     "weight": 2,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Show modal when the feature contains requirements",
-                            "estimate": 0.75,
                             "is_complete": true,
                             "weight": 0
                         }
                     ],
-                    "unknowns":
-                    [
+                    "unknowns": [
                         {
                             "name": "Instead of requiring users to delete all requirements under the feature, do we give them the option to move them?"
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         1
                     ]
                 }
@@ -455,8 +361,7 @@
             "name": "Requirements",
             "description": "<p>Requirements describe actions users perform to achieve a task. Some may refer to these as user stories.</p>",
             "weight": 2,
-            "requirements":
-            [
+            "requirements": [
                 {
                     "name": "create new requirements",
                     "description": "<p>While a user doesn't have to select the user types that apply to the requirement, they must still give it a name. If they do no select any users, the name defaults to \"Users can...\"</p><p>Next, they can optionally provide a rich-text description for elaboration and a source to trace where requirements have come from (such as other documents, meetings, etc.)</p><p>If a requirement is blocked, the user can mark it as such by giving it a reason.</p><p>A \"Quick Add\" button should be available at all times where the user can create a requirement and specify the feature it belongs to, instead of using a button within the feature itself.</p>",
@@ -464,19 +369,15 @@
                     "source": null,
                     "reference": 13,
                     "weight": 0,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Create the requirement creation form",
-                            "estimate": 6,
                             "is_complete": true,
                             "weight": 0
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -487,31 +388,25 @@
                     "source": null,
                     "reference": 14,
                     "weight": 1,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Reuse the create form for editing",
-                            "estimate": 1,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Find a better icon for the scroll to requirement button",
-                            "estimate": null,
                             "is_complete": false,
                             "weight": 1
                         },
                         {
                             "name": "Show an outline around the active requirement",
-                            "estimate": 0.75,
                             "is_complete": true,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
                     ]
                 },
@@ -522,56 +417,21 @@
                     "source": null,
                     "reference": 15,
                     "weight": 2,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Create a confirmation modal to prevent accidents",
-                            "estimate": 0.5,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Close the side panel if it's open on the requirement that was just deleted",
-                            "estimate": 0.5,
                             "is_complete": false,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1
-                    ]
-                },
-                {
-                    "name": "manage tasks on requirements",
-                    "description": "<p>Tasks have a required name and an optional estimate and completed status.</p><p>When creating or editing a requirement, tasks can also be modified, reordered and deleted.</p><p>Marking all tasks in a requirement as completed will mark the entire requirement as complete.</p>",
-                    "blocked_reason": null,
-                    "source": null,
-                    "reference": 16,
-                    "weight": 3,
-                    "tasks":
-                    [
-                        {
-                            "name": "Add tasks to the requirement edit and create forms",
-                            "estimate": 3,
-                            "is_complete": true,
-                            "weight": 0
-                        },
-                        {
-                            "name": "Make tasks sortable",
-                            "estimate": 2,
-                            "is_complete": true,
-                            "weight": 1
-                        }
-                    ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
-                        1,
-                        2
                     ]
                 },
                 {
@@ -581,25 +441,20 @@
                     "source": null,
                     "reference": 17,
                     "weight": 4,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Add the action to the task mini-menu",
-                            "estimate": 0.5,
                             "is_complete": true,
                             "weight": 0
                         },
                         {
                             "name": "Add the Mark All action to the requirement",
-                            "estimate": 0.5,
                             "is_complete": true,
                             "weight": 1
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         1,
                         2
                     ]
@@ -611,23 +466,19 @@
                     "source": null,
                     "reference": 18,
                     "weight": 5,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Wrap the appended text in paragraph text.",
-                            "estimate": 0.25,
                             "is_complete": false,
                             "weight": 0
                         }
                     ],
-                    "unknowns":
-                    [
+                    "unknowns": [
                         {
                             "name": "Do unknowns need to be sortable? Probably not."
                         }
                     ],
-                    "actor_ids":
-                    [
+                    "actor_ids": [
                         1,
                         2
                     ]
@@ -638,8 +489,7 @@
             "name": "Settings",
             "description": null,
             "weight": 3,
-            "requirements":
-            [
+            "requirements": [
                 {
                     "name": "switch to and from dark mode",
                     "description": "<p>The default should be <em>Auto</em> - the system-wide setting. The user has the option to switch between this, light and dark mode.</p>",
@@ -647,31 +497,25 @@
                     "source": null,
                     "reference": 19,
                     "weight": 0,
-                    "tasks":
-                    [
+                    "tasks": [
                         {
                             "name": "Create a widget for changing the theme",
-                            "estimate": 0.5,
                             "is_complete": false,
                             "weight": 0
                         },
                         {
                             "name": "Create a dark theme",
-                            "estimate": 5,
                             "is_complete": false,
                             "weight": 1
                         },
                         {
                             "name": "Implement a switching mode including sensing system setting",
-                            "estimate": 1,
                             "is_complete": false,
                             "weight": 2
                         }
                     ],
-                    "unknowns":
-                    [],
-                    "actor_ids":
-                    [
+                    "unknowns": [],
+                    "actor_ids": [
                         2,
                         1
                     ]

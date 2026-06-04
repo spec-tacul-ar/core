@@ -10,8 +10,8 @@ class TaskFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(),
-            'estimate' => $this->faker->numberBetween(1, 8) / 4,
             'is_complete' => $this->faker->boolean(),
+            'weight' => null,
         ];
     }
 }

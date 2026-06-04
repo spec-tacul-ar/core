@@ -27,7 +27,24 @@ class ConsoleAccountCommandsTest extends TestCase
         $account = Account::query()->where('email', 'created@example.test')->firstOrFail();
 
         $this->assertSame('Created Account', $account->name);
+        $this->assertTrue($account->hasVerifiedEmail());
         $this->assertTrue(Hash::check('provided-password', $account->password));
+    }
+
+    public function test_account_create_command_can_create_an_unverified_account(): void
+    {
+        $this->artisan('spectacular:account:create', [
+            'email' => 'unverified@example.test',
+            'name' => 'Unverified Account',
+            '--unverified' => true,
+        ])
+            ->expectsQuestion('Password (leave blank for random password)', 'provided-password')
+            ->expectsOutput('User created.')
+            ->assertSuccessful();
+
+        $account = Account::query()->where('email', 'unverified@example.test')->firstOrFail();
+
+        $this->assertFalse($account->hasVerifiedEmail());
     }
 
     public function test_account_create_command_rejects_duplicate_email_addresses(): void
@@ -50,7 +67,7 @@ class ConsoleAccountCommandsTest extends TestCase
             ->assertExitCode(Command::INVALID);
     }
 
-    public function test_account_create_command_attaches_existing_solo_projects_to_the_first_account(): void
+    public function test_account_create_command_does_not_attach_existing_projects(): void
     {
         $projects = Project::factory()->count(2)->create();
 
@@ -64,13 +81,56 @@ class ConsoleAccountCommandsTest extends TestCase
 
         $account = Account::query()->where('email', 'first@example.test')->firstOrFail();
 
-        foreach ($projects as $project) {
-            $this->assertDatabaseHas('contributors', [
-                'account_id' => $account->id,
-                'project_id' => $project->id,
-                'role' => Role::OWNER->value,
-            ]);
-        }
+        $this->assertDatabaseCount('collaborations', 0);
+
+        $projects->each(fn(Project $project) => $this->assertDatabaseHas('projects', [
+            'id' => $project->id,
+        ]));
+    }
+
+    public function test_solo_migrate_command_claims_projects_without_collaborators(): void
+    {
+        $account = Account::factory()->create(['email' => 'owner@example.test']);
+        $project = Project::factory()->create();
+
+        $this->artisan('spectacular:solo:migrate', [
+            'email' => $account->email,
+        ])
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('collaborations', [
+            'account_id' => $account->id,
+            'project_id' => $project->id,
+            'role' => Role::OWNER->value,
+        ]);
+    }
+
+    public function test_solo_migrate_command_ignores_projects_with_collaborators(): void
+    {
+        $account = Account::factory()->create(['email' => 'owner@example.test']);
+        $other = Account::factory()->create();
+        $project = Project::factory()->create();
+
+        $project->addCollaboration($other, Role::OWNER);
+
+        $this->artisan('spectacular:solo:migrate', [
+            'email' => $account->email,
+        ])
+            ->assertSuccessful();
+
+        $this->assertDatabaseMissing('collaborations', [
+            'account_id' => $account->id,
+            'project_id' => $project->id,
+        ]);
+    }
+
+    public function test_solo_migrate_command_reports_missing_accounts(): void
+    {
+        $this->artisan('spectacular:solo:migrate', [
+            'email' => 'missing@example.test',
+        ])
+            ->expectsOutput('No account found for that email address.')
+            ->assertExitCode(Command::INVALID);
     }
 
     public function test_account_password_command_resets_an_existing_account_password(): void

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use App\Casts\AsSqid;
+use App\Notifications\InvitationForExistingAccount;
+use App\Notifications\InvitationForNewAccount;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
-use App\Enums\Role;
-use App\Notifications\InvitationForExistingAccount;
-use App\Notifications\InvitationForNewAccount;
 
 class Invitation extends Model
 {

@@ -9,9 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Enums\Role;
 use App\Models\Invitation;
-use App\Notifications\InvitationAccepted;
 
 class AcceptInvitation
 {
@@ -29,14 +27,14 @@ class AcceptInvitation
 
     public function handle(Request $request, Invitation $invitation): void
     {
-        $contributor = $invitation->project->contributors()
+        $collaboration = $invitation->project->collaborations()
             ->make(['role' => $invitation->role])
             ->account()->associate($request->user());
 
-        $contributor->save();
+        $collaboration->save();
 
         // Disabled, for now.
-        // $invitation->account->notify(new InvitationAccepted($contributor));
+        // $invitation->account->notify(new InvitationAccepted($collaboration));
 
         $invitation->delete();
     }

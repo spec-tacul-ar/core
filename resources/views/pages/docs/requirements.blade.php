@@ -99,12 +99,6 @@
             </x-slot:bad>
         </x-docs.examples>
 
-        <h4>Estimate</h4>
-
-        <p>The number of hours this task is expected to consume. These are summed to give time estimates for the parent requirement, feature, and project.</p>
-
-        <p>Estimates are defined in quarter-hour increments. For instance, <em>0.75</em> is three-quarters of an hour. You may use zero hours for trivial tasks.</p>
-
         <h4>Is complete</h4>
 
         <p>Check this box if a task has been completed. When all tasks have been marked as complete, the requirement itself is automatically marked as complete.</p>

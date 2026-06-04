@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Casts\AsSqid;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\Scopes\WeightedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,12 +20,19 @@ class Task extends Model
     ];
 
     protected $fillable = [
-        'estimate',
         'is_complete',
         'name',
         'requirement_id',
         'weight',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new WeightedScope());
+
+        static::saved(fn($task) => $task->requirement->trackActivity());
+        static::deleted(fn($task) => $task->requirement->trackActivity());
+    }
 
     /* Relations */
 
@@ -40,15 +47,5 @@ class Task extends Model
     {
         $this->is_complete = true;
         $this->save();
-    }
-
-    /* Attributes */
-
-    protected function estimate(): Attribute
-    {
-        return new Attribute(
-            get: fn($value) => $value === null ? null : $value * 0.25,
-            set: fn($value) => $value === null ? null : $value / 0.25,
-        );
     }
 }

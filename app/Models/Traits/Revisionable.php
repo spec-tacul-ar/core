@@ -3,11 +3,11 @@
 namespace App\Models\Traits;
 
 use App\Casts\CompressedCollection;
+use App\Models\Scopes\WithoutHistoryScope;
 use DateTime;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use LogicException;
 
 trait Revisionable
@@ -31,6 +31,8 @@ trait Revisionable
 
     public static function bootRevisionable()
     {
+        static::addGlobalScope(app(WithoutHistoryScope::class));
+
         static::updated(function ($model) {
             $data = array_intersect_key($model->getOriginal(), $model->getChanges());
 
@@ -41,10 +43,19 @@ trait Revisionable
         static::registerModelEvent('trashed', fn($model) => $model->saveRevision(['deleted_at' => null]));
     }
 
+    /* Scopes */
+
+    public function scopeWithHistory($query)
+    {
+        return $query->withoutGlobalScope(WithoutHistoryScope::class);
+    }
+
     /* Helpers */
 
     public function saveRevision($data)
     {
+        $this->loadHistory();
+
         $this->history->push([
             'timestamp' => now()->toISOString(),
             'data' => $data,
@@ -61,6 +72,8 @@ trait Revisionable
             throw new LogicException('Cannot roll back before model was created.');
         }
 
+        $this->loadHistory();
+
         $this->history
             ->where('timestamp', '>', $timestamp->toISOString())
             ->sortByDesc('timestamp')
@@ -74,6 +87,7 @@ trait Revisionable
                     }
 
                     return $query
+                        ->withHistory()
                         ->withTrashed()
                         ->afterQuery(fn($models) => $models
                             ->where('created_at', '<', $timestamp->toDateTimeString())
@@ -82,5 +96,49 @@ trait Revisionable
                 },
             ]);
         }
+    }
+
+    /**
+     * Returns the fields that have changed since a given timestamp and what their values are now.
+     */
+    public function getChangesSince(DateTime $timestamp)
+    {
+        $this->loadHistory();
+
+        if ($this->created_at->isAfter($timestamp)) {
+            return $this->obfuscateIdentifiers($this->toArray());
+        }
+
+        if ($this->deleted_at) {
+            return [
+                'id' => $this->sqid,
+                'deleted_at' => $this->deleted_at,
+            ];
+        }
+
+        $fields = $this->history
+            ->where('timestamp', '>', $timestamp->toISOString())
+            ->map(fn($item) => array_keys($item['data']))
+            ->flatten()
+            ->unique()
+            ->toArray();
+
+        return $this->obfuscateIdentifiers($this->only($fields));
+    }
+
+    /**
+     * Load the history in instance where the WithoutHistoryScope global scope blocked it.
+     */
+    public function loadHistory(): void
+    {
+        if (! $this->exists || $this->getRawOriginal('history') !== null) {
+            return;
+        }
+
+        $this->attributes['history'] = $this->newQuery()
+            ->withHistory()
+            ->whereKey($this->getKey())
+            ->toBase()
+            ->value('history');
     }
 }

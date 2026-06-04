@@ -42,6 +42,8 @@ class EditActor
 
     public function asController(ActionRequest $request, Actor $actor): ActorResource
     {
-        return new ActorResource($this->handle($actor, $request->validated()));
+        $actor = $this->handle($actor, $request->validated());
+
+        return new ActorResource($actor);
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Enums\Role;
 use App\Models\Account;
+use App\Models\Comment;
 use App\Models\Feature;
 use App\Models\Project;
 use App\Models\Requirement;
@@ -23,15 +24,31 @@ class NestedResourcesTest extends TestCase
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->for($project)->create(['name' => 'Initial']);
+        $requirement = Requirement::factory()->for($feature)->create();
 
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
+
+        $featureComment = Comment::factory()
+            ->for($editor, 'account')
+            ->for($project)
+            ->create([
+                'commentable_id' => $feature->id,
+                'commentable_type' => 'feature',
+            ]);
+        $requirementComment = Comment::factory()
+            ->for($editor, 'account')
+            ->for($project)
+            ->create([
+                'commentable_id' => $requirement->id,
+                'commentable_type' => 'requirement',
+            ]);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/features/add', [
+        $this->postJson('/api/features', [
             'description' => 'Feature details',
             'name' => 'Workflow',
             'project_id' => $project->sqid,
@@ -46,7 +63,7 @@ class NestedResourcesTest extends TestCase
         ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/features/add', [
+        $this->postJson('/api/features', [
             'name' => 'Blocked feature',
             'project_id' => $project->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
@@ -71,6 +88,8 @@ class NestedResourcesTest extends TestCase
 
         $this->postJson('/api/features/' . $feature->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('features', ['id' => $feature->id]);
+        $this->assertDatabaseMissing('comments', ['id' => $featureComment->id]);
+        $this->assertDatabaseMissing('comments', ['id' => $requirementComment->id]);
     }
 
     public function test_actors_endpoints_require_project_edit_access(): void
@@ -81,17 +100,17 @@ class NestedResourcesTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
 
-        $this->getJson('/api/actors/' . $actor->sqid . '/read')
+        $this->getJson('/api/actors/' . $actor->sqid . '')
             ->assertOk()
             ->assertJsonPath('data.id', $actor->sqid)
             ->assertJsonPath('data.name', 'Initial users');
 
-        $this->postJson('/api/actors/add', [
+        $this->postJson('/api/actors', [
             'name' => 'Operators',
             'project_id' => $project->sqid,
             'summary' => 'Platform users',
@@ -107,11 +126,11 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->getJson('/api/actors/' . $actor->sqid . '/read')
+        $this->getJson('/api/actors/' . $actor->sqid . '')
             ->assertOk()
             ->assertJsonPath('data.id', $actor->sqid);
 
-        $this->postJson('/api/actors/add', [
+        $this->postJson('/api/actors', [
             'name' => 'Blocked users',
             'project_id' => $project->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
@@ -125,7 +144,7 @@ class NestedResourcesTest extends TestCase
         $outsider = Account::factory()->create();
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/actors/' . $actor->sqid . '/read')->assertNotFound();
+        $this->getJson('/api/actors/' . $actor->sqid . '')->assertNotFound();
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/actors/' . $actor->sqid . '/edit', [
@@ -158,15 +177,15 @@ class NestedResourcesTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/requirements/add', [
+        $this->postJson('/api/requirements', [
             'feature_id' => $feature->sqid,
             'name' => 'deliver notifications',
             'tasks' => [
-                ['estimate' => 1.5, 'is_complete' => false, 'name' => 'Write implementation', 'weight' => 2],
+                ['is_complete' => false, 'name' => 'Write implementation', 'weight' => 2],
             ],
             'unknowns' => [
                 ['name' => 'Which provider?'],
@@ -190,7 +209,7 @@ class NestedResourcesTest extends TestCase
         ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/requirements/add', [
+        $this->postJson('/api/requirements', [
             'feature_id' => $feature->sqid,
             'name' => 'blocked requirement',
             'tasks' => [],
@@ -199,7 +218,7 @@ class NestedResourcesTest extends TestCase
         ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/requirements/add', [
+        $this->postJson('/api/requirements', [
             'feature_id' => $feature->sqid,
             'name' => 'cross project assignment',
             'tasks' => [],
@@ -216,8 +235,8 @@ class NestedResourcesTest extends TestCase
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
             'name' => 'Updated requirement',
             'tasks' => [
-                ['estimate' => 2.0, 'id' => $existingTask->sqid, 'is_complete' => true, 'name' => 'Updated task', 'weight' => 6],
-                ['estimate' => 1.0, 'is_complete' => false, 'name' => 'Fresh task', 'weight' => 7],
+                ['id' => $existingTask->sqid, 'is_complete' => true, 'name' => 'Updated task', 'weight' => 6],
+                ['is_complete' => false, 'name' => 'Fresh task', 'weight' => 7],
             ],
             'unknowns' => [
                 ['id' => $existingUnknown->sqid, 'name' => 'Updated unknown?'],
@@ -259,21 +278,30 @@ class NestedResourcesTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
+
+        $comment = Comment::factory()
+            ->for($editor, 'account')
+            ->for($project)
+            ->create([
+                'commentable_id' => $requirement->id,
+                'commentable_type' => 'requirement',
+            ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/requirements/' . $requirement->sqid . '/tasks/complete')->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/requirements/' . $requirement->sqid . '/tasks/complete')->assertOk();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertOk();
 
         $this->assertDatabaseHas('tasks', ['id' => $taskA->id, 'is_complete' => true]);
         $this->assertDatabaseHas('tasks', ['id' => $taskB->id, 'is_complete' => true]);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('requirements', ['id' => $requirement->id]);
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
     public function test_tasks_endpoints_require_project_edit_access(): void
@@ -286,12 +314,11 @@ class NestedResourcesTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/tasks/add', [
-            'estimate' => 0.75,
+        $this->postJson('/api/tasks', [
             'is_complete' => false,
             'name' => 'Create endpoint',
             'requirement_id' => $requirement->sqid,
@@ -306,7 +333,7 @@ class NestedResourcesTest extends TestCase
         ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/tasks/add', [
+        $this->postJson('/api/tasks', [
             'is_complete' => false,
             'name' => 'Blocked task',
             'requirement_id' => $requirement->sqid,
@@ -320,7 +347,6 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/tasks/' . $task->sqid . '/edit', [
-            'estimate' => 1.25,
             'is_complete' => true,
             'name' => 'Updated task',
             'weight' => 8,
@@ -347,11 +373,11 @@ class NestedResourcesTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/unknowns/add', [
+        $this->postJson('/api/unknowns', [
             'name' => 'How will retries work?',
             'requirement_id' => $requirement->sqid,
         ])->assertCreated();
@@ -363,7 +389,7 @@ class NestedResourcesTest extends TestCase
         ]);
 
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/unknowns/add', [
+        $this->postJson('/api/unknowns', [
             'name' => 'Blocked unknown?',
             'requirement_id' => $requirement->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('requirement_id');

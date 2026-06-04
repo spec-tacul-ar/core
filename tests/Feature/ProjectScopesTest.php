@@ -23,9 +23,9 @@ class ProjectScopesTest extends TestCase
         $editableProject = Project::factory()->create(['name' => 'Editable']);
         $otherOwnedProject = Project::factory()->create(['name' => 'Other owned']);
 
-        $this->attachContributor($owner, $ownedProject, Role::OWNER);
-        $this->attachContributor($owner, $editableProject, Role::EDITOR);
-        $this->attachContributor($otherAccount, $otherOwnedProject, Role::OWNER);
+        $this->attachCollaboration($owner, $ownedProject, Role::OWNER);
+        $this->attachCollaboration($owner, $editableProject, Role::EDITOR);
+        $this->attachCollaboration($otherAccount, $otherOwnedProject, Role::OWNER);
 
         $projects = Project::query()
             ->ownedBy($owner)

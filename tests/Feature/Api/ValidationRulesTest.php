@@ -23,36 +23,11 @@ class ValidationRulesTest extends TestCase
     {
         $this->actingAsAccount();
 
-        $this->postJson('/api/projects/add', [
+        $this->postJson('/api/projects', [
             'name' => '12345',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('name');
-    }
-
-    public function test_task_estimates_must_be_quarter_hour_segments(): void
-    {
-        $fixture = $this->createProjectFixture(Role::EDITOR);
-        $this->actingAsAccount($fixture['account']);
-
-        $this->postJson('/api/tasks/add', [
-            'estimate' => 1.3,
-            'is_complete' => false,
-            'name' => 'Bad estimate',
-            'requirement_id' => $fixture['requirement']->sqid,
-        ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors('estimate');
-
-        $this->postJson('/api/requirements/add', [
-            'feature_id' => $fixture['feature']->sqid,
-            'name' => 'requirement with bad estimate',
-            'tasks' => [
-                ['estimate' => 0.3, 'is_complete' => false, 'name' => 'Bad nested estimate'],
-            ],
-        ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors('tasks.0.estimate');
     }
 
     public function test_invitations_reject_duplicate_existing_member_and_own_email_addresses(): void
@@ -61,8 +36,8 @@ class ValidationRulesTest extends TestCase
         $owner = Account::factory()->create(['email' => 'owner@example.test']);
         $member = Account::factory()->create(['email' => 'member@example.test']);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($member, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($member, $project, Role::VIEWER);
 
         Invitation::factory()
             ->for($owner, 'account')
@@ -76,15 +51,15 @@ class ValidationRulesTest extends TestCase
             'role' => Role::VIEWER->value,
         ];
 
-        $this->postJson('/api/invitations/add', $basePayload + ['email' => 'pending@example.test'])
+        $this->postJson('/api/invitations', $basePayload + ['email' => 'pending@example.test'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('email');
 
-        $this->postJson('/api/invitations/add', $basePayload + ['email' => 'member@example.test'])
+        $this->postJson('/api/invitations', $basePayload + ['email' => 'member@example.test'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('email');
 
-        $this->postJson('/api/invitations/add', $basePayload + ['email' => 'owner@example.test'])
+        $this->postJson('/api/invitations', $basePayload + ['email' => 'owner@example.test'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('email');
     }
@@ -94,7 +69,7 @@ class ValidationRulesTest extends TestCase
         $fixture = $this->createProjectFixture(Role::OWNER);
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'project_id' => $fixture['project']->sqid,
             'email' => 'invitee@spectacular',
             'role' => Role::VIEWER->value,
@@ -108,7 +83,7 @@ class ValidationRulesTest extends TestCase
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $fixture['requirement']->sqid,
             'commentable_type' => 'requirement',
             'message' => 'Requirement comment',
@@ -132,7 +107,7 @@ class ValidationRulesTest extends TestCase
 
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $otherFeature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Wrong project feature',
@@ -141,7 +116,7 @@ class ValidationRulesTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors('commentable_id');
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $otherRequirement->sqid,
             'commentable_type' => 'requirement',
             'message' => 'Wrong project requirement',
@@ -156,7 +131,7 @@ class ValidationRulesTest extends TestCase
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $fixture['feature']->sqid,
             'message' => 'Missing type',
             'project_id' => $fixture['project']->sqid,
@@ -172,7 +147,7 @@ class ValidationRulesTest extends TestCase
 
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/requirements/add', [
+        $this->postJson('/api/requirements', [
             'actor_ids' => [$foreignActor->sqid],
             'feature_id' => $fixture['feature']->sqid,
             'name' => 'cross project actor',
@@ -181,20 +156,20 @@ class ValidationRulesTest extends TestCase
             ->assertJsonValidationErrors('actor_ids.0');
     }
 
-    public function test_malformed_sqids_are_reported_as_validation_errors(): void
+    public function test_malformed_ids_are_reported_as_validation_errors(): void
     {
         $fixture = $this->createProjectFixture(Role::EDITOR);
         $this->actingAsAccount($fixture['account']);
 
-        $this->postJson('/api/features/add', [
+        $this->postJson('/api/features', [
             'name' => 'Malformed feature',
-            'project_id' => 'not-a-sqid',
+            'project_id' => 'not-an-id',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('project_id');
 
-        $this->postJson('/api/requirements/add', [
-            'actor_ids' => ['not-a-sqid'],
+        $this->postJson('/api/requirements', [
+            'actor_ids' => ['not-an-id'],
             'feature_id' => $fixture['feature']->sqid,
             'name' => 'Malformed actor assignment',
         ])

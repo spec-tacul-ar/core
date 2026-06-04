@@ -12,7 +12,7 @@ Spectacular puts the functional specification back at the center of software dev
 
 ### Features
 * Maintain the specification as change requests come in
-* Estimate effort and track progress
+* Track progress as requirements move through delivery
 * Document ambiguities and highlight blockers
 * Effortlessly export to Markdown and HTML
 
@@ -51,10 +51,6 @@ docker compose up --build
 ```
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preserved.
-
-### Self-hosting
-
-Spectacular defaults to a standalone *solo* mode so you can get started immediately. If you're self hosting, you probably want to enable the authentication and collaboration features. To do this, simply remove `SPECTACULAR_MODE=solo` from the .env file.
 
 ## Contributing
 

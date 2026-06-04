@@ -2,7 +2,7 @@
     <article class="prose">
         <h1>Team</h1>
 
-        <p>If you're not running Spectacular in solo mode, you can invite others to collaborate on your project.</p>
+        <p>You can invite others to collaborate on your project.</p>
 
         <h2 id="roles">Roles</h2>
 

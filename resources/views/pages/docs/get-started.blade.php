@@ -121,9 +121,6 @@ php artisan serve</code></pre>
 
         <pre><code>docker compose up</code></pre>
 
-        <h2 id="solo-mode">Solo mode</h2>
-
-        <p>To get your started as quick as possible, Spectacular will run in <em>solo</em> mode by default. It streamlines the experience for single users. You can disable it by removing <code>SPECTACULAR_MODE=solo</code> from the .env file.</p>
     </article>
 
     <x-docs.next-link href="/docs/projects">Projects</x-docs.next-link>

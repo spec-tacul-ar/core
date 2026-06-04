@@ -46,6 +46,8 @@ class EditFeature
 
     public function asController(ActionRequest $request, Feature $feature): FeatureResource
     {
-        return new FeatureResource($this->handle($feature, $request->validated()));
+        $feature = $this->handle($feature, $request->validated());
+
+        return new FeatureResource($feature);
     }
 }

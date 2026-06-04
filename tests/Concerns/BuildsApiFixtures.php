@@ -4,14 +4,14 @@ namespace Tests\Concerns;
 
 use App\Enums\Role;
 use App\Models\Account;
-use App\Models\Contributor;
+use App\Models\Collaboration;
 use App\Models\Feature;
 use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\Actor;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 
 trait BuildsApiFixtures
 {
@@ -19,14 +19,14 @@ trait BuildsApiFixtures
     {
         $account ??= Account::factory()->create();
 
-        Sanctum::actingAs($account);
+        Passport::actingAs($account);
 
         return $account;
     }
 
-    protected function attachContributor(Account $account, Project $project, Role $role = Role::OWNER): Contributor
+    protected function attachCollaboration(Account $account, Project $project, Role $role = Role::OWNER): Collaboration
     {
-        return Contributor::factory()
+        return Collaboration::factory()
             ->for($account)
             ->for($project)
             ->create(['role' => $role]);
@@ -37,7 +37,7 @@ trait BuildsApiFixtures
         $account ??= Account::factory()->create();
 
         $project = Project::factory()->create();
-        $contributor = $this->attachContributor($account, $project, $role);
+        $collaboration = $this->attachCollaboration($account, $project, $role);
         $projectActor = Actor::factory()->for($project)->create();
         $feature = Feature::factory()->for($project)->create();
         $requirement = Requirement::factory()->for($feature)->create();
@@ -48,7 +48,7 @@ trait BuildsApiFixtures
         return compact(
             'account',
             'assignment',
-            'contributor',
+            'collaboration',
             'feature',
             'project',
             'projectActor',

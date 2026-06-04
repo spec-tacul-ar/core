@@ -12,7 +12,8 @@
         "laravel/folio": "^1.1",
         "laravel/fortify": "^1.25",
         "laravel/framework": "^13.0",
-        "laravel/sanctum": "^4.3",
+        "laravel/mcp": "^0.7.2",
+        "laravel/passport": "^13.0",
         "laravel/tinker": "^3.0",
         "league/html-to-markdown": "^5.1",
         "lorisleiva/laravel-actions": "^2.9",
@@ -22,6 +23,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "fruitcake/laravel-debugbar": "^4.2",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
@@ -47,6 +49,7 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
             "@php artisan migrate --force",
+            "@php artisan spectacular:oauth",
             "npm install",
             "npm run build"
         ],
@@ -87,7 +90,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
     },

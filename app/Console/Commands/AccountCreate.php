@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Actions\Fortify\CreateNewAccount;
-use App\Enums\Role;
 use App\Models\Account;
-use App\Models\Project;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -19,7 +17,8 @@ class AccountCreate extends Command
      */
     protected $signature = 'spectacular:account:create
                             {email? : The email address of the user}
-                            {name? : The name of the user}';
+                            {name? : The name of the user}
+                            {--unverified : Do not mark the email address as verified}';
 
     /**
      * The console command description.
@@ -58,7 +57,7 @@ class AccountCreate extends Command
         $password = $provided_password ?: Str::random(8);
 
         try {
-            new CreateNewAccount()->create([
+            $account = new CreateNewAccount()->create([
                 'name' => $name,
                 'email' => $email,
                 'password' => $password,
@@ -69,17 +68,14 @@ class AccountCreate extends Command
             return self::INVALID;
         }
 
+        if (!$this->option('unverified')) {
+            $account->markEmailAsVerified();
+        }
+
         if (!$provided_password) {
             $this->info('User created with password: ' . $password);
         } else {
             $this->info('User created.');
-        }
-
-        // If this is the first account, attach any solo projects to them.
-        if (Account::count() === 1) {
-            $account = Account::first();
-
-            Project::each(fn ($project) => $project->addContributor($account, Role::OWNER));
         }
 
         return self::SUCCESS;

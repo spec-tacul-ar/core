@@ -124,10 +124,6 @@ hr {
     }
 }
 
-.estimate {
-    @apply bg-gray-100 p-1 rounded after:content-['h'];
-}
-
 .status {
     @apply p-1 rounded;
 }

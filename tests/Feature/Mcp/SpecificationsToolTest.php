@@ -1,0 +1,236 @@
+<?php
+
+namespace Tests\Feature\Mcp;
+
+use App\Enums\Role;
+use App\Mcp\Servers\SpecificationsServer;
+use App\Mcp\Tools\GetChangesTool;
+use App\Mcp\Tools\GetItemTool;
+use App\Mcp\Tools\GetProjectTool;
+use App\Mcp\Tools\ListProjectsTool;
+use App\Models\Account;
+use App\Models\Project;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Mcp\Server\Testing\TestResponse;
+use Tests\Concerns\BuildsApiFixtures;
+use Tests\TestCase;
+
+class SpecificationsToolTest extends TestCase
+{
+    use BuildsApiFixtures;
+    use RefreshDatabase;
+
+    public function test_tools_are_exposed_with_project_tool_names(): void
+    {
+        $this->assertSame('GetChangesTool', app(GetChangesTool::class)->name());
+        $this->assertSame('GetItemTool', app(GetItemTool::class)->name());
+        $this->assertSame('GetProjectTool', app(GetProjectTool::class)->name());
+        $this->assertSame('ListProjectsTool', app(ListProjectsTool::class)->name());
+    }
+
+    public function test_list_specifications_returns_object_structured_content(): void
+    {
+        $account = Account::factory()->create();
+        $project = Project::factory()->create(['name' => 'My Project']);
+        $otherProject = Project::factory()->create(['name' => 'Hidden Project']);
+
+        $this->attachCollaboration($account, $project, Role::OWNER);
+
+        SpecificationsServer::actingAs($account)
+            ->tool(ListProjectsTool::class)
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                ->count('specifications', 1)
+                ->where('specifications.0.id', $project->sqid)
+                ->where('specifications.0.name', 'My Project')
+                ->has('generated_at'),
+            )
+            ->assertDontSee($otherProject->sqid);
+    }
+
+    public function test_fetch_changes_returns_empty_collections_when_project_has_no_new_activity(): void
+    {
+        $this->travelTo('2026-01-01 00:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $project = $fixture['project'];
+
+        $response = SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetChangesTool::class, [
+                'id' => $project->sqid,
+                'since' => now()->addMinute()->toISOString(),
+            ])
+            ->assertOk();
+
+        $this->assertEmptyChangesOrTextResponse($response);
+
+        $this->travelBack();
+    }
+
+    public function test_fetch_changes_returns_entities_updated_since_the_given_timestamp(): void
+    {
+        $this->travelTo('2026-01-01 00:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $since = now()->toISOString();
+
+        $this->travelTo('2026-01-01 00:01:00');
+
+        $fixture['project']->update([
+            'name' => 'Updated project',
+            'description' => '<p>Updated project description.</p>',
+        ]);
+        $fixture['projectActor']->update([
+            'name' => 'Updated actors',
+            'summary' => 'Updated actor summary.',
+        ]);
+        $fixture['feature']->update([
+            'name' => 'Updated feature',
+            'description' => '<p>Updated feature description.</p>',
+        ]);
+        $fixture['requirement']->update([
+            'name' => 'updated requirement',
+            'description' => '<p>Updated requirement description.</p>',
+            'blocked_reason' => null,
+            'source' => 'Updated source',
+        ]);
+        $fixture['task']->update([
+            'name' => 'Updated task',
+            'is_complete' => true,
+        ]);
+        $fixture['unknown']->update([
+            'name' => 'Updated unknown?',
+        ]);
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetChangesTool::class, [
+                'id' => $fixture['project']->sqid,
+                'since' => $since,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                ->count('actors', 1)
+                ->where('actors.0.name', 'Updated actors')
+                ->where('actors.0.summary', 'Updated actor summary.')
+                ->count('features', 1)
+                ->where('features.0.name', 'Updated feature')
+                ->count('requirements', 1)
+                ->where('requirements.0.name', 'updated requirement')
+                ->where('requirements.0.source', 'Updated source')
+                ->count('tasks', 1)
+                ->where('tasks.0.name', 'Updated task')
+                ->where('tasks.0.is_complete', true)
+                ->count('unknowns', 1)
+                ->where('unknowns.0.name', 'Updated unknown?')
+                ->etc(),
+            );
+
+        $this->travelBack();
+    }
+
+    public function test_fetch_changes_returns_soft_deleted_entities_updated_since_the_given_timestamp(): void
+    {
+        $this->travelTo('2026-01-01 00:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $since = now()->toISOString();
+
+        $this->travelTo('2026-01-01 00:01:00');
+
+        $fixture['task']->delete();
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetChangesTool::class, [
+                'id' => $fixture['project']->sqid,
+                'since' => $since,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                ->count('tasks', 1)
+                ->has('tasks.0.deleted_at')
+                ->etc(),
+            );
+
+        $this->travelBack();
+    }
+
+    public function test_get_specification_returns_a_full_specification(): void
+    {
+        $fixture = $this->createProjectFixture();
+
+        $fixture['project']->update([
+            'name' => 'Updated project',
+            'description' => '<p>Updated project description.</p>',
+        ]);
+        $fixture['feature']->update([
+            'name' => 'Updated feature',
+            'description' => '<p>Updated feature description.</p>',
+        ]);
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetProjectTool::class, [
+                'id' => $fixture['project']->sqid,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                ->where('id', $fixture['project']->sqid)
+                ->where('name', 'Updated project')
+                ->where('description', 'Updated project description.')
+                ->where('actors.0.id', $fixture['projectActor']->sqid)
+                ->where('features.0.id', $fixture['feature']->sqid)
+                ->where('features.0.name', 'Updated feature')
+                ->where('features.0.description', 'Updated feature description.')
+                ->where('features.0.requirements.0.id', $fixture['requirement']->sqid)
+                ->where('features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->sqid)
+                ->where('features.0.requirements.0.tasks.0.id', $fixture['task']->sqid)
+                ->where('features.0.requirements.0.unknowns.0.id', $fixture['unknown']->sqid)
+                ->has('created_at')
+                ->has('updated_at')
+                ->has('generated_at'),
+            );
+    }
+
+    public function test_get_specification_does_not_return_unauthorized_projects(): void
+    {
+        $fixture = $this->createProjectFixture();
+        $otherAccount = Account::factory()->create();
+
+        SpecificationsServer::actingAs($otherAccount)
+            ->tool(GetProjectTool::class, [
+                'id' => $fixture['project']->sqid,
+            ])
+            ->assertHasErrors(['Project not found.']);
+    }
+
+    private function assertEmptyChangesOrTextResponse(TestResponse $response): void
+    {
+        $structuredContent = $this->structuredContent($response);
+
+        if ($structuredContent === null) {
+            $response->assertSee('no changes since');
+
+            return;
+        }
+
+        AssertableJson::fromArray($structuredContent)
+            ->count('actors', 0)
+            ->count('assignments', 0)
+            ->count('features', 0)
+            ->count('requirements', 0)
+            ->count('tasks', 0)
+            ->count('unknowns', 0)
+            ->etc()
+            ->interacted();
+    }
+
+    private function structuredContent(TestResponse $response): ?array
+    {
+        $jsonRpcResponse = (fn() => $this->response->toArray())->call($response);
+
+        return $jsonRpcResponse['result']['structuredContent'] ?? null;
+    }
+}

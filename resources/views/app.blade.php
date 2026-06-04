@@ -1,11 +1,15 @@
+@use('Laravel\Fortify\Features')
+
 <x-layout>
     <x-slot:head>
         <script>
-            window.Spectacular = {
-                mode: {{ Js::from(config('spectacular.mode')) }},
-                path: {{ Js::from(config('spectacular.path')) }},
-            };
+            window.Spectacular = {{ Js::from([
+                'registration' => Features::enabled(Features::registration()),
+                'socialite' => array_keys(array_filter(config('spectacular.socialite'))),
+                'verification' => Features::enabled(Features::emailVerification()),
+            ]) }};
         </script>
+
         @vite(['resources/js/app.js'])
 
         <style>

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Feature;
 use App\Models\Project;
 use App\Models\Requirement;
+use App\Models\Scopes\WithoutHistoryScope;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use LogicException;
@@ -24,6 +25,51 @@ class HistoryTest extends TestCase
 
         $this->assertCount(1, $project->history);
         $this->assertEquals(['name' => 'Old Name'], $project->history->last()['data']);
+    }
+
+    public function test_history_is_removed_from_queries(): void
+    {
+        $project = Project::factory()->create(['name' => 'Old Name']);
+
+        $project->update(['name' => 'New Name']);
+
+        $this->assertNull(Project::find($project->id)->getRawOriginal('history'));
+
+        $this->assertNotNull(Project::withHistory()->find($project->id)->getRawOriginal('history'));
+    }
+
+    public function test_history_scope_can_be_disabled_globally(): void
+    {
+        $project = Project::factory()->create(['name' => 'Old Name']);
+
+        $project->update(['name' => 'New Name']);
+
+        $withoutHistory = app(WithoutHistoryScope::class);
+
+        $withoutHistory->disable();
+
+        try {
+            $this->assertNotNull(Project::find($project->id)->getRawOriginal('history'));
+        } finally {
+            $withoutHistory->enable();
+        }
+
+        $this->assertNull(Project::find($project->id)->getRawOriginal('history'));
+    }
+
+    public function test_projects_loaded_without_history_preserve_existing_revisions_on_update(): void
+    {
+        $project = Project::factory()->create(['name' => 'First Name']);
+
+        $project->update(['name' => 'Second Name']);
+
+        Project::find($project->id)->update(['name' => 'Third Name']);
+
+        $project = Project::withHistory()->find($project->id);
+
+        $this->assertCount(2, $project->history);
+        $this->assertEquals(['name' => 'First Name'], $project->history->first()['data']);
+        $this->assertEquals(['name' => 'Second Name'], $project->history->last()['data']);
     }
 
     public function test_features_create_revisions_on_delete(): void

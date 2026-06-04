@@ -11,16 +11,22 @@ class Assignment extends Model
     use Traits\HasSqid;
     use Traits\Revisionable;
 
-    protected $fillable = [
-        'actor_id',
-    ];
-
     protected function casts(): array
     {
         return [
             'actor_sqid' => AsSqid::class,
             'requirement_sqid' => AsSqid::class,
         ];
+    }
+
+    protected $fillable = [
+        'actor_id',
+    ];
+
+    protected static function booted(): void
+    {
+        static::saved(fn($assignment) => $assignment->requirement->trackActivity());
+        static::deleted(fn($assignment) => $assignment->requirement->trackActivity());
     }
 
     public function actor(): BelongsTo

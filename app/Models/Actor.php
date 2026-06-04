@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\AsSqid;
+use App\Models\Scopes\WeightedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,11 @@ class Actor extends Model
 
     protected static function booted(): void
     {
+        static::addGlobalScope(new WeightedScope());
+
+        static::saved(fn($actor) => $actor->project->trackActivity());
+        static::deleted(fn($actor) => $actor->project->trackActivity());
+
         static::deleting(function ($actor) {
             $actor->assignments->each->delete();
         });

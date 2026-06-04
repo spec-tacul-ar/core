@@ -86,9 +86,6 @@
                                                     @foreach ($requirement->tasks as $task)
                                                         <li>
                                                             {{ $task->name }}
-                                                            @if (!$project->hide_estimates && $task->estimate)
-                                                                <span class="estimate">{{ $task->estimate }}</span>
-                                                            @endif
                                                             @if ($task->is_complete)
                                                                 <span class="status status-complete">Complete</span>
                                                             @endif
@@ -104,33 +101,6 @@
                     </div>
                 @endforeach
             </div>
-        @endif
-
-        @if (!$project->hide_estimates && $project->total_estimate > 0)
-            <h2>Summary</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Estimate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($project->features as $feature)
-                        <tr>
-                            <td>{{ $feature->name }}</td>
-                            <td>{{ $feature->requirements_estimate }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <td>{{ $project->total_estimate }}</td>
-                    </tr>
-                </tfoot>
-            </table>
         @endif
     </main>
 </body>

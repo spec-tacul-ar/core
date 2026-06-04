@@ -27,13 +27,13 @@ class AuthorizationEdgeCasesTest extends TestCase
         $feature = Feature::factory()->for($sourceProject)->create();
 
         $editor = Account::factory()->create();
-        $this->attachContributor($editor, $sourceProject, Role::EDITOR);
+        $this->attachCollaboration($editor, $sourceProject, Role::EDITOR);
 
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/features/' . $feature->sqid . '/edit', [
             'name' => 'Moved feature',
-            'project_id' => $targetProject->id,
+            'project_id' => $targetProject->sqid,
         ])->assertUnprocessable()->assertJsonValidationErrors('project_id');
 
         $this->assertDatabaseHas('features', [
@@ -51,12 +51,12 @@ class AuthorizationEdgeCasesTest extends TestCase
         $requirement = Requirement::factory()->for($sourceFeature)->create();
 
         $editor = Account::factory()->create();
-        $this->attachContributor($editor, $sourceProject, Role::EDITOR);
+        $this->attachCollaboration($editor, $sourceProject, Role::EDITOR);
 
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
-            'feature_id' => $targetFeature->id,
+            'feature_id' => $targetFeature->sqid,
             'name' => 'Moved requirement',
         ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
 
@@ -78,7 +78,7 @@ class AuthorizationEdgeCasesTest extends TestCase
         $foreignTask = Task::factory()->for($otherRequirement)->create(['name' => 'Foreign task']);
 
         $editor = Account::factory()->create();
-        $this->attachContributor($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
 
         $this->actingAsAccount($editor);
 
@@ -86,7 +86,7 @@ class AuthorizationEdgeCasesTest extends TestCase
             'name' => 'Updated requirement',
             'tasks' => [
                 [
-                    'id' => $foreignTask->id,
+                    'id' => $foreignTask->sqid,
                     'name' => 'Hijacked task',
                     'is_complete' => true,
                 ],
@@ -112,7 +112,7 @@ class AuthorizationEdgeCasesTest extends TestCase
         $foreignUnknown = Unknown::factory()->for($otherRequirement)->create(['name' => 'Foreign unknown?']);
 
         $editor = Account::factory()->create();
-        $this->attachContributor($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
 
         $this->actingAsAccount($editor);
 
@@ -120,7 +120,7 @@ class AuthorizationEdgeCasesTest extends TestCase
             'name' => 'Updated requirement',
             'unknowns' => [
                 [
-                    'id' => $foreignUnknown->id,
+                    'id' => $foreignUnknown->sqid,
                     'name' => 'Hijacked unknown?',
                 ],
             ],
@@ -139,12 +139,12 @@ class AuthorizationEdgeCasesTest extends TestCase
         $hiddenProject = Project::factory()->create(['name' => 'Hidden']);
         $account = Account::factory()->create();
 
-        $this->attachContributor($account, $visibleProject, Role::VIEWER);
+        $this->attachCollaboration($account, $visibleProject, Role::VIEWER);
         Feature::factory()->for($hiddenProject)->create();
 
         $this->actingAsAccount($account);
 
-        $response = $this->getJson('/api/projects/browse');
+        $response = $this->getJson('/api/projects');
 
         $response->assertOk();
         $response->assertJsonCount(1, 'data');
@@ -169,7 +169,7 @@ class AuthorizationEdgeCasesTest extends TestCase
         ])->assertNotFound();
     }
 
-    public function test_account_delete_cleans_up_comments_invitations_readmarks_and_shared_contributors(): void
+    public function test_account_delete_cleans_up_comments_invitations_and_shared_collaborations(): void
     {
         $ownedProject = Project::factory()->create();
         $sharedProject = Project::factory()->create();
@@ -178,9 +178,9 @@ class AuthorizationEdgeCasesTest extends TestCase
         $otherOwner = Account::factory()->create();
         $feature = Feature::factory()->for($sharedProject)->create();
 
-        $this->attachContributor($account, $ownedProject, Role::OWNER);
-        $sharedContributor = $this->attachContributor($account, $sharedProject, Role::VIEWER);
-        $this->attachContributor($otherOwner, $sharedProject, Role::OWNER);
+        $this->attachCollaboration($account, $ownedProject, Role::OWNER);
+        $sharedCollaboration = $this->attachCollaboration($account, $sharedProject, Role::VIEWER);
+        $this->attachCollaboration($otherOwner, $sharedProject, Role::OWNER);
 
         $comment = Comment::factory()
             ->for($account, 'account')
@@ -205,11 +205,7 @@ class AuthorizationEdgeCasesTest extends TestCase
 
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
         $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
-        $this->assertDatabaseMissing('readmarks', [
-            'account_id' => $account->id,
-            'project_id' => $sharedProject->id,
-        ]);
-        $this->assertDatabaseMissing('contributors', ['id' => $sharedContributor->id]);
+        $this->assertDatabaseMissing('collaborations', ['id' => $sharedCollaboration->id]);
         $this->assertDatabaseHas('projects', ['id' => $sharedProject->id]);
     }
 }

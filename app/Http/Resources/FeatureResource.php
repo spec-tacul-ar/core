@@ -10,14 +10,14 @@ class FeatureResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'created_at' => $this->created_at,
-            'description' => $this->description,
             'id' => $this->sqid,
-            'name' => $this->name,
             'project_id' => $this->project_sqid,
+            'name' => $this->name,
+            'description' => $this->description,
             'requirements' => RequirementResource::collection($this->whenLoaded('requirements')),
-            'updated_at' => $this->updated_at,
             'weight' => $this->weight,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

@@ -3,6 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Lorisleiva\Actions\Facades\Actions;
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:api', 'verified'])->group(function () {
     Actions::registerRoutes();
 });

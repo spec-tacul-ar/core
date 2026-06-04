@@ -18,7 +18,7 @@ class FortifyAuthenticationTest extends TestCase
 
     public function test_registration_creates_an_account(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/auth/register', [
             'name' => 'New Account',
             'email' => 'new@example.test',
             'password' => 'password',
@@ -32,11 +32,11 @@ class FortifyAuthenticationTest extends TestCase
         $this->assertTrue(Hash::check('password', $account->password));
     }
 
-    public function test_registration_does_not_send_an_email_verification_notification(): void
+    public function test_registration_sends_an_email_verification_notification(): void
     {
         Notification::fake();
 
-        $this->postJson('/api/auth/register', [
+        $this->postJson('/auth/register', [
             'name' => 'New Account',
             'email' => 'new@example.test',
             'password' => 'password',
@@ -44,14 +44,14 @@ class FortifyAuthenticationTest extends TestCase
 
         $account = Account::query()->where('email', 'new@example.test')->firstOrFail();
 
-        Notification::assertNotSentTo($account, VerifyEmail::class);
+        Notification::assertSentTo($account, VerifyEmail::class);
     }
 
     public function test_registration_rejects_duplicate_email_addresses(): void
     {
         Account::factory()->create(['email' => 'taken@example.test']);
 
-        $this->postJson('/api/auth/register', [
+        $this->postJson('/auth/register', [
             'name' => 'New Account',
             'email' => 'taken@example.test',
             'password' => 'password',
@@ -62,7 +62,7 @@ class FortifyAuthenticationTest extends TestCase
 
     public function test_registration_rejects_email_addresses_without_a_domain_suffix(): void
     {
-        $this->postJson('/api/auth/register', [
+        $this->postJson('/auth/register', [
             'name' => 'New Account',
             'email' => 'new@spectacular',
             'password' => 'password',
@@ -78,16 +78,17 @@ class FortifyAuthenticationTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->postJson('/api/auth/login', [
+        $this->postJson('/auth/login', [
             'email' => $account->email,
             'password' => 'password',
         ])->assertOk();
 
-        $this->getJson('/api/auth/account')
+        $this->getJson('/auth/check')
             ->assertOk()
-            ->assertJsonPath('data.id', $account->sqid);
+            ->assertJsonPath('is_authenticated', true)
+            ->assertJsonPath('is_verified', true);
 
-        $this->postJson('/api/auth/logout')->assertNoContent();
+        $this->postJson('/auth/logout')->assertNoContent();
 
         $this->assertGuest('web');
     }
@@ -99,7 +100,7 @@ class FortifyAuthenticationTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
-        $this->postJson('/api/auth/login', [
+        $this->postJson('/auth/login', [
             'email' => 'login@example.test',
             'password' => 'wrong-password',
         ])
@@ -113,11 +114,17 @@ class FortifyAuthenticationTest extends TestCase
 
         $account = Account::factory()->create(['email' => 'reset@example.test']);
 
-        $this->postJson('/api/auth/password/request', [
+        $this->postJson('/auth/password/request', [
             'email' => $account->email,
         ])->assertOk();
 
-        Notification::assertSentTo($account, ResetPassword::class);
+        Notification::assertSentTo($account, ResetPassword::class, function (ResetPassword $notification) use ($account) {
+            $path = parse_url($notification->toMail($account)->actionUrl, PHP_URL_PATH);
+
+            $this->assertStringStartsWith('/app/password/reset/', $path);
+
+            return true;
+        });
     }
 
     public function test_password_reset_changes_the_account_password(): void
@@ -129,7 +136,7 @@ class FortifyAuthenticationTest extends TestCase
 
         $token = Password::broker('accounts')->createToken($account);
 
-        $this->postJson('/api/auth/password/reset', [
+        $this->postJson('/auth/password/reset', [
             'email' => $account->email,
             'password' => 'new-password',
             'token' => $token,
@@ -147,7 +154,7 @@ class FortifyAuthenticationTest extends TestCase
 
         $token = Password::broker('accounts')->createToken($account);
 
-        $this->postJson('/api/auth/password/reset', [
+        $this->postJson('/auth/password/reset', [
             'email' => $account->email,
             'password' => 'new-password',
             'token' => $token,
@@ -163,7 +170,7 @@ class FortifyAuthenticationTest extends TestCase
     {
         $account = Account::factory()->create(['email' => 'reset@example.test']);
 
-        $this->postJson('/api/auth/password/reset', [
+        $this->postJson('/auth/password/reset', [
             'email' => $account->email,
             'password' => 'new-password',
             'token' => 'not-the-token',
@@ -179,7 +186,7 @@ class FortifyAuthenticationTest extends TestCase
         $this->actingAs($account);
 
         $this->get($this->emailVerificationUrl($account))
-            ->assertRedirect('/account/settings?verified=1');
+            ->assertRedirect('/app?verified=1');
 
         $this->assertTrue($account->fresh()->hasVerifiedEmail());
     }
@@ -205,7 +212,7 @@ class FortifyAuthenticationTest extends TestCase
         $account = Account::factory()->unverified()->create();
         $this->actingAs($account);
 
-        $this->postJson('/api/email/verification-notification')->assertAccepted();
+        $this->postJson('/email/verification-notification')->assertAccepted();
 
         Notification::assertSentTo($account, VerifyEmail::class);
     }
@@ -218,11 +225,11 @@ class FortifyAuthenticationTest extends TestCase
 
         $this->actingAs($account);
 
-        $this->postJson('/api/auth/password/confirm', [
+        $this->postJson('/auth/password/confirm', [
             'password' => 'password',
         ])->assertCreated();
 
-        $this->getJson('/api/auth/password/confirmed')
+        $this->getJson('/auth/password/confirmed')
             ->assertOk()
             ->assertJsonPath('confirmed', true);
     }

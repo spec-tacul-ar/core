@@ -28,12 +28,12 @@ class CollaborationTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $feature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Editor comment',
@@ -49,7 +49,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $feature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Viewer comment',
@@ -70,10 +70,10 @@ class CollaborationTest extends TestCase
         $feature = \App\Models\Feature::factory()->for($project)->create();
         $account = Account::factory()->create();
 
-        $this->attachContributor($account, $project, Role::EDITOR);
+        $this->attachCollaboration($account, $project, Role::EDITOR);
         $this->actingAsAccount($account);
 
-        $this->postJson('/api/comments/add', [
+        $this->postJson('/api/comments', [
             'commentable_id' => $feature->sqid,
             'commentable_type' => 'feature',
             'message' => 'Archived comment',
@@ -100,8 +100,8 @@ class CollaborationTest extends TestCase
         $viewer = Account::factory()->create();
         $outsider = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         Comment::factory()
             ->for($owner, 'account')
@@ -113,13 +113,13 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
+        $this->getJson('/api/comments?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(1, 'data');
 
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
+        $this->getJson('/api/comments?project_id=' . $project->sqid)
             ->assertUnprocessable()
             ->assertJsonValidationErrors('project_id');
     }
@@ -133,7 +133,7 @@ class CollaborationTest extends TestCase
         $otherFeature = \App\Models\Feature::factory()->for($otherProject)->create();
 
         $account = Account::factory()->create();
-        $this->attachContributor($account, $project, Role::VIEWER);
+        $this->attachCollaboration($account, $project, Role::VIEWER);
 
         $older = Comment::factory()
             ->for($account, 'account')
@@ -166,7 +166,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($account);
 
-        $this->getJson('/api/comments/browse?project_id=' . $project->sqid)
+        $this->getJson('/api/comments?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.id', $newer->sqid)
@@ -183,8 +183,8 @@ class CollaborationTest extends TestCase
         $author = Account::factory()->create();
         $otherEditor = Account::factory()->create();
 
-        $this->attachContributor($author, $project, Role::EDITOR);
-        $this->attachContributor($otherEditor, $project, Role::EDITOR);
+        $this->attachCollaboration($author, $project, Role::EDITOR);
+        $this->attachCollaboration($otherEditor, $project, Role::EDITOR);
 
         $comment = Comment::factory()
             ->for($author, 'account')
@@ -204,7 +204,7 @@ class CollaborationTest extends TestCase
         $this->assertDatabaseMissing('comments', ['id' => $authorComment->id]);
 
         $owner = Account::factory()->create();
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $ownerBlockedComment = Comment::factory()
             ->for($author, 'account')
@@ -226,13 +226,13 @@ class CollaborationTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'email' => 'new-person@example.test',
             'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
@@ -249,7 +249,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($editor);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'email' => 'blocked-editor@example.test',
             'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
@@ -257,7 +257,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'email' => 'blocked-viewer@example.test',
             'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
@@ -272,11 +272,11 @@ class CollaborationTest extends TestCase
         $owner = Account::factory()->create();
         $recipient = Account::factory()->create(['email' => 'existing@example.test']);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'email' => $recipient->email,
             'project_id' => $project->sqid,
             'role' => Role::EDITOR->value,
@@ -299,10 +299,10 @@ class CollaborationTest extends TestCase
         $owner = Account::factory()->create();
         $invitee = Account::factory()->create(['email_verified_at' => now()]);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/invitations/add', [
+        $this->postJson('/api/invitations', [
             'email' => 'new-person@example.test',
             'project_id' => $project->sqid,
             'role' => Role::VIEWER->value,
@@ -319,7 +319,7 @@ class CollaborationTest extends TestCase
         $this->actingAsAccount($invitee);
 
         $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertForbidden();
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $invitee->id,
             'project_id' => $project->id,
         ]);
@@ -334,7 +334,7 @@ class CollaborationTest extends TestCase
         $recipient = Account::factory()->create(['email' => 'invitee@example.test']);
         $outsider = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $projectInvitation = Invitation::factory()
             ->for($owner, 'account')
@@ -354,7 +354,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($owner);
 
-        $this->getJson('/api/invitations/browse?project_id=' . $project->sqid)
+        $this->getJson('/api/invitations?project_id=' . $project->sqid)
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $projectInvitation->sqid)
@@ -363,7 +363,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($recipient);
 
-        $this->getJson('/api/invitations/browse')
+        $this->getJson('/api/invitations')
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $projectInvitation->sqid)
@@ -372,7 +372,7 @@ class CollaborationTest extends TestCase
 
         $this->actingAsAccount($outsider);
 
-        $this->getJson('/api/invitations/browse?project_id=' . $project->sqid)
+        $this->getJson('/api/invitations?project_id=' . $project->sqid)
             ->assertUnprocessable()
             ->assertJsonValidationErrors('project_id');
     }
@@ -386,7 +386,7 @@ class CollaborationTest extends TestCase
         $recipient = Account::factory()->create(['email' => 'invitee@example.test']);
         $outsider = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -402,7 +402,7 @@ class CollaborationTest extends TestCase
         $this->actingAsAccount($recipient);
         $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')->assertNoContent();
 
-        $this->assertDatabaseHas('contributors', [
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $recipient->id,
             'project_id' => $project->id,
             'role' => Role::VIEWER->value,
@@ -416,7 +416,7 @@ class CollaborationTest extends TestCase
         $owner = Account::factory()->create();
         $recipient = Account::factory()->unverified()->create(['email' => 'invitee@example.test']);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -430,7 +430,7 @@ class CollaborationTest extends TestCase
         $this->postJson('/api/invitations/' . $invitation->sqid . '/accept')
             ->assertForbidden();
 
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $recipient->id,
             'project_id' => $project->id,
         ]);
@@ -442,7 +442,7 @@ class CollaborationTest extends TestCase
         $project = Project::factory()->create();
         $owner = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -455,7 +455,7 @@ class CollaborationTest extends TestCase
         $url = URL::signedRoute('invitations.accept', $invitation);
 
         $this->get($url)
-            ->assertRedirect(config('spectacular.path') . '/register');
+            ->assertRedirect('/app/register');
     }
 
     public function test_signed_invitation_route_verifies_the_email_and_accepts_the_invitation(): void
@@ -466,7 +466,7 @@ class CollaborationTest extends TestCase
         $owner = Account::factory()->create();
         $recipient = Account::factory()->unverified()->create(['email' => 'invitee@example.test']);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -482,7 +482,7 @@ class CollaborationTest extends TestCase
             ->assertRedirect($project->url);
 
         $this->assertTrue($recipient->fresh()->hasVerifiedEmail());
-        $this->assertDatabaseHas('contributors', [
+        $this->assertDatabaseHas('collaborations', [
             'account_id' => $recipient->id,
             'project_id' => $project->id,
             'role' => Role::VIEWER->value,
@@ -497,7 +497,7 @@ class CollaborationTest extends TestCase
         $recipient = Account::factory()->create(['email' => 'invitee@example.test']);
         $outsider = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -512,7 +512,7 @@ class CollaborationTest extends TestCase
         $this->get(URL::signedRoute('invitations.accept', $invitation))
             ->assertNotFound();
 
-        $this->assertDatabaseMissing('contributors', [
+        $this->assertDatabaseMissing('collaborations', [
             'account_id' => $outsider->id,
             'project_id' => $project->id,
         ]);
@@ -526,7 +526,7 @@ class CollaborationTest extends TestCase
         $recipient = Account::factory()->create(['email' => 'recipient@example.test']);
         $outsider = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $recipientInvitation = Invitation::factory()
             ->for($owner, 'account')
@@ -560,7 +560,7 @@ class CollaborationTest extends TestCase
         $owner = Account::factory()->create();
         $recipient = Account::factory()->unverified()->create(['email' => 'recipient@example.test']);
 
-        $this->attachContributor($owner, $project, Role::OWNER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
 
         $invitation = Invitation::factory()
             ->for($owner, 'account')
@@ -576,7 +576,7 @@ class CollaborationTest extends TestCase
         $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
     }
 
-    public function test_contributors_edit_endpoint_requires_owner_permissions(): void
+    public function test_collaborations_edit_endpoint_requires_owner_permissions(): void
     {
         $project = Project::factory()->create();
 
@@ -584,22 +584,22 @@ class CollaborationTest extends TestCase
         $editor = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $this->attachContributor($editor, $project, Role::EDITOR);
-        $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+        $viewerCollaboration = $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($editor);
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/edit', [
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/edit', [
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertOk();
 
-        $this->assertDatabaseHas('contributors', [
-            'id' => $viewerContributor->id,
+        $this->assertDatabaseHas('collaborations', [
+            'id' => $viewerCollaboration->id,
             'role' => Role::EDITOR->value,
         ]);
     }
@@ -611,20 +611,20 @@ class CollaborationTest extends TestCase
         $olderOwner = Account::factory()->create();
         $newerOwner = Account::factory()->create();
 
-        $olderContributor = $this->attachContributor($olderOwner, $project, Role::OWNER);
-        $newerContributor = $this->attachContributor($newerOwner, $project, Role::OWNER);
+        $olderCollaboration = $this->attachCollaboration($olderOwner, $project, Role::OWNER);
+        $newerCollaboration = $this->attachCollaboration($newerOwner, $project, Role::OWNER);
 
-        $olderContributor->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
-        $newerContributor->forceFill(['updated_at' => now()])->saveQuietly();
+        $olderCollaboration->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
+        $newerCollaboration->forceFill(['updated_at' => now()])->saveQuietly();
 
         $this->actingAsAccount($newerOwner);
 
-        $this->postJson('/api/contributors/' . $olderContributor->sqid . '/edit', [
+        $this->postJson('/api/collaborations/' . $olderCollaboration->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
 
-        $this->assertDatabaseHas('contributors', [
-            'id' => $olderContributor->id,
+        $this->assertDatabaseHas('collaborations', [
+            'id' => $olderCollaboration->id,
             'role' => Role::OWNER->value,
         ]);
     }
@@ -636,20 +636,20 @@ class CollaborationTest extends TestCase
         $olderOwner = Account::factory()->create();
         $newerOwner = Account::factory()->create();
 
-        $olderContributor = $this->attachContributor($olderOwner, $project, Role::OWNER);
-        $newerContributor = $this->attachContributor($newerOwner, $project, Role::OWNER);
+        $olderCollaboration = $this->attachCollaboration($olderOwner, $project, Role::OWNER);
+        $newerCollaboration = $this->attachCollaboration($newerOwner, $project, Role::OWNER);
 
-        $olderContributor->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
-        $newerContributor->forceFill(['updated_at' => now()])->saveQuietly();
+        $olderCollaboration->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
+        $newerCollaboration->forceFill(['updated_at' => now()])->saveQuietly();
 
         $this->actingAsAccount($olderOwner);
 
-        $this->postJson('/api/contributors/' . $newerContributor->sqid . '/edit', [
+        $this->postJson('/api/collaborations/' . $newerCollaboration->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertOk();
 
-        $this->assertDatabaseHas('contributors', [
-            'id' => $newerContributor->id,
+        $this->assertDatabaseHas('collaborations', [
+            'id' => $newerCollaboration->id,
             'role' => Role::EDITOR->value,
         ]);
     }
@@ -662,39 +662,39 @@ class CollaborationTest extends TestCase
         $peer = Account::factory()->create();
         $timestamp = now()->subMinute();
 
-        $ownerContributor = $this->attachContributor($owner, $project, Role::OWNER);
-        $peerContributor = $this->attachContributor($peer, $project, Role::OWNER);
+        $ownerCollaboration = $this->attachCollaboration($owner, $project, Role::OWNER);
+        $peerCollaboration = $this->attachCollaboration($peer, $project, Role::OWNER);
 
-        $ownerContributor->forceFill(['updated_at' => $timestamp])->saveQuietly();
-        $peerContributor->forceFill(['updated_at' => $timestamp])->saveQuietly();
+        $ownerCollaboration->forceFill(['updated_at' => $timestamp])->saveQuietly();
+        $peerCollaboration->forceFill(['updated_at' => $timestamp])->saveQuietly();
 
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/contributors/' . $peerContributor->sqid . '/edit', [
+        $this->postJson('/api/collaborations/' . $peerCollaboration->sqid . '/edit', [
             'role' => Role::EDITOR->value,
         ])->assertForbidden();
     }
 
-    public function test_contributors_delete_endpoint_cannot_remove_the_last_owner_and_allows_other_removals(): void
+    public function test_collaborations_delete_endpoint_cannot_remove_the_last_owner_and_allows_other_removals(): void
     {
         $soleOwnerProject = Project::factory()->create();
         $soleOwner = Account::factory()->create();
-        $soleOwnerContributor = $this->attachContributor($soleOwner, $soleOwnerProject, Role::OWNER);
+        $soleOwnerCollaboration = $this->attachCollaboration($soleOwner, $soleOwnerProject, Role::OWNER);
 
         $this->actingAsAccount($soleOwner);
-        $this->postJson('/api/contributors/' . $soleOwnerContributor->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/collaborations/' . $soleOwnerCollaboration->sqid . '/delete')->assertForbidden();
 
         $project = Project::factory()->create();
         $owner = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $viewerCollaboration = $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/delete')->assertNoContent();
 
-        $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
+        $this->assertDatabaseMissing('collaborations', ['id' => $viewerCollaboration->id]);
     }
 
     public function test_newer_owners_cannot_delete_older_owners_but_older_owners_can_delete_newer_owners(): void
@@ -704,25 +704,25 @@ class CollaborationTest extends TestCase
         $olderOwner = Account::factory()->create();
         $newerOwner = Account::factory()->create();
 
-        $olderContributor = $this->attachContributor($olderOwner, $project, Role::OWNER);
-        $newerContributor = $this->attachContributor($newerOwner, $project, Role::OWNER);
+        $olderCollaboration = $this->attachCollaboration($olderOwner, $project, Role::OWNER);
+        $newerCollaboration = $this->attachCollaboration($newerOwner, $project, Role::OWNER);
 
-        $olderContributor->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
-        $newerContributor->forceFill(['updated_at' => now()])->saveQuietly();
+        $olderCollaboration->forceFill(['updated_at' => now()->subMinutes(10)])->saveQuietly();
+        $newerCollaboration->forceFill(['updated_at' => now()])->saveQuietly();
 
         $this->actingAsAccount($newerOwner);
 
-        $this->postJson('/api/contributors/' . $olderContributor->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/collaborations/' . $olderCollaboration->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($olderOwner);
 
-        $this->postJson('/api/contributors/' . $newerContributor->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/collaborations/' . $newerCollaboration->sqid . '/delete')->assertNoContent();
 
-        $this->assertDatabaseHas('contributors', ['id' => $olderContributor->id]);
-        $this->assertDatabaseMissing('contributors', ['id' => $newerContributor->id]);
+        $this->assertDatabaseHas('collaborations', ['id' => $olderCollaboration->id]);
+        $this->assertDatabaseMissing('collaborations', ['id' => $newerCollaboration->id]);
     }
 
-    public function test_non_owner_contributors_can_remove_themselves_but_not_other_contributors(): void
+    public function test_non_owner_collaborations_can_remove_themselves_but_not_other_collaborations(): void
     {
         $project = Project::factory()->create();
 
@@ -730,21 +730,21 @@ class CollaborationTest extends TestCase
         $viewer = Account::factory()->create();
         $otherViewer = Account::factory()->create();
 
-        $this->attachContributor($owner, $project, Role::OWNER);
-        $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
-        $otherViewerContributor = $this->attachContributor($otherViewer, $project, Role::VIEWER);
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $viewerCollaboration = $this->attachCollaboration($viewer, $project, Role::VIEWER);
+        $otherViewerCollaboration = $this->attachCollaboration($otherViewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/contributors/' . $otherViewerContributor->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/collaborations/' . $otherViewerCollaboration->sqid . '/delete')->assertForbidden();
 
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/delete')->assertNoContent();
 
-        $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
-        $this->assertDatabaseHas('contributors', ['id' => $otherViewerContributor->id]);
+        $this->assertDatabaseMissing('collaborations', ['id' => $viewerCollaboration->id]);
+        $this->assertDatabaseHas('collaborations', ['id' => $otherViewerCollaboration->id]);
     }
 
-    public function test_contributors_can_leave_archived_projects_without_managing_other_contributors(): void
+    public function test_collaborations_can_leave_archived_projects_without_managing_other_collaborations(): void
     {
         $project = Project::factory()->archived()->create();
 
@@ -752,26 +752,26 @@ class CollaborationTest extends TestCase
         $otherOwner = Account::factory()->create();
         $viewer = Account::factory()->create();
 
-        $ownerContributor = $this->attachContributor($owner, $project, Role::OWNER);
-        $otherOwnerContributor = $this->attachContributor($otherOwner, $project, Role::OWNER);
-        $viewerContributor = $this->attachContributor($viewer, $project, Role::VIEWER);
+        $ownerCollaboration = $this->attachCollaboration($owner, $project, Role::OWNER);
+        $otherOwnerCollaboration = $this->attachCollaboration($otherOwner, $project, Role::OWNER);
+        $viewerCollaboration = $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
         $this->actingAsAccount($owner);
 
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertForbidden();
-        $this->postJson('/api/contributors/' . $ownerContributor->sqid . '/delete')->assertNoContent();
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/collaborations/' . $ownerCollaboration->sqid . '/delete')->assertNoContent();
 
-        $this->assertDatabaseMissing('contributors', ['id' => $ownerContributor->id]);
-        $this->assertDatabaseHas('contributors', ['id' => $viewerContributor->id]);
+        $this->assertDatabaseMissing('collaborations', ['id' => $ownerCollaboration->id]);
+        $this->assertDatabaseHas('collaborations', ['id' => $viewerCollaboration->id]);
 
         $this->actingAsAccount($otherOwner);
 
-        $this->postJson('/api/contributors/' . $otherOwnerContributor->sqid . '/delete')->assertForbidden();
-        $this->assertDatabaseHas('contributors', ['id' => $otherOwnerContributor->id]);
+        $this->postJson('/api/collaborations/' . $otherOwnerCollaboration->sqid . '/delete')->assertForbidden();
+        $this->assertDatabaseHas('collaborations', ['id' => $otherOwnerCollaboration->id]);
 
         $this->actingAsAccount($viewer);
 
-        $this->postJson('/api/contributors/' . $viewerContributor->sqid . '/delete')->assertNoContent();
-        $this->assertDatabaseMissing('contributors', ['id' => $viewerContributor->id]);
+        $this->postJson('/api/collaborations/' . $viewerCollaboration->sqid . '/delete')->assertNoContent();
+        $this->assertDatabaseMissing('collaborations', ['id' => $viewerCollaboration->id]);
     }
 }

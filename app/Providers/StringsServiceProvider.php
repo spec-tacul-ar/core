@@ -30,6 +30,6 @@ class StringsServiceProvider extends ServiceProvider
         /* Convert HTML to Markdown */
         $converter = new HtmlConverter(['strip_tags' => true]);
 
-        Str::macro('htmlToMarkdown', fn(string $html) => $converter->convert($html));
+        Str::macro('htmlToMarkdown', fn(?string $html) => $html ? $converter->convert($html) : '');
     }
 }

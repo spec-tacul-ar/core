@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Casts\AsSqid;
+use App\Models\Scopes\WeightedScope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 
 class Requirement extends Model
@@ -16,6 +18,9 @@ class Requirement extends Model
     use HasFactory;
     use Traits\HasSqid;
     use Traits\Revisionable;
+    use Traits\TracksActivity;
+
+    protected $appends = ['title'];
 
     protected $casts = [
         'actor_id' => 'integer',
@@ -35,6 +40,8 @@ class Requirement extends Model
 
     protected static function booted(): void
     {
+        static::addGlobalScope(new WeightedScope());
+
         static::created(function ($requirement) {
             // We have to do it like this to prevent duplicates from race conditions.
             DB::transaction(function () use ($requirement) {
@@ -49,24 +56,48 @@ class Requirement extends Model
             });
         });
 
+        static::saved(fn($requirement) => $requirement->trackActivity());
+        static::deleted(function ($requirement) {
+            if (! $requirement->isForceDeleting()) {
+                $requirement->trackActivity();
+            }
+        });
+
         static::deleting(function ($requirement) {
+            $requirement->comments()->delete();
             $requirement->assignments->each->delete();
             $requirement->unknowns->each->delete();
             $requirement->tasks->each->delete();
         });
 
         static::forceDeleting(function ($requirement) {
+            $requirement->comments()->delete();
             $requirement->assignments()->withTrashed()->forceDelete();
             $requirement->unknowns()->withTrashed()->forceDelete();
             $requirement->tasks()->withTrashed()->forceDelete();
         });
     }
 
+    protected function handleActivity()
+    {
+        $this->feature->trackActivity();
+    }
+
     /* Relations */
+
+    public function actors(): BelongsToMany
+    {
+        return $this->belongsToMany(Actor::class, Assignment::class);
+    }
 
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function feature(): BelongsTo
@@ -76,17 +107,12 @@ class Requirement extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class)->chaperone();
     }
 
     public function unknowns(): HasMany
     {
-        return $this->hasMany(Unknown::class);
-    }
-
-    public function actors(): BelongsToMany
-    {
-        return $this->belongsToMany(Actor::class, Assignment::class);
+        return $this->hasMany(Unknown::class)->chaperone();
     }
 
     /* Attributes */
@@ -115,10 +141,5 @@ class Requirement extends Model
 
             return (!$actors->isEmpty() ? $actors->implode(', ') . ' and ' : '') . $last_actor . ' can ' . $this->name;
         });
-    }
-
-    public function tasksEstimate(): Attribute
-    {
-        return new Attribute(fn() => $this->tasks->sum('estimate'));
     }
 }

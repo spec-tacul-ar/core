@@ -9,7 +9,6 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
-use App\Rules\QuarterHour as QuarterHourRule;
 
 class EditTask
 {
@@ -29,7 +28,6 @@ class EditTask
     {
         return [
             'name' => ['sometimes', 'required', 'string', 'max:250'],
-            'estimate' => ['sometimes', 'nullable', 'numeric', 'min:0', 'max:1000', new QuarterHourRule()],
             'is_complete' => ['sometimes', 'required', 'boolean'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
@@ -44,6 +42,8 @@ class EditTask
 
     public function asController(ActionRequest $request, Task $task): TaskResource
     {
-        return new TaskResource($this->handle($task, $request->validated()));
+        $task = $this->handle($task, $request->validated());
+
+        return new TaskResource($task);
     }
 }
