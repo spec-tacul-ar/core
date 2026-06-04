@@ -30,9 +30,9 @@ class CreateTask
     public function rules(): array
     {
         return [
-            'requirement_id' => ['required', 'integer', new Authorised('update', Requirement::class)],
-            'name' => ['required', 'string', 'max:250'],
             'is_complete' => ['required', 'boolean'],
+            'name' => ['required', 'string', 'max:250'],
+            'requirement_id' => ['required', 'integer', new Authorised('update', Requirement::class)],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

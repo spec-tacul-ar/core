@@ -30,9 +30,9 @@ class CreateFeature
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', new Authorised('update', Project::class)],
             'description' => ['nullable', 'string', 'max:10000'],
             'name' => ['required', 'string', 'max:250'],
+            'project_id' => ['required', 'integer', new Authorised('update', Project::class)],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

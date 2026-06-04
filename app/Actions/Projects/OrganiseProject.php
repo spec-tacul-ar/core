@@ -36,8 +36,8 @@ class OrganiseProject
             'features.*.id' => ['required', 'integer', 'min:0'],
             'features.*.weight' => ['required', 'integer', 'min:0', 'max:250'],
             'requirements' => ['nullable', 'array'],
-            'requirements.*.id' => ['required', 'integer', 'min:0'],
             'requirements.*.feature_id' => ['required', 'integer', 'min:0'],
+            'requirements.*.id' => ['required', 'integer', 'min:0'],
             'requirements.*.weight' => ['required', 'integer', 'min:0', 'max:250'],
         ];
     }

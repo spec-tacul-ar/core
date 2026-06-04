@@ -30,9 +30,9 @@ class CreateActor
     public function rules(): array
     {
         return [
+            'name' => ['required', 'string', 'max:250'],
             'project_id' => ['required', 'integer', new Authorised('update', Project::class)],
             'summary' => ['nullable', 'string', 'max:2500'],
-            'name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

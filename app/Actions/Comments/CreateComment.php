@@ -32,10 +32,10 @@ class CreateComment
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', new Authorised('comment', Project::class)],
-            'commentable_type' => ['nullable', 'in:feature,requirement'],
             'commentable_id' => ['nullable', 'integer', new Commentable()],
+            'commentable_type' => ['nullable', 'in:feature,requirement'],
             'message' => ['required', 'string', 'max:5000'],
+            'project_id' => ['required', 'integer', new Authorised('comment', Project::class)],
         ];
     }
 

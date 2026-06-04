@@ -32,19 +32,19 @@ class CreateRequirement
     public function rules(): array
     {
         return [
+            'actor_ids' => ['array'],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
             'blocked_reason' => ['nullable', 'string', 'max:250'],
             'description' => ['nullable', 'string', 'max:10000'],
             'feature_id' => ['required', 'integer', new Authorised('update', Feature::class)],
             'name' => ['required', 'string', 'max:250'],
-            'unknowns' => ['nullable', 'array'],
-            'unknowns.*.name' => ['required', 'string', 'max:250'],
-            'actor_ids' => ['array'],
-            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
             'source' => ['nullable', 'string', 'max:250'],
             'tasks' => ['nullable', 'array'],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
             'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
+            'unknowns' => ['nullable', 'array'],
+            'unknowns.*.name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

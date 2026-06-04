@@ -20,7 +20,6 @@ class CreateNewAccount implements CreatesNewUsers
     public function create(array $input): Account
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:250'],
             'email' => [
                 'required',
                 'string',
@@ -28,6 +27,7 @@ class CreateNewAccount implements CreatesNewUsers
                 'max:250',
                 Rule::unique(Account::class),
             ],
+            'name' => ['required', 'string', 'max:250'],
             'password' => $this->passwordRules(),
         ])->validate();
 

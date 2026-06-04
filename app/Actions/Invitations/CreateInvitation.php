@@ -35,8 +35,8 @@ class CreateInvitation
     public function rules(ActionRequest $request): array
     {
         return [
-            'project_id' => ['required', 'integer', new Authorised('invite', Project::class)],
             'email' => ['required', 'email:filter', 'max:250', new InvitationEmail(), new NotOwnEmail($request->user())],
+            'project_id' => ['required', 'integer', new Authorised('invite', Project::class)],
             'role' => ['required', Rule::enum(Role::class)],
         ];
     }

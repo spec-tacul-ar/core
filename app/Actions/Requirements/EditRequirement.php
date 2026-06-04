@@ -41,21 +41,21 @@ class EditRequirement
     public function rules(): array
     {
         return [
+            'actor_ids' => ['sometimes', 'array'],
+            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
             'blocked_reason' => ['sometimes', 'nullable', 'string', 'max:250'],
             'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
             'feature_id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Feature::class)],
             'name' => ['sometimes', 'required', 'string', 'max:250'],
-            'unknowns' => ['sometimes', 'array'],
-            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Unknown::class)],
-            'unknowns.*.name' => ['required', 'string', 'max:250'],
-            'actor_ids' => ['sometimes', 'array'],
-            'actor_ids.*' => ['integer', new SharesRelation(Actor::class, 'feature_id', 'project.features'), new Authorised('update', Actor::class)],
+            'source' => ['sometimes', 'nullable', 'string', 'max:250'],
             'tasks' => ['sometimes', 'array'],
             'tasks.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Task::class)],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
             'tasks.*.weight' => ['nullable', 'integer', 'min:0', 'max:250'],
-            'source' => ['sometimes', 'nullable', 'string', 'max:250'],
+            'unknowns' => ['sometimes', 'array'],
+            'unknowns.*.id' => ['sometimes', 'bail', 'required', 'integer', new Authorised('update', Unknown::class)],
+            'unknowns.*.name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }

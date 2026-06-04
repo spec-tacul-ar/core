@@ -27,8 +27,8 @@ class EditTask
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:250'],
             'is_complete' => ['sometimes', 'required', 'boolean'],
+            'name' => ['sometimes', 'required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
