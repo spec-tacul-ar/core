@@ -18,7 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias(['sqids' => DecodeSqids::class]);
         $middleware->prependToGroup('web', MakeFolioPagesCachable::class);
         $middleware->redirectGuestsTo(fn() => url('app/login'));
-        $middleware->throttleApi('api');
 
         $middleware->web(append: [
             CreateFreshApiToken::class, // Make sure this is always appended last.

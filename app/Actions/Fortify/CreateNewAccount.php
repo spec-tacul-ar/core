@@ -2,11 +2,11 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Account;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use App\Models\Account;
 
 class CreateNewAccount implements CreatesNewUsers
 {

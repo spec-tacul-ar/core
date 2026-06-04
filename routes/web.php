@@ -5,7 +5,6 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Passport\Scope;
 
 Route::get('auth/check', [AuthController::class, 'check'])
     ->name('auth.check');

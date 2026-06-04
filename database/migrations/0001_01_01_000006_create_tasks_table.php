@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('requirement_id')->constrained();
             $table->string('name');
+            $table->integer('estimate')->nullable()->unsigned();
             $table->boolean('is_complete')->default(false);
             $table->tinyInteger('weight')->unsigned()->nullable();
             $table->timestamps();
