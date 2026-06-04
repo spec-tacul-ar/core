@@ -42,6 +42,16 @@ php artisan serve
 
 To upgrade, simply grab the latest code and run `composer setup` again.
 
+### Migrating to v2
+
+If you previously used Spectacular as a solo user, create or register the account that should own your existing projects, then assign any legacy solo projects to it:
+
+```bash
+php artisan spectacular:solo:migrate your-email@example.com
+```
+
+The solo migration command only claims projects that do not already have collaborators, so shared projects are left untouched.
+
 ### Docker
 
 If you don't have PHP available, you can run the app with Docker. Once ready, you'll find Spectacular running at [http://localhost:8000](http://localhost:8000).
