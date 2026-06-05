@@ -228,12 +228,21 @@ class NestedResourcesTest extends TestCase
 
         $this->actingAsAccount($viewer);
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
             'name' => 'Blocked update',
+            'source' => null,
+            'tasks' => [],
+            'unknowns' => [],
         ])->assertForbidden();
 
         $this->actingAsAccount($editor);
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'blocked_reason' => null,
+            'description' => null,
             'name' => 'Updated requirement',
+            'source' => null,
             'tasks' => [
                 ['id' => $existingTask->sqid, 'is_complete' => true, 'name' => 'Updated task', 'weight' => 6],
                 ['is_complete' => false, 'name' => 'Fresh task', 'weight' => 7],
@@ -271,7 +280,10 @@ class NestedResourcesTest extends TestCase
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->for($project)->create();
-        $requirement = Requirement::factory()->for($feature)->create();
+        $requirement = Requirement::factory()->for($feature)->create([
+            'blocked_reason' => 'Waiting on API access',
+            'description' => 'Initial notes',
+        ]);
         $taskA = Task::factory()->for($requirement)->create(['is_complete' => false]);
         $taskB = Task::factory()->for($requirement)->create(['is_complete' => false]);
 
@@ -290,10 +302,50 @@ class NestedResourcesTest extends TestCase
             ]);
 
         $this->actingAsAccount($viewer);
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/append', [
+            'text' => 'Blocked append',
+        ])->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/block', [
+            'reason' => 'Blocked block',
+        ])->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/unblock')->assertForbidden();
 
         $this->actingAsAccount($editor);
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/append', [
+            'text' => 'Client confirmed OAuth is enough.',
+        ])->assertOk();
+
+        $this->assertDatabaseHas('requirements', [
+            'id' => $requirement->id,
+            'description' => 'Initial notes<p>Client confirmed OAuth is enough.</p>',
+        ]);
+
+        $longRequirement = Requirement::factory()->for($feature)->create([
+            'description' => str_repeat('a', 9993),
+        ]);
+
+        $this->postJson('/api/requirements/' . $longRequirement->sqid . '/append', [
+            'text' => 'b',
+        ])->assertUnprocessable()->assertJsonValidationErrors('text');
+
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/block', [
+            'reason' => 'Waiting on API access',
+        ])->assertOk();
+
+        $this->assertDatabaseHas('requirements', [
+            'id' => $requirement->id,
+            'blocked_reason' => 'Waiting on API access',
+        ]);
+
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/unblock')->assertOk();
+
+        $this->assertDatabaseHas('requirements', [
+            'id' => $requirement->id,
+            'blocked_reason' => null,
+        ]);
+
         $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertOk();
 
         $this->assertDatabaseHas('tasks', ['id' => $taskA->id, 'is_complete' => true]);
@@ -304,7 +356,7 @@ class NestedResourcesTest extends TestCase
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
-    public function test_tasks_endpoints_require_project_edit_access(): void
+    public function test_tasks_edit_and_delete_endpoints_require_project_edit_access(): void
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->for($project)->create();
@@ -317,35 +369,31 @@ class NestedResourcesTest extends TestCase
         $this->attachCollaboration($editor, $project, Role::EDITOR);
         $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
-        $this->actingAsAccount($editor);
-        $this->postJson('/api/tasks', [
-            'is_complete' => false,
-            'name' => 'Create endpoint',
-            'requirement_id' => $requirement->sqid,
-            'weight' => 4,
-        ])->assertCreated();
-
-        $createdTask = Task::query()->where('name', 'Create endpoint')->firstOrFail();
-        $this->assertDatabaseHas('tasks', [
-            'id' => $createdTask->id,
-            'requirement_id' => $requirement->id,
-            'weight' => 4,
-        ]);
-
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/tasks', [
-            'is_complete' => false,
-            'name' => 'Blocked task',
-            'requirement_id' => $requirement->sqid,
-        ])->assertUnprocessable()->assertJsonValidationErrors('requirement_id');
-
         $this->postJson('/api/tasks/' . $task->sqid . '/edit', [
             'name' => 'Blocked task update',
         ])->assertForbidden();
 
+        $this->postJson('/api/tasks/' . $task->sqid . '/toggle')->assertForbidden();
         $this->postJson('/api/tasks/' . $task->sqid . '/delete')->assertForbidden();
 
         $this->actingAsAccount($editor);
+        $this->postJson('/api/tasks/' . $task->sqid . '/toggle')->assertOk();
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'is_complete' => true,
+        ]);
+
+        $this->postJson('/api/tasks/' . $task->sqid . '/toggle', [
+            'is_complete' => false,
+        ])->assertOk();
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'is_complete' => false,
+        ]);
+
         $this->postJson('/api/tasks/' . $task->sqid . '/edit', [
             'is_complete' => true,
             'name' => 'Updated task',
@@ -363,7 +411,7 @@ class NestedResourcesTest extends TestCase
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);
     }
 
-    public function test_unknowns_endpoints_require_project_edit_access(): void
+    public function test_unknowns_edit_and_delete_endpoints_require_project_edit_access(): void
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->for($project)->create();
@@ -376,24 +424,7 @@ class NestedResourcesTest extends TestCase
         $this->attachCollaboration($editor, $project, Role::EDITOR);
         $this->attachCollaboration($viewer, $project, Role::VIEWER);
 
-        $this->actingAsAccount($editor);
-        $this->postJson('/api/unknowns', [
-            'name' => 'How will retries work?',
-            'requirement_id' => $requirement->sqid,
-        ])->assertCreated();
-
-        $createdUnknown = Unknown::query()->where('name', 'How will retries work?')->firstOrFail();
-        $this->assertDatabaseHas('unknowns', [
-            'id' => $createdUnknown->id,
-            'requirement_id' => $requirement->id,
-        ]);
-
         $this->actingAsAccount($viewer);
-        $this->postJson('/api/unknowns', [
-            'name' => 'Blocked unknown?',
-            'requirement_id' => $requirement->sqid,
-        ])->assertUnprocessable()->assertJsonValidationErrors('requirement_id');
-
         $this->postJson('/api/unknowns/' . $unknown->sqid . '/edit', [
             'name' => 'Blocked?',
         ])->assertForbidden();

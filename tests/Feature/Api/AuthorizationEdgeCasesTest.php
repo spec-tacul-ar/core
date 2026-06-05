@@ -56,8 +56,14 @@ class AuthorizationEdgeCasesTest extends TestCase
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
             'feature_id' => $targetFeature->sqid,
             'name' => 'Moved requirement',
+            'source' => null,
+            'tasks' => [],
+            'unknowns' => [],
         ])->assertUnprocessable()->assertJsonValidationErrors('feature_id');
 
         $this->assertDatabaseHas('requirements', [
@@ -83,7 +89,11 @@ class AuthorizationEdgeCasesTest extends TestCase
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
             'name' => 'Updated requirement',
+            'source' => null,
             'tasks' => [
                 [
                     'id' => $foreignTask->sqid,
@@ -91,6 +101,7 @@ class AuthorizationEdgeCasesTest extends TestCase
                     'is_complete' => true,
                 ],
             ],
+            'unknowns' => [],
         ])->assertUnprocessable()->assertJsonValidationErrors('tasks.0.id');
 
         $this->assertDatabaseHas('tasks', [
@@ -117,7 +128,12 @@ class AuthorizationEdgeCasesTest extends TestCase
         $this->actingAsAccount($editor);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
             'name' => 'Updated requirement',
+            'source' => null,
+            'tasks' => [],
             'unknowns' => [
                 [
                     'id' => $foreignUnknown->sqid,

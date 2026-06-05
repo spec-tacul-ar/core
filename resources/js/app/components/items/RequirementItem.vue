@@ -85,7 +85,7 @@ export default {
         unblock() {
             this.is_waiting_for_unblock = true;
 
-            this.api.post('requirements/' + this.requirement.id + '/edit', { blocked_reason: null })
+            this.api.post('requirements/' + this.requirement.id + '/unblock')
                 .then((result) => {
                     Requirement.repository().save(result.data);
 

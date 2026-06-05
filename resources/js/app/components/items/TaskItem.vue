@@ -54,7 +54,7 @@ export default {
         toggleComplete() {
             this.is_waiting_for_complete = true;
 
-            this.api.post('tasks/' + this.task.id + '/edit', {
+            this.api.post('tasks/' + this.task.id + '/toggle', {
                 'is_complete': !this.task.is_complete
             })
                 .then((result) => {

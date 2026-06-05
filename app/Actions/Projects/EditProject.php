@@ -29,7 +29,7 @@ class EditProject
     {
         return [
             'description' => ['nullable', 'string', 'max:10000'],
-            'name' => ['sometimes', 'string', 'max:250', new SluggableNameRule()],
+            'name' => ['required', 'string', 'max:250', new SluggableNameRule()],
         ];
     }
 

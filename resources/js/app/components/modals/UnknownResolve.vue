@@ -7,7 +7,7 @@
             <p class="mb-4">You can optionally append text to the requirement's description using the field below.</p>
 
             <div class="mb-4">
-                <FormInput type="textarea" :id="elementId('clarification')" label="Clarification" v-model="form.clarification" />
+                <FormInput type="textarea" :id="elementId('text')" label="Clarification" v-model="form.text" />
             </div>
 
             <SpinnerButton type="submit" class="btn btn-primary" :loading="is_waiting">Resolve unknown</SpinnerButton>
@@ -35,7 +35,7 @@ export default {
     data() {
         return {
             'form': {
-                'clarification': '',
+                'text': '',
             },
             'is_waiting': false,
         };
@@ -46,16 +46,10 @@ export default {
 
             this.api.post('unknowns/' + this.unknown.id + '/delete')
                 .then(() => {
-                    if (this.form.clarification) {
-                        let description = this.unknown.requirement.description;
-
-                        if (description.length > 0) {
-                            description = description + '\n\n';
-                        }
-
-                        description = description + this.form.clarification;
-
-                        this.api.post('requirements/' + this.unknown.requirement_id + '/edit', { description })
+                    if (this.form.text) {
+                        this.api.post('requirements/' + this.unknown.requirement_id + '/append', {
+                            text: this.form.text,
+                        })
                             .then((result) => Requirement.repository().save(result.data));
                     }
 

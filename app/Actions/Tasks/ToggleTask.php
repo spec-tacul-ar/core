@@ -2,15 +2,15 @@
 
 namespace App\Actions\Tasks;
 
-use Illuminate\Auth\Access\Response as GateResponse;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Routing\Router;
-use Lorisleiva\Actions\ActionRequest;
-use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use Illuminate\Auth\Access\Response as GateResponse;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Gate;
+use Lorisleiva\Actions\ActionRequest;
+use Lorisleiva\Actions\Concerns\AsAction;
 
-class EditTask
+class ToggleTask
 {
     use AsAction;
 
@@ -21,28 +21,26 @@ class EditTask
 
     public static function routes(Router $router): void
     {
-        $router->post('tasks/{task}/edit', static::class);
+        $router->post('tasks/{task}/toggle', static::class);
     }
 
     public function rules(): array
     {
         return [
-            'is_complete' => ['required', 'boolean'],
-            'name' => ['required', 'string', 'max:250'],
-            'weight' => ['nullable', 'integer', 'between:0,250'],
+            'is_complete' => ['sometimes', 'boolean'],
         ];
     }
 
-    public function handle(Task $task, array $validated): Task
+    public function handle(Task $task, bool $isComplete = true): Task
     {
-        $task->update($validated);
+        $task->update(['is_complete' => $isComplete]);
 
         return $task;
     }
 
     public function asController(ActionRequest $request, Task $task): TaskResource
     {
-        $task = $this->handle($task, $request->validated());
+        $task = $this->handle($task, $request->boolean('is_complete', true));
 
         return new TaskResource($task);
     }

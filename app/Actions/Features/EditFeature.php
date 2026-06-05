@@ -32,6 +32,7 @@ class EditFeature
         return [
             'description' => ['nullable', 'string', 'max:10000'],
             'name' => ['required', 'string', 'max:250'],
+            'project_id' => ['prohibited'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
         ];
     }
