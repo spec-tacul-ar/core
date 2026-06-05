@@ -83,7 +83,7 @@ https://your-spectacular.example.com/mcp/specifications
 
 The MCP server supports OAuth where your agent supports it. You can also create a bearer token in Account integrations and pass it as an `Authorization: Bearer ...` header.
 
-See the [AI-assisted development docs](https://spec.tacul.ar/docs/ai-assisted-development) for Codex, Cursor, Claude, and generic MCP setup examples.
+See the [AI-assisted development docs](https://spec.tacul.ar/docs/ai) for Codex, Cursor, Claude, and generic MCP setup examples.
 
 ## Contributing
 

@@ -62,5 +62,5 @@
         <pre><code>Use the Spectacular MCP server to inspect this project's requirements before changing code.</code></pre>
     </article>
 
-    <x-docs.next-link href="/docs/mcp-setup/claude">Claude Setup</x-docs.next-link>
+    <x-docs.next-link href="/docs/mcp/claude">Claude Setup</x-docs.next-link>
 </x-layout.docs>

@@ -78,7 +78,7 @@
 
         <p>The <em>Export</em> button in the navbar reveals the options to download your project as HTML, Markdown and JSON. These links are only available to collaborators.</p>
 
-        <p>For AI-assisted development, prefer connecting your agent through the <a href="/docs/ai-assisted-development#connect-agents">MCP server</a>. MCP lets the agent list specifications, fetch the full project, and request changes since a timestamp without pasting a large export into every prompt.</p>
+        <p>For AI-assisted development, prefer connecting your agent through the <a href="/docs/ai#connect-agents">MCP server</a>. MCP lets the agent list specifications, fetch the full project, and request changes since a timestamp without pasting a large export into every prompt.</p>
 
         <p>If your agent does not support MCP, you can still copy the Markdown export link and provide it directly.</p>
 

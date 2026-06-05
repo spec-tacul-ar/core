@@ -131,5 +131,5 @@
         <p>Requirements can be deleted using the item in the requirement's dropdown menu.</p>
     </article>
 
-    <x-docs.next-link href="/docs/roles">Roles</x-docs.next-link>
+    <x-docs.next-link href="/docs/team">Team</x-docs.next-link>
 </x-layout.docs>

@@ -19,9 +19,9 @@
 
         <p>The agent should be smart enough to only request changes during the iterative process, saving on tokens.</p>
 
-        <h2 id="prototyping">Rapid Prototying</h2>
+        <h2 id="prototyping">Rapid Prototyping</h2>
 
-        <p>Even if you intend to implement the specification with human developers, the workflow above is an excellent way to discover holes in your specification. By mocking up the applpication in this way, you often find requirements you missed that may be costly to add later.</p>
+        <p>Even if you intend to implement the specification with human developers, the workflow above is an excellent way to discover holes in your specification. By mocking up the application in this way, you often find requirements you missed that may be costly to add later.</p>
 
         <h2 id="connect-agents">Connect agents with MCP</h2>
 
@@ -29,17 +29,17 @@
 
         <h2 id="server-url">Connecting</h2>
 
-        <p>Anyone with a Spectacular account can use the MCP server to interogate their specifications using the following URL.</p>
+        <p>Anyone with a Spectacular account can use the MCP server to interrogate their specifications using the following URL.</p>
 
         <pre><code>https://spec.tacul.ar/mcp/specifications</code></pre>
 
-        <p>We have agent-specific instructions for <a href="/docs/mcp-setup/codex">Codex</a>, <a href="/docs/mcp-setup/cursor">Cursor</a> and <a href="/docs/mcp-setup/claude">Claude</a>.</p>
+        <p>We have agent-specific instructions for <a href="/docs/mcp/codex">Codex</a>, <a href="/docs/mcp/cursor">Cursor</a> and <a href="/docs/mcp/claude">Claude</a>.</p>
 
         <h2 id="authentication">Authentication</h2>
 
         <p>Most agents will attempt authentication using a standard OAuth flow like those of social logins. Simply follow the browser sign-in flow when your client asks you to authenticate.</p>
 
-        <p>If your client does not support OAuth for remote MCP servers, simpole bearer tokens are available in your account's <a href="/app/account/integrations">integrations</a> section. Pass the token as a bearer token in the HTTP authorization header:</p>
+        <p>If your client does not support OAuth for remote MCP servers, simple bearer tokens are available in your account's <a href="/app/account/integrations">integrations</a> section. Pass the token as a bearer token in the HTTP authorization header:</p>
 
         <pre><code>Authorization: Bearer YOUR_SPECTACULAR_TOKEN</code></pre>
 
@@ -74,16 +74,24 @@
             </tbody>
         </table>
 
-        <h2 id="test-prompts">Prompts</h2>
+        <h2 id="example-prompts">Example Prompts</h2>
 
-        <p>After setup, ask your agent to prove it can reach Spectacular:</p>
+        <p>The real advantage is not just giving an agent a one-off brief. Spectacular gives it the full specification: users, features, requirements, tasks, unresolved questions, blockers, assignments, comments, and recent changes. That lets the agent keep checking its work against the product you actually meant to build, especially later in development when the codebase and the plan have both started to move.</p>
 
         <pre><code>Can you list my Spectacular specifications?</code></pre>
 
-        <pre><code>Use Spectacular to read the specification for this codebase before you propose a plan.</code></pre>
+        <pre><code>Read the Spectacular specification for this project before you propose an implementation plan. Identify the users, the relevant feature, and any requirements or unknowns that should shape the work.</code></pre>
 
-        <pre><code>Check Spectacular for unknowns or blockers that affect this change.</code></pre>
+        <pre><code>Before changing code, check Spectacular for blockers, unknowns, or recent specification changes that affect this feature. If anything is ambiguous, tell me what needs clarifying before you implement.</code></pre>
+
+        <pre><code>Compare the current implementation with the Spectacular requirements for this feature. Point out any missing behaviours, edge cases, or assumptions that do not match the specification.</code></pre>
+
+        <pre><code>Use Spectacular to find the requirements related to this bug. Explain which requirement is being violated, then make the smallest code change that brings the implementation back into line.</code></pre>
+
+        <pre><code>Check what has changed in Spectacular since yesterday and tell me whether this branch needs to be updated before we continue.</code></pre>
+
+        <pre><code>After implementing this feature, review the Spectacular tasks and requirements again. Confirm what is complete, what still needs testing, and whether any unknowns should be added back to the specification.</code></pre>
     </article>
 
-    <x-docs.next-link href="/docs/mcp-setup/codex">Codex Setup</x-docs.next-link>
+    <x-docs.next-link href="/docs/projects">Projects</x-docs.next-link>
 </x-layout.docs>

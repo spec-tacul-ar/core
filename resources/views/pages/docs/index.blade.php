@@ -16,15 +16,15 @@
 
         <p>You won't get it right the first time; the key is to iteratively remove ambiguity. Developers can assist by adding Unknowns for a manager to address. Over time, scope is cemented. When change inevitably arrives, the specification is updated and the product is changed to fit it.</p>
 
-        <p>The goal is not to create an impressive document. The goal is to create a specification that is complete, unambiguous and suitable for stateholders, developers and agentic workflows.</p>
+        <p>The goal is not to create an impressive document. The goal is to create a specification that is complete, unambiguous and suitable for stakeholders, developers and agentic workflows.</p>
 
-        <h2 id="ai-assisted-development">Spectacular and AI-assisted development</h2>
+        <h2 id="agent-context">Spectacular as agent context</h2>
 
         <p>AI coding tools are most useful when they are given clear, structured context. Agents struggle and hallucinate intent without clear instructions, leading to frustration and burning tokens unnecessarily. Spectacular gives agents a structured specification they can inspect before planning, editing, or reviewing code. They can detect when the specification has changed and make targeted alterations.</p>
 
         <p>Vague prompts produce vague software. A clear specification gives both people and AI something trustworthy to build from.</p>
 
-        <p><a href="/docs/ai-assisted-development">Learn how to connect Spectacular to AI agents through MCP.</a></p>
+        <p><a href="/docs/ai">Learn how to connect Spectacular to AI agents using MCP.</a></p>
     </article>
 
     <x-docs.next-link href="/docs/get-started">Get Started</x-docs.next-link>

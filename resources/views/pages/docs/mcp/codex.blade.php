@@ -49,5 +49,5 @@ bearer_token_env_var = "SPECTACULAR_TOKEN"</code></pre>
         <pre><code>Use Spectacular to read the relevant specification, then summarize the requirements and blockers before you plan code changes.</code></pre>
     </article>
 
-    <x-docs.next-link href="/docs/mcp-setup/cursor">Cursor Setup</x-docs.next-link>
+    <x-docs.next-link href="/docs/mcp/cursor">Cursor Setup</x-docs.next-link>
 </x-layout.docs>

@@ -4,12 +4,37 @@
 
         <p>You can start using Spectacular in two ways: by using the hosted cloud version or by installing the open-source application. Both options let AI agents read your specifications through MCP.</p>
 
+        <p>Simply register at <a href="https://spec.tacul.ar">spec.tacul.ar</a> and get started!</p>
+
+        <a href="https://spec.tacul.ar/app/register" class="btn btn-lg btn-primary max-w-64 mb-4 mx-auto">Create an account</a>
+
+        <section id="your-first-project" class="rounded-lg border border-gray-200 bg-gray-50 p-6 not-last:mb-4">
+            <h2>Your first project</h2>
+
+            <p>A Spectacular project is the home for one specification. Start small: capture the shape of the product first, then fill in detail as you learn.</p>
+
+            <ol>
+                <li>Open the app and choose <strong>Create project</strong>.</li>
+                <li>Name the project after the product, feature set, or change you want to specify.</li>
+                <li>Add the main user types. These are groups such as customers, administrators, staff, or API clients.</li>
+                <li>Add the main features. Keep them broad enough to organise related requirements.</li>
+                <li>Open the project and add requirements for the behaviours the product must support.</li>
+                <li>Use tasks for implementation steps and unknowns for decisions that still need an answer.</li>
+            </ol>
+
+            <p><a href="/docs/projects">Read the Projects guide for more detailed instructions.</a></p>
+        </section>
+
+        <h2 id="self-hosting">Self-Hosting</h2>
+
+        <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://github.com/syntheticminds/spectacular">https://github.com/syntheticminds/spectacular</a></p>
+
         <table class="table-fixed w-full">
             <thead>
                 <tr>
                     <th class="bg-transparent"></th>
                     <th>Cloud</th>
-                    <th>Self-hosted</th>
+                    <th>Self-Hosting</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,16 +123,6 @@
 
         <p>For nearly everyone, Spectacular Cloud is the best place to start. Self-hosting is primarily for development, customisation, or teams that need complete ownership of their data for compliance reasons.</p>
 
-        <h2 id="cloud">Spectacular Cloud</h2>
-
-        <p>Simply register at <a href="https://spec.tacul.ar">spec.tacul.ar</a> and get started!</p>
-
-        <a href="https://spec.tacul.ar/app/register" class="btn btn-lg btn-primary max-w-64 mb-4 mx-auto">Create an account</a>
-
-        <h2 id="self-hosted">Self-hosted</h2>
-
-        <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://spec.tacul.ar">https://github.com/syntheticminds/spectacular</a></p>
-
         <p>Spectacular is a Laravel and Vue application. Getting started has been made easy. If you can host Laravel applications, you can use the following commands to get started quickly.</p>
 
         <pre><code>git clone https://github.com/syntheticminds/spectacular.git
@@ -125,10 +140,10 @@ php artisan serve</code></pre>
 
         <p>Again, the application will be available at <code>http://127.0.0.1:8000</code>.
 
-        <h3 id="connect-an-agent">Settings</h3>
+        <h3 id="settings">Settings</h3>
 
-        <p>In addition to Laravel's configuration options, Spectacular has a number of feature flags you can use to quicky customise the application's behaviour. Look inside the <code>config/spectacular.php</code> file and identify any that fit your use case. It's highly recommended that these changes are made through the use of <a href="https://laravel.com/docs/13.x/configuration#environment-configuration">environment variables</a> instead of modifying the settings file directly.</p>
+        <p>In addition to Laravel's configuration options, Spectacular has a number of feature flags you can use to quickly customise the application's behaviour. Look inside the <code>config/spectacular.php</code> file and identify any that fit your use case. It's highly recommended that these changes are made through the use of <a href="https://laravel.com/docs/13.x/configuration#environment-configuration">environment variables</a> instead of modifying the settings file directly.</p>
     </article>
 
-    <x-docs.next-link href="/docs/ai-assisted-development">AI-assisted Development</x-docs.next-link>
+    <x-docs.next-link href="/docs/ai">AI-assisted Development</x-docs.next-link>
 </x-layout.docs>

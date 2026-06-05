@@ -96,7 +96,8 @@
         }
 
         pre {
-            @apply bg-gray-100 p-4 rounded not-last:mb-4;
+            @apply bg-gray-100 p-4 rounded not-last:mb-4 whitespace-pre-wrap;
+            overflow-wrap: anywhere;
         }
 
         hr {
