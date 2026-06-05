@@ -4,26 +4,29 @@
 
 ## About Spectacular
 
-Spectacular is a free open-source functional specification builder.
+Spectacular is a free open-source specification workspace for AI-assisted software development.
 
-Spectacular puts the functional specification back at the center of software development. It replaces tickets and conversations with a single, living source of truth that is clear enough for humans and structured enough for AI. Even after launch, changes are integrated into the specification ready for the code to follow.
+Spectacular gives coding agents the structured product context they need before they touch the code. Instead of asking AI to infer intent from tickets, chats, and stale documents, Spectacular keeps the functional specification as a living source of truth that is clear for humans and directly available to AI tools.
+
+The built-in MCP server lets agents such as Codex, Cursor, and Claude read your specifications, inspect project changes, and pull only the context they need while they work.
 
 [LIVE DEMO](https://spec.tacul.ar)
 
 ### Features
 * Maintain the specification as change requests come in
+* Give AI agents structured requirements through MCP
 * Track progress as requirements move through delivery
 * Document ambiguities and highlight blockers
 * Effortlessly export to Markdown and HTML
 
 ### Roadmap
+* More agent-facing MCP tools
 * More export formats
 * Dark mode for working late
 * External documentation
 * Browsable changelog (changes are already being stored!)
 * Versioning, including a comparison tool
 * Presence indicators and live updates
-* Obligatory AI integration
 * Desktop app
 
 ## Installation
@@ -61,6 +64,26 @@ docker compose up --build
 ```
 
 Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preserved.
+
+## MCP for AI Agents
+
+Connect AI coding agents to Spectacular's MCP server so they can read the latest specification while they work.
+
+Cloud endpoint:
+
+```text
+https://spec.tacul.ar/mcp/specifications
+```
+
+Self-hosted endpoint:
+
+```text
+https://your-spectacular.example.com/mcp/specifications
+```
+
+The MCP server supports OAuth where your agent supports it. You can also create a bearer token in Account integrations and pass it as an `Authorization: Bearer ...` header.
+
+See the [AI-assisted development docs](https://spec.tacul.ar/docs/ai-assisted-development) for Codex, Cursor, Claude, and generic MCP setup examples.
 
 ## Contributing
 

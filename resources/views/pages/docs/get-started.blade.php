@@ -2,7 +2,7 @@
     <article class="prose">
         <h1>Get Started</h1>
 
-        <p>You can start using Spectacular in two ways: by using the hosted cloud version or by installing the open-source application.</p>
+        <p>You can start using Spectacular in two ways: by using the hosted cloud version or by installing the open-source application. Both options let AI agents read your specifications through MCP.</p>
 
         <table class="table-fixed w-full">
             <thead>
@@ -31,8 +31,8 @@
                 </tr>
                 <tr>
                     <th class="text-left font-normal">
-                        <strong>Unlimited projects</strong><br>
-                        Premium subscribers get unlimited projects (subject to fair usage).
+                        <strong>AI agent access</strong><br>
+                        Connect tools such as Codex, Cursor, and Claude to your specifications with MCP.
                     </th>
                     <td class="text-center align-middle">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="text-green-600 inline-block fill-current size-6">
@@ -115,13 +115,20 @@ cd spectacular
 composer setup
 php artisan serve</code></pre>
 
+        <p>The application will be available locally at <code>http://127.0.0.1:8000</code>.
+
         <h3>Docker</h3>
 
         <p>To make it easy for those without PHP available, a Spectacular instance can be run with Docker. After cloning the repository, run:</p>
 
         <pre><code>docker compose up</code></pre>
 
+        <p>Again, the application will be available at <code>http://127.0.0.1:8000</code>.
+
+        <h3 id="connect-an-agent">Settings</h3>
+
+        <p>In addition to Laravel's configuration options, Spectacular has a number of feature flags you can use to quicky customise the application's behaviour. Look inside the <code>config/spectacular.php</code> file and identify any that fit your use case. It's highly recommended that these changes are made through the use of <a href="https://laravel.com/docs/13.x/configuration#environment-configuration">environment variables</a> instead of modifying the settings file directly.</p>
     </article>
 
-    <x-docs.next-link href="/docs/projects">Projects</x-docs.next-link>
+    <x-docs.next-link href="/docs/ai-assisted-development">AI-assisted Development</x-docs.next-link>
 </x-layout.docs>

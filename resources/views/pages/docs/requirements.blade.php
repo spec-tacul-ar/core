@@ -4,7 +4,7 @@
 
         <p>Requirements are the core entities in Spectacular specifications. In other places, they might be called user stories. They describe the specific user needs or system interactions that contribute to the parent feature.</p>
 
-        <p>How granlar you are with your requirements is up to you but a general rule of thumb is that a developer should be able to implement a requirement within a day.</p>
+        <p>How granular you are with your requirements is up to you but a general rule of thumb is that a developer should be able to implement a requirement within a day.</p>
 
         <h2 id="fields">Fields</h2>
 

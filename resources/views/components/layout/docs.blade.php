@@ -63,7 +63,6 @@
                     <nav class="space-y-8">
                         <x-docs.sidebar-group>
                             <x-docs.sidebar-link label="Introduction" href="/docs">
-                                <x-docs.sidebar-sublink href="/docs#who-is-spectacular-for">Who is Spectacular for?</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs#methodology">Methodology</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs#ai-assisted-development">AI-assisted development</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
@@ -71,6 +70,17 @@
                             <x-docs.sidebar-link label="Get Started" href="/docs/get-started">
                                 <x-docs.sidebar-sublink href="/docs/get-started#cloud">Cloud</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/get-started#self-hosted">Self-hosted</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/get-started#connect-an-agent">Connect an agent</x-docs.sidebar-sublink>
+                            </x-docs.sidebar-link>
+
+                            <x-docs.sidebar-link label="AI-assisted Development" href="/docs/ai-assisted-development">
+                                <x-docs.sidebar-sublink href="/docs/ai-assisted-development#workflow">Workflow</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/ai-assisted-development#server-url">Server URL</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/ai-assisted-development#available-tools">Available tools</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/ai-assisted-development#authentication">Authentication</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/mcp-setup/codex">Codex</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/mcp-setup/cursor">Cursor</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/mcp-setup/claude">Claude</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
                         </x-docs.sidebar-group>
 

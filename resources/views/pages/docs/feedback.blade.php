@@ -6,8 +6,8 @@
 
         <p>Feedback can be added to the project as a whole or on specific features and requirements. These threads can be accessed from the feedback pane or via the dropdown menus on the items themselves.</p>
 
+        <p>AI agents do not get access to feedback. This prevents discussions hammering out requirements from confusing the agent and poisoning the context.</p>
+
         <p>When you're up to date on all the latest feedback, you can mark it as read.</p>
     </article>
-
-    <x-docs.next-link href="/docs/invitations">Invitations</x-docs.next-link>
 </x-layout.docs>

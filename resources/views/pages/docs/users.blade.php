@@ -28,6 +28,7 @@
             <x-slot:bad>
                 <x-docs.example>User</x-docs.example>
                 <x-docs.example>People</x-docs.example>
+                <x-docs.example>Registered users with more than two roles</x-docs.example>
                 <x-docs.example>Sandra from accounts</x-docs.example>
             </x-slot:bad>
         </x-docs.examples>

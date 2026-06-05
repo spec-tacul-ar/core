@@ -15,7 +15,7 @@
             <li>Who is contributing to the specification?</li>
         </ul>
 
-        <p>Remember that a Spectacular project is not a filing cabinet: it is a discovery tool. Use writing the specification as an opportunity to find gaps in knowledge. Keep these thoughts in mind:</p>
+        <p>Remember that a Spectacular project is not a filing cabinet: it is a discovery tool and an agent context source. Use writing the specification as an opportunity to find gaps in knowledge before those gaps become code. Keep these thoughts in mind:</p>
 
         <ul>
             <li>Which users haven't we thought of?</li>
@@ -29,7 +29,7 @@
         <p>The earlier these questions are captured, the cheaper they are to resolve.</p>
 
         <x-docs.tip>
-            While it's tempting to thrash out a specification in no time using AI, you are outsourcing your thinking and may miss critical requirements. AI doesn't <em>understand</em> motivations like humans do and will make odd judgements.
+            AI can help draft and challenge a specification, but it should not replace the thinking. It's best to treat agent output as a second opinion because it probably wasn't in the meeting you were.
         </x-docs.tip>
 
         <h2 id="fields">Fields</h2>
@@ -78,7 +78,9 @@
 
         <p>The <em>Export</em> button in the navbar reveals the options to download your project as HTML, Markdown and JSON. These links are only available to collaborators.</p>
 
-        <p>If you're running Spectacular locally, you can copy the link to the Markdown export and provide it directly to your AI coding agent.</p>
+        <p>For AI-assisted development, prefer connecting your agent through the <a href="/docs/ai-assisted-development#connect-agents">MCP server</a>. MCP lets the agent list specifications, fetch the full project, and request changes since a timestamp without pasting a large export into every prompt.</p>
+
+        <p>If your agent does not support MCP, you can still copy the Markdown export link and provide it directly.</p>
 
         <h2 id="filtering">Filtering</h2>
 
