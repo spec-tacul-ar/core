@@ -143,6 +143,12 @@ php artisan serve</code></pre>
         <h3 id="settings">Settings</h3>
 
         <p>In addition to Laravel's configuration options, Spectacular has a number of feature flags you can use to quickly customise the application's behaviour. Look inside the <code>config/spectacular.php</code> file and identify any that fit your use case. It's highly recommended that these changes are made through the use of <a href="https://laravel.com/docs/13.x/configuration#environment-configuration">environment variables</a> instead of modifying the settings file directly.</p>
+
+        <h3>Customisation</h3>
+
+        <p>Unlike many SaaS offerings, Spectacular is available as free and open-source software. That means you can modify the code however you need to under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero General Public License v3.0</a>. However, you must also share the source code for all users of the software.</p>
+
+        <p>If you wish to rebrand or otherwise make changes to Spectacular without this restriction, <a href="mailto:hello@spec.tacul.ar">contact us</a> about commercial licensing.</p>
     </article>
 
     <x-docs.next-link href="/docs/ai">AI-assisted Development</x-docs.next-link>
