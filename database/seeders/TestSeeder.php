@@ -62,8 +62,8 @@ class TestSeeder extends Seeder
                                 foreach ($actors as $actor) {
                                     $requirement->assignments()->make()->actor()->associate($actor)->save();
                                 }
-                            })
-                    )
+                            }),
+                    ),
             )
             ->create();
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
+use Laravel\Fortify\Features;
 use Tests\TestCase;
 
 class FortifyAuthenticationTest extends TestCase
@@ -69,6 +70,35 @@ class FortifyAuthenticationTest extends TestCase
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('email');
+    }
+
+    public function test_registration_and_verification_follow_spectacular_enable_flags(): void
+    {
+        $previousRegistration = getenv('SPECTACULAR_ENABLE_REGISTRATION');
+        $previousVerification = getenv('SPECTACULAR_ENABLE_VERIFICATION');
+
+        try {
+            putenv('SPECTACULAR_ENABLE_REGISTRATION=false');
+            putenv('SPECTACULAR_ENABLE_VERIFICATION=false');
+
+            $spectacular = require config_path('spectacular.php');
+            $fortify = require config_path('fortify.php');
+            $features = array_filter($fortify['features']);
+
+            $this->assertFalse($spectacular['registration']);
+            $this->assertFalse($spectacular['verification']);
+            $this->assertNotContains(Features::registration(), $features);
+            $this->assertContains(Features::resetPasswords(), $features);
+            $this->assertNotContains(Features::emailVerification(), $features);
+        } finally {
+            $previousRegistration === false
+                ? putenv('SPECTACULAR_ENABLE_REGISTRATION')
+                : putenv('SPECTACULAR_ENABLE_REGISTRATION=' . $previousRegistration);
+
+            $previousVerification === false
+                ? putenv('SPECTACULAR_ENABLE_VERIFICATION')
+                : putenv('SPECTACULAR_ENABLE_VERIFICATION=' . $previousVerification);
+        }
     }
 
     public function test_login_and_logout_use_the_web_session(): void

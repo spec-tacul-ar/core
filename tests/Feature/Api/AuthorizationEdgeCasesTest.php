@@ -111,6 +111,42 @@ class AuthorizationEdgeCasesTest extends TestCase
         ]);
     }
 
+    public function test_requirement_edit_rejects_task_ids_from_another_requirement_in_the_same_project(): void
+    {
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->for($project)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+        $otherRequirement = Requirement::factory()->for($feature)->create();
+        $otherTask = Task::factory()->for($otherRequirement)->create(['name' => 'Other task']);
+
+        $editor = Account::factory()->create();
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
+            'name' => 'Updated requirement',
+            'source' => null,
+            'tasks' => [
+                [
+                    'id' => $otherTask->sqid,
+                    'name' => 'Hijacked task',
+                    'is_complete' => true,
+                ],
+            ],
+            'unknowns' => [],
+        ])->assertUnprocessable()->assertJsonValidationErrors('tasks.0.id');
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $otherTask->id,
+            'requirement_id' => $otherRequirement->id,
+            'name' => 'Other task',
+        ]);
+    }
+
     public function test_requirement_edit_rejects_unknown_ids_from_another_project(): void
     {
         $project = Project::factory()->create();
@@ -146,6 +182,41 @@ class AuthorizationEdgeCasesTest extends TestCase
             'id' => $foreignUnknown->id,
             'requirement_id' => $otherRequirement->id,
             'name' => 'Foreign unknown?',
+        ]);
+    }
+
+    public function test_requirement_edit_rejects_unknown_ids_from_another_requirement_in_the_same_project(): void
+    {
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->for($project)->create();
+        $requirement = Requirement::factory()->for($feature)->create();
+        $otherRequirement = Requirement::factory()->for($feature)->create();
+        $otherUnknown = Unknown::factory()->for($otherRequirement)->create(['name' => 'Other unknown?']);
+
+        $editor = Account::factory()->create();
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+
+        $this->actingAsAccount($editor);
+
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/edit', [
+            'actor_ids' => [],
+            'blocked_reason' => null,
+            'description' => null,
+            'name' => 'Updated requirement',
+            'source' => null,
+            'tasks' => [],
+            'unknowns' => [
+                [
+                    'id' => $otherUnknown->sqid,
+                    'name' => 'Hijacked unknown?',
+                ],
+            ],
+        ])->assertUnprocessable()->assertJsonValidationErrors('unknowns.0.id');
+
+        $this->assertDatabaseHas('unknowns', [
+            'id' => $otherUnknown->id,
+            'requirement_id' => $otherRequirement->id,
+            'name' => 'Other unknown?',
         ]);
     }
 

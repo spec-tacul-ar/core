@@ -6,8 +6,6 @@ use Illuminate\Auth\Access\Response as GateResponse;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\FeatureResource;
 use App\Models\Feature;
-use App\Models\Project;
-use App\Rules\Authorised;
 use Illuminate\Routing\Router;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;

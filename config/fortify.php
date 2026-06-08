@@ -2,6 +2,9 @@
 
 use Laravel\Fortify\Features;
 
+$registration = env('SPECTACULAR_ENABLE_REGISTRATION', true);
+$verification = env('SPECTACULAR_ENABLE_VERIFICATION', true);
+
 return [
 
     /*
@@ -144,9 +147,9 @@ return [
     */
 
     'features' => [
-        env('SPECTACULAR_DISABLE_REGISTRATION') ? null : Features::registration(),
+        $registration ? Features::registration() : null,
         Features::resetPasswords(),
-        env('SPECTACULAR_DISABLE_VERIFICATION') ? null : Features::emailVerification(),
+        $verification ? Features::emailVerification() : null,
         // Features::updateProfileInformation(),
         // Features::updatePasswords(),
         // Features::twoFactorAuthentication([

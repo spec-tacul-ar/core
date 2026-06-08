@@ -257,7 +257,7 @@ function buildRouter(base) {
                 await api.get('account').then(response => auth_store.account = response.data);
             }
         }
-        
+
         if (to.meta.auth === 'unverified') {
             if (!auth_store.status.is_authenticated) {
                 useAlertsStore().push('You are not logged in.', 'warning');

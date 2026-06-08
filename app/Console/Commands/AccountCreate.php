@@ -54,7 +54,7 @@ class AccountCreate extends Command
 
         $provided_password = $this->secret('Password (leave blank for random password)');
 
-        $password = $provided_password ?: Str::random(8);
+        $password = $provided_password ?: Str::password(16);
 
         try {
             $account = new CreateNewAccount()->create([

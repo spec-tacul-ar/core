@@ -62,7 +62,7 @@ trait BuildsApiFixtures
     {
         if (is_array($value)) {
             return array_map(
-                fn (mixed $item) => $this->interpolatePlaceholders($item, $bindings),
+                fn(mixed $item) => $this->interpolatePlaceholders($item, $bindings),
                 $value,
             );
         }

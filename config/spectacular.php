@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Disable Registration
+    | Registration
     |--------------------------------------------------------------------------
     |
     | Use this to disable registration. Accounts can still be created using an
@@ -12,18 +12,18 @@ return [
     |
     */
 
-    'registration' => env('SPECTACULAR_REGISTRATION', true),
+    'registration' => env('SPECTACULAR_ENABLE_REGISTRATION', true),
 
     /*
     |--------------------------------------------------------------------------
-    | Disable Verification
+    | Enable Verification
     |--------------------------------------------------------------------------
     |
     | Use this to disable email verification.
     |
     */
 
-    'verification' => env('SPECTACULAR_EMAIL_VERIFICATION', true),
+    'verification' => env('SPECTACULAR_ENABLE_VERIFICATION', true),
 
     /*
     |--------------------------------------------------------------------------

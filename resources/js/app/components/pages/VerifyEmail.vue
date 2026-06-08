@@ -16,7 +16,7 @@
 
                         Resend Verification Email
                     </SpinnerButton>
-                    
+
                     <button type="button" class="shrink-0 btn btn-primary-outline" @click="logout">Log out</button>
                 </div>
             </Card>
@@ -75,7 +75,7 @@ export default {
             useAuthStore().status = null;
 
             this.$router.push({ name: 'auth.login' });
-            
+
             useAlertsStore().push('You have been logged out.');
         },
     },
@@ -83,8 +83,8 @@ export default {
         this.cooldown();
     },
     beforeUnmount() {
-        if (this.verification_cooldown_timer) {
-            window.clearTimeout(this.verification_cooldown_timer);
+        if (this.timer) {
+            window.clearTimeout(this.timer);
         }
     },
 };
