@@ -1,6 +1,6 @@
-<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
+<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/spectacular/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
 
-<p align="center"><a href="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/screenshot.png" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/screenshot.png" alt="Screenshot"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/spec-tacul-ar/spectacular/main/public/images/screenshot.png" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/spectacular/main/public/images/screenshot.png" alt="Screenshot"></a></p>
 
 ## About Spectacular
 
@@ -37,8 +37,8 @@ The built-in MCP server lets agents such as Codex, Cursor, and Claude read your 
 Spectacular is installed and configured like any other Laravel application.
 
 ```bash
-git clone https://github.com/spec-tacul-ar/core.git
-cd core
+git clone https://github.com/spec-tacul-ar/spectacular.git
+cd spectacular
 composer setup
 php artisan serve
 ```
@@ -91,7 +91,7 @@ Thank you for considering contributing to Spectacular!
 
 Spectacular has been designed with simplicity in mind so you can customise it for your own needs. If you've made something you think everyone could benefit from, please consider sharing it back.
 
-See [CONTRIBUTING.md](https://github.com/spec-tacul-ar/core/blob/main/CONTRIBUTING.md) for more information.
+See [CONTRIBUTING.md](https://github.com/spec-tacul-ar/spectacular/blob/main/CONTRIBUTING.md) for more information.
 
 ## Security
 
@@ -100,7 +100,7 @@ If you discover a security vulnerability within Spectacular, please send an e-ma
 ## License
 
 Spectacular - an open-source functional specification manager\
-Copyright (C) 2026 Matthew White
+Copyright (C) 2026 Spectacular Software Limited
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

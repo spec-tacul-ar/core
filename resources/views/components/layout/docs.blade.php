@@ -16,7 +16,7 @@
             </a>
 
             <div class="flex w-full items-center justify-end gap-4 px-4">
-                <a href="https://www.github.com/spec-tacul-ar/core">
+                <a href="https://www.github.com/spec-tacul-ar/spectacular">
                     <span class="sr-only">GitHub</span>
 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current size-6">
