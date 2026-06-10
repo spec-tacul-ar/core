@@ -12,7 +12,7 @@
             <h1 class="font-display font-semibold text-4xl mb-4">Create project</h1>
 
             <Card class="p-8 mb-4">
-                <FormInput v-model="form.name" name="name" label="What is your project called?" required autofocus>
+                <FormInput v-model="form.name" name="name" label="What is your project called?" :error="errors.name" required autofocus>
                     <template v-slot:prepend>
                         <p class="mb-4">A working title is fine; you can always change it later.</p>
                     </template>

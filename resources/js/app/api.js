@@ -54,6 +54,10 @@ export class Api {
     }
 
     handleError(error, method = 'get') {
+        if (!error.response) {
+            throw error;
+        }
+
         const http_status_code = error.response.status;
 
         if (http_status_code === 401) {
