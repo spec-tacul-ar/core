@@ -33,6 +33,8 @@ class EditRequirement
 
     public function prepareForValidation(ActionRequest $request): void
     {
+        $request->merge(['requirement_id' => $request->route('requirement')->id]);
+
         if (!$request->has('feature_id')) {
             $request->merge(['feature_id' => $request->route('requirement')->feature_id]);
         }
@@ -55,6 +57,7 @@ class EditRequirement
                 'required',
                 'integer',
                 new Authorised('update', Task::class),
+                new SharesRelation(Task::class, 'requirement_id', 'requirement'),
             ],
             'tasks.*.is_complete' => ['nullable', 'boolean'],
             'tasks.*.name' => ['required', 'string', 'max:250'],
@@ -66,6 +69,7 @@ class EditRequirement
                 'required',
                 'integer',
                 new Authorised('update', Unknown::class),
+                new SharesRelation(Unknown::class, 'requirement_id', 'requirement'),
             ],
             'unknowns.*.name' => ['required', 'string', 'max:250'],
             'weight' => ['nullable', 'integer', 'between:0,250'],
