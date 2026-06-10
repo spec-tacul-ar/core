@@ -1,6 +1,6 @@
-<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
+<p align="center"><a href="https://spec.tacul.ar" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/logo.svg" width="400" alt="Spectacular Logo"></a></p>
 
-<p align="center"><a href="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/screenshot.png" target="_blank"><img src="https://raw.githubusercontent.com/syntheticminds/spectacular/main/public/images/screenshot.png" alt="Screenshot"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/screenshot.png" target="_blank"><img src="https://raw.githubusercontent.com/spec-tacul-ar/core/main/public/images/screenshot.png" alt="Screenshot"></a></p>
 
 ## About Spectacular
 
@@ -37,8 +37,8 @@ The built-in MCP server lets agents such as Codex, Cursor, and Claude read your 
 Spectacular is installed and configured like any other Laravel application.
 
 ```bash
-git clone https://github.com/syntheticminds/spectacular.git
-cd spectacular
+git clone https://github.com/spec-tacul-ar/core.git
+cd core
 composer setup
 php artisan serve
 ```
@@ -91,7 +91,7 @@ Thank you for considering contributing to Spectacular!
 
 Spectacular has been designed with simplicity in mind so you can customise it for your own needs. If you've made something you think everyone could benefit from, please consider sharing it back.
 
-See [CONTRIBUTING.md](https://github.com/syntheticminds/spectacular/blob/main/CONTRIBUTING.md) for more information.
+See [CONTRIBUTING.md](https://github.com/spec-tacul-ar/core/blob/main/CONTRIBUTING.md) for more information.
 
 ## Security
 
