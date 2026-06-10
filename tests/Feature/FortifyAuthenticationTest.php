@@ -123,6 +123,33 @@ class FortifyAuthenticationTest extends TestCase
         $this->assertGuest('web');
     }
 
+    public function test_database_sessions_store_the_account_sqid(): void
+    {
+        $previousDriver = config('session.driver');
+
+        try {
+            config(['session.driver' => 'database']);
+            app('session')->forgetDrivers();
+
+            $account = Account::factory()->create([
+                'email' => 'database-session@example.test',
+                'password' => Hash::make('password'),
+            ]);
+
+            $this->postJson('/auth/login', [
+                'email' => $account->email,
+                'password' => 'password',
+            ])->assertOk();
+
+            $this->assertDatabaseHas('sessions', [
+                'user_id' => $account->sqid,
+            ]);
+        } finally {
+            config(['session.driver' => $previousDriver]);
+            app('session')->forgetDrivers();
+        }
+    }
+
     public function test_login_rejects_invalid_credentials(): void
     {
         Account::factory()->create([
