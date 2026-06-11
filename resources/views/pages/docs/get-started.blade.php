@@ -27,7 +27,7 @@
 
         <h2 id="self-hosting">Self-Hosting</h2>
 
-        <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://github.com/syntheticminds/spectacular">https://github.com/syntheticminds/spectacular</a></p>
+        <p>Self-hosting is useful for development, evaluation, private deployments, and teams that want to operate Spectacular themselves. The repository is available at: <a href="https://github.com/spec-tacul-ar/spectacular">https://github.com/spec-tacul-ar/spectacular</a></p>
 
         <table class="table-fixed w-full">
             <thead>
@@ -125,7 +125,7 @@
 
         <p>Spectacular is a Laravel and Vue application. Getting started has been made easy. If you can host Laravel applications, you can use the following commands to get started quickly.</p>
 
-        <pre><code>git clone https://github.com/syntheticminds/spectacular.git
+        <pre><code>git clone https://github.com/spec-tacul-ar/spectacular.git
 cd spectacular
 composer setup
 php artisan serve</code></pre>
