@@ -3,7 +3,7 @@
         <style>
             body {
                 margin: 0;
-                color: #111827;
+                color: #1e2939;
                 background-color: #f9fafb;
                 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='7.5' width='0.5' height='16' fill='%23f3f4f6'/%3E%3Crect y='7.5' width='16' height='0.5' fill='%23f3f4f6'/%3E%3Crect width='0.5' height='16' fill='%23edeff2'/%3E%3Crect width='16' height='0.5' fill='%23edeff2'/%3E%3C/svg%3E");
                 background-repeat: repeat;

@@ -8,7 +8,7 @@
     <div
         x-data="{ is_open: false, is_mobile: false }"
         x-resize.document="is_mobile = window.getComputedStyle($refs.burger).display !== 'none'"
-        class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-400">
+        class="min-h-screen bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-400">
 
         <header class="fixed inset-x-0 top-0 z-20 flex h-16 items-center border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-950">
             <a href="/" class="flex h-full shrink-0 items-center justify-center px-4 xl:w-(--sidebar-width) xl:border-r xl:border-gray-100 dark:xl:border-gray-800">

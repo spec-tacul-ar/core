@@ -31,7 +31,7 @@
         <title>{{ $title }}</title>
         {{ $head ?? '' }}
     </head>
-    <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-400">
+    <body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-400">
         {{ $slot }}
     </body>
 </html>
