@@ -13,9 +13,9 @@
 
             <div
                 v-if="!is_loading_projects && projects.isEmpty()"
-                class="flex flex-col items-center gap-2 bg-white/25 border-2 border-gray-200 border-dashed rounded-2xl p-4 mb-4">
+                class="flex flex-col items-center gap-2 bg-white/25 border-2 border-gray-200 border-dashed rounded-2xl p-4 mb-4 dark:border-gray-700 dark:bg-gray-900/50">
 
-                <IconSet name="create-project" class="size-16 text-gray-600" />
+                <IconSet name="create-project" class="size-16 text-gray-600 dark:text-gray-300" />
 
                 <h2 class="font-semibold">Welcome to Spectacular!</h2>
 
@@ -34,19 +34,19 @@
                 </div>
             </div>
 
-            <Card v-if="invitations.isNotEmpty()" class="divide-y divide-gray-300 mb-8">
+            <Card v-if="invitations.isNotEmpty()" class="divide-y divide-gray-300 dark:divide-gray-800 mb-8">
                 <InvitationItem v-for="invitation in invitations" :key="invitation.id" :invitation="invitation" />
             </Card>
 
             <!-- TODO Sorting -->
-            <Card v-if="active_projects.isNotEmpty()" class="divide-y divide-gray-300 mb-8">
+            <Card v-if="active_projects.isNotEmpty()" class="divide-y divide-gray-300 dark:divide-gray-800 mb-8">
                 <ProjectItem v-for="project in active_projects" :key="project.id" :project="project" />
             </Card>
 
             <section v-if="archived_projects.isNotEmpty()">
                 <h2 class="text-2xl mb-4 sm:pl-4">Archived projects</h2>
 
-                <Card class="divide-y divide-gray-300">
+                <Card class="divide-y divide-gray-300 dark:divide-gray-800">
                     <ProjectItem v-for="project in archived_projects" :key="project.id" :project="project" />
                 </Card>
             </section>

@@ -1,6 +1,6 @@
 <template>
     <div class="flex h-full flex-col relative">
-        <div class="fixed top-0 bg-white shadow-lg shadow-white w-full max-w-(--sidepanel-width) h-16 flex items-center px-4 sm:px-8">
+        <div class="fixed top-0 bg-white shadow-lg shadow-white w-full max-w-(--sidepanel-width) h-16 flex items-center px-4 sm:px-8 dark:bg-gray-950 dark:shadow-gray-950">
             <div class="flex items-center w-full -ml-2">
                 <slot name="toolbar"></slot>
             </div>
@@ -22,8 +22,8 @@
             </div>
 
             <div v-if="has_buttons" class="fixed bottom-0 w-full -mx-8">
-                <div class="h-4 bg-linear-to-b from-white/0 to-white/100"></div>
-                <div class="bg-white border-t border-gray-200 py-4 px-8">
+                <div class="h-4 bg-linear-to-b from-white/0 to-white/100 dark:from-gray-950/0 dark:to-gray-950/100"></div>
+                <div class="bg-white border-t border-gray-200 py-4 px-8 dark:border-gray-800 dark:bg-gray-950">
                     <slot name="buttons"></slot>
                 </div>
             </div>

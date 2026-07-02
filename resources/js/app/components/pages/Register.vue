@@ -24,7 +24,7 @@
                                 required>
 
                                 <template v-slot:append>
-                                    <button type="button" title="Show password" class="absolute inset-y-0 right-0 p-2 text-gray-800 hover:text-black transition-colors duration-500" @click="show_password = !show_password">
+                                    <button type="button" title="Show password" class="absolute inset-y-0 right-0 p-2 text-gray-800 hover:text-black transition-colors duration-500 dark:text-gray-300 dark:hover:text-white" @click="show_password = !show_password">
                                         <IconSet name="show" v-if="show_password" class="size-6" />
                                         <IconSet name="hide" v-if="!show_password" class="size-6" />
                                     </button>

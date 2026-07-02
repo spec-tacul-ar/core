@@ -15,9 +15,9 @@
 
             <div
                 v-if="is_open"
-                class="absolute -bottom-2 right-0 translate-y-full bg-white text-gray-800 shadow-lg border border-gray-400 rounded-lg w-56 py-2 z-10">
+                class="absolute -bottom-2 right-0 translate-y-full bg-white text-gray-800 shadow-lg border border-gray-400 rounded-lg w-56 py-2 z-10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">
                 
-                <div v-if="heading" class="uppercase font-semibold text-xs text-gray-400 text-center px-4 border-b border-b-gray-400 pb-2 mb-2">{{ heading }}</div>
+                <div v-if="heading" class="uppercase font-semibold text-xs text-gray-400 text-center px-4 border-b border-b-gray-400 pb-2 mb-2 dark:border-b-gray-700 dark:text-gray-500">{{ heading }}</div>
 
                 <slot />
             </div>
@@ -83,4 +83,3 @@ export default {
     },
 };
 </script>
-

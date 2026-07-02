@@ -6,6 +6,22 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <script>
+            (function () {
+                const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+                const applyTheme = () => document.documentElement.classList.toggle(
+                    'dark',
+                    localStorage.theme === 'dark'
+                    || (!('theme' in localStorage) && media.matches),
+                );
+
+                applyTheme();
+
+                media.addEventListener('change', applyTheme);
+            })();
+        </script>
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -15,7 +31,7 @@
         <title>{{ $title }}</title>
         {{ $head ?? '' }}
     </head>
-    <body>
+    <body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-400">
         {{ $slot }}
     </body>
 </html>

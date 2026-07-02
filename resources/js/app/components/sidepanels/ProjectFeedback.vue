@@ -1,7 +1,7 @@
 <template>
     <SidepanelLayout help="/docs/feedback">
         <template #toolbar>
-            <RouterLink v-if="commentable" :to="{ name: 'projects.feedback' }" title="Feedback" class="flex items-center gap-2 p-2 -ml-2 text-indigo-600 mr-auto">
+            <RouterLink v-if="commentable" :to="{ name: 'projects.feedback' }" title="Feedback" class="flex items-center gap-2 p-2 -ml-2 text-indigo-600 mr-auto dark:text-indigo-300">
                 <IconSet name="chevron-left" />
                 All feedback
             </RouterLink>
@@ -43,7 +43,7 @@
             </CommentItem>
         </div>
 
-        <p v-if="comments.isEmpty()" class="text-center text-gray-400">No comments.</p>
+        <p v-if="comments.isEmpty()" class="text-center text-gray-400 dark:text-gray-500">No comments.</p>
     </SidepanelLayout>
 </template>
 

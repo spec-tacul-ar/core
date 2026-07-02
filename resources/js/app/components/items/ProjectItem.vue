@@ -15,40 +15,40 @@
 
         <div class="relative z-10 ml-auto text-right">
             <div class="flex justify-end gap-1">
-                <div v-if="!project.archived_at && project.my_role_name" class="inline-flex gap-2 leading-none px-2 h-6 text-sm rounded-full items-center bg-gray-200 text-gray-500 cursor-default">
+                <div v-if="!project.archived_at && project.my_role_name" class="inline-flex gap-2 leading-none px-2 h-6 text-sm rounded-full items-center bg-gray-200 text-gray-500 cursor-default dark:bg-gray-800 dark:text-gray-300">
                     {{ project.my_role_name }}
                 </div>
 
                 <Tooltip v-if="project.collaborations_count > 0 && !project.archived_at" text="Collaborations">
-                    <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-gray-200 text-gray-500 cursor-default">
+                    <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-gray-200 text-gray-500 cursor-default dark:bg-gray-800 dark:text-gray-300">
                         <IconSet name="person-circle" /> {{ project.collaborations_count }}
                     </div>
                 </Tooltip>
 
                 <template v-if="project.requirements_count && !project.archived_at">
                     <Tooltip v-if="project.tasks_count > 0" text="Completed">
-                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-green-100 text-green-500 cursor-default">
+                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-green-100 text-green-500 cursor-default dark:bg-green-950 dark:text-green-300">
                             <IconSet name="success" /> {{ Math.round((project.requirements_all_tasks_complete_count / project.requirements_with_tasks_count) * 100) }}%
                         </div>
                     </Tooltip>
 
                     <Tooltip v-if="project.unknowns_count > 0" text="Unknowns">
-                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-yellow-100 text-yellow-600 cursor-default">
+                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-yellow-100 text-yellow-600 cursor-default dark:bg-yellow-950 dark:text-yellow-300">
                             <IconSet name="question" /> {{ project.unknowns_count }}
                         </div>
                     </Tooltip>
 
                     <Tooltip v-if="project.blocked_requirements_count > 0" text="Blocked">
-                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-red-100 text-red-500 cursor-default">
+                        <div class="inline-flex gap-2 leading-none px-1 pr-2 h-6 text-sm rounded-full items-center bg-red-100 text-red-500 cursor-default dark:bg-red-950 dark:text-red-300">
                             <IconSet name="warning" /> {{ project.blocked_requirements_count }}
                         </div>
                     </Tooltip>
                 </template>
 
-                <p v-if="project.archived_at" class="text-sm text-gray-500 whitespace-nowrap">Archived {{ archived_at }}</p>
+                <p v-if="project.archived_at" class="text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">Archived {{ archived_at }}</p>
             </div>
 
-            <p v-if="!project.archived_at" class="text-sm text-gray-500 mt-2">Updated {{ updated_at }} ago</p>
+            <p v-if="!project.archived_at" class="text-sm text-gray-500 mt-2 dark:text-gray-400">Updated {{ updated_at }} ago</p>
         </div>
     </div>
 </template>

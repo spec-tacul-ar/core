@@ -5,7 +5,7 @@
         @scroll.prevent
         class="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur z-30 print:hidden">
 
-        <div ref="modal" class="bg-white p-8 max-w-3xl shadow-lg">
+        <div ref="modal" class="bg-white p-8 max-w-3xl shadow-lg dark:bg-gray-900 dark:text-gray-100">
             <button v-if="!locked" type="button" class="block p-2 float-right -m-2" @click="trap.deactivate()">
                 <IconSet name="x-lg" class="size-6" />
             </button>

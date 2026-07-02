@@ -1,6 +1,6 @@
 <template>
     <ModalLayout>
-        <h2 class="text-4xl text-red-400 font-light mb-4">Delete requirement</h2>
+        <h2 class="text-4xl text-red-400 dark:text-red-300 font-light mb-4">Delete requirement</h2>
 
         <form @submit.prevent="submit">
             <p class="mb-4">Deleting a requirement will delete all data associated with it including unknowns and tasks. Any comments on this requirement will be deleted forever. Are you sure you want to do this?</p>

@@ -13,7 +13,7 @@
             <ProjectFilters v-if="sidebar === 'filters'" :project />
         </template>
 
-        <div v-if="project.archived_at" class="flex items-center gap-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-lg p-4 mb-8 print:hidden">
+        <div v-if="project.archived_at" class="flex items-center gap-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-lg p-4 mb-8 print:hidden dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
             <IconSet name="warning" class="size-5 shrink-0" />
             <p class="font-semibold mr-auto">This project is archived and cannot be edited.</p>
 
@@ -40,7 +40,7 @@
                 <RouterLink v-if="project.can_write" :to="{ name: 'projects.edit' }" class="btn btn-primary"><IconSet name="edit" /> Edit project</RouterLink>
             </div>
 
-            <div v-if="project.description" class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none">
+            <div v-if="project.description" class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none dark:bg-gray-900">
                 <RichText v-if="project.description" :markup="project.description" />
             </div>
         </section>
@@ -52,7 +52,7 @@
                 <RouterLink v-if="project.can_write" :to="{ name: 'projects.actors.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
             </div>
 
-            <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4">
+            <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4 dark:bg-gray-900">
                 <ActorItem :actor="actor" v-for="actor in actors" :key="actor.id" />
             </div>
         </section>

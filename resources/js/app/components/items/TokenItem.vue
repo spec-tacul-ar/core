@@ -2,10 +2,10 @@
     <article class="flex items-center gap-4">
         <div class="flex flex-col mr-auto">
             <h3 class="text-lg font-semibold">{{ token.name }}</h3>
-            <p class="text-sm text-gray-500">Created {{ created_at }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Created {{ created_at }}</p>
         </div>
 
-        <p class="text-gray-500 text-sm">Expires {{ expires_at }}</p>
+        <p class="text-gray-500 text-sm dark:text-gray-400">Expires {{ expires_at }}</p>
 
         <SpinnerButton type="button" class="btn btn-danger-outline" @click="revoke">Revoke</SpinnerButton>
     </article>

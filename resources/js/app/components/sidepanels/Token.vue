@@ -26,7 +26,7 @@
         <section v-if="secret">
             <p class="mb-4">Here is your new token. Be sure to copy it now as it will not be accessible again.</p>
 
-            <div class="border border-gray-200 p-4 mb-4">
+            <div class="border border-gray-200 p-4 mb-4 dark:border-gray-800 dark:bg-gray-900">
                 <code class="font-mono break-all overflow-auto text-xs">{{ secret }}</code>
             </div>
 

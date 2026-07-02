@@ -6,7 +6,7 @@
         ]">
 
         <div
-            class="block bg-gray-100 p-4 rounded-xl mb-1"
+            class="block bg-gray-100 p-4 rounded-xl mb-1 dark:bg-gray-800"
             :class="is_unread && !was_me ? 'outline-2 outline-offset-3' : ''">
 
             <button
@@ -23,10 +23,10 @@
             <div :class="!is_expanded && is_long ? 'line-clamp-2' : ''">{{ comment.message }}</div>
         </div>
         
-        <div class="text-sm text-gray-600 ml-4">
+        <div class="text-sm text-gray-600 ml-4 dark:text-gray-400">
             {{ author }} - {{ date }}
 
-            <template v-if="was_me && comment.project.can_comment"> - <button type="button" class="text-red-400" @click="remove">Delete</button></template>
+            <template v-if="was_me && comment.project.can_comment"> - <button type="button" class="text-red-400 dark:text-red-300" @click="remove">Delete</button></template>
         </div>
     </div>
 </template>

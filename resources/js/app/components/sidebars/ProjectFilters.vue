@@ -99,7 +99,7 @@
                     v-for="feature in project.features.sortBy('weight')"
                     :key="feature.id"
                     type="button"
-                    class="w-full flex items-center gap-2 text-left hover:bg-gray-50 px-4 py-2"
+                    class="w-full flex items-center gap-2 text-left hover:bg-gray-50 px-4 py-2 dark:hover:bg-gray-800"
                     :class="filters.features.includes(feature.id) ? '' : 'pl-10'"
                     @click="filters.toggleFeature(feature.id)">
 

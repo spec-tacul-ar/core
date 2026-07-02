@@ -17,7 +17,7 @@
             leave-active-class="transition-opacity"
             leave-to-class="opacity-0">
 
-            <div v-if="is_open" class="absolute right-0 top-0 w-72 z-10 bg-gray-50 border border-gray-200 rounded shadow-md mr-6 p-4 z-30" ref="content">
+            <div v-if="is_open" class="absolute right-0 top-0 w-72 z-10 bg-gray-50 border border-gray-200 rounded shadow-md mr-6 p-4 z-30 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" ref="content">
                 <slot></slot>
             </div>
         </Transition>

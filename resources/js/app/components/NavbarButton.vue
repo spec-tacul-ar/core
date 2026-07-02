@@ -2,8 +2,8 @@
     <Tooltip :enabled="!has_slot" :text="tooltip">
         <RouterLink
             :to="destination"
-            class="flex items-center whitespace-nowrap p-2 rounded-full border border-gray-100 transition-colors"
-            :class="{ 'bg-gray-200': is_active }">
+            class="flex items-center whitespace-nowrap p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
+            :class="{ 'bg-gray-200 dark:bg-gray-800': is_active }">
 
             <IconSet :name="icon" class="size-6" />
 

@@ -3,13 +3,13 @@
         <template #toolbar>
             <Tooltip text="Delete project">
                 <button type="button" class="p-2" @click="openProjectDeleteModal()">
-                    <IconSet name="trash" class="text-red-400 size-6" />
+                    <IconSet name="trash" class="text-red-400 dark:text-red-300 size-6" />
                 </button>
             </Tooltip>
 
             <Tooltip v-if="!project.archived_at" text="Archive project">
                 <button type="button" class="p-2" :disabled="is_archiving" @click="archive()">
-                    <IconSet name="archive" class="text-gray-600 size-6" />
+                    <IconSet name="archive" class="text-gray-600 size-6 dark:text-gray-300" />
                 </button>
             </Tooltip>
         </template>

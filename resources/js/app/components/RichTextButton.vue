@@ -2,8 +2,8 @@
     <button
         type="button"
         :title="title"
-        class="p-2 rounded disabled:opacity-50"
-        :class="editor && (editor.isActive(this.name) || active) ? 'bg-gray-200' : 'bg-gray-50'">
+        class="p-2 rounded disabled:opacity-50 dark:text-gray-950"
+        :class="editor && (editor.isActive(this.name) || active) ? 'bg-gray-200 dark:bg-gray-300' : 'bg-gray-50 dark:bg-gray-400 dark:hover:bg-gray-300'">
 
         <IconSet :name="icon" />
     </button>

@@ -3,10 +3,10 @@
         <div class="w-full max-w-xl mx-auto">
             <h1 class="font-display font-semibold text-4xl text-center mb-4 mx-6">Delete account</h1>
 
-            <Card class="border-red-400 border-2 p-6">
+            <Card class="border-red-400 border-2 p-6 dark:border-red-900">
                 <form @submit.prevent="submit">
                     <p class="mb-4">Are you sure you want to delete your account?</p>
-                    <p class="font-semibold text-red-400 mb-4">This will permanently delete all projects where you are the sole owner and the data associate with them.</p>
+                    <p class="font-semibold text-red-400 mb-4 dark:text-red-300">This will permanently delete all projects where you are the sole owner and the data associate with them.</p>
                     
                     <div class="mb-4">
                         <FormInput

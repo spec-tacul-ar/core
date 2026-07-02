@@ -3,7 +3,7 @@
         <div>
             <h3 class="font-semibold text-xl mb-2">{{ actor.name }}</h3>
             <TextMultiline v-if="actor.summary" :text="actor.summary" />
-            <p v-if="!actor.summary" class="text-gray-400">No description</p>
+            <p v-if="!actor.summary" class="text-gray-400 dark:text-gray-500">No description</p>
         </div>
 
         <DropdownMenu v-if="project.can_write" class="d-print-none">

@@ -8,9 +8,9 @@
 
             <ol class="space-y-4">
                 <li v-for="requirement in sortRequirements(feature.requirements)" :key="requirement.id" class="flex items-center gap-2">
-                    <div v-if="requirement.is_blocked" class="size-2 shrink-0 rounded-full bg-red-400"></div>
+                    <div v-if="requirement.is_blocked" class="size-2 shrink-0 rounded-full bg-red-400 dark:bg-red-950"></div>
                     <div v-else-if="requirement.unknowns.isNotEmpty()" class="size-2 shrink-0 rounded-full bg-orange-400"></div>
-                    <div v-else-if="requirement.is_complete" class="size-2 shrink-0 rounded-full bg-green-400"></div>
+                    <div v-else-if="requirement.is_complete" class="size-2 shrink-0 rounded-full bg-green-400 dark:bg-green-950"></div>
                     <div v-else class="size-2 shrink-0"></div>
 
                     <a :href="'#requirement_' + requirement.id" class="text-sm leading-tight" @click.prevent="scroll">{{ formatName(requirement.name) }}</a>

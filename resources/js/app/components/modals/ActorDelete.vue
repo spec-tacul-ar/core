@@ -1,6 +1,6 @@
 <template>
     <ModalLayout>
-        <h2 class="text-4xl text-red-400 font-light mb-4">Delete user</h2>
+        <h2 class="text-4xl text-red-400 dark:text-red-300 font-light mb-4">Delete user</h2>
 
         <form v-if="!has_requirements" @submit.prevent="submit">
             <p class="mb-4">Are you sure you want to do this?</p>
