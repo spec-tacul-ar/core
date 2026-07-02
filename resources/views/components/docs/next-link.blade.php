@@ -1,7 +1,7 @@
 @props(['href'])
 
-<nav class="mt-12 flex justify-end border-t border-gray-100 pt-8">
-    <a href="{{ $href }}" class="flex gap-2 items-center text-gray-500 hover:text-black transition-all duration-500">
+<nav class="mt-12 flex justify-end border-t border-gray-100 pt-8 dark:border-gray-800">
+    <a href="{{ $href }}" class="flex gap-2 items-center text-gray-500 hover:text-black transition-all duration-500 dark:text-gray-300 dark:hover:text-white">
         <span>{{ $slot }}</span>
 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current size-6">

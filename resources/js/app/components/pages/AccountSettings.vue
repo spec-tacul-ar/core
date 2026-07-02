@@ -9,7 +9,7 @@
                 </RouterLink>
 
                 <Tooltip text="Delete account" class="ml-auto">
-                    <RouterLink :to="{ name: 'account.delete' }" class="p-2 text-red-400">
+                    <RouterLink :to="{ name: 'account.delete' }" class="p-2 text-red-400 dark:text-red-300">
                         <IconSet name="trash" />
                     </RouterLink>
                 </Tooltip>

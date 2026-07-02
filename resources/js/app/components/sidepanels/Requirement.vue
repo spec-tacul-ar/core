@@ -53,7 +53,7 @@
 
                 <label class="flex items-stretch rounded focus-within:ring" :class="{ 'ring-red-400': errors.name }">
                     <div
-                        class="whitespace-nowrap border rounded-sm rounded-r-none border-r-0 place-content-center pl-2"
+                        class="whitespace-nowrap border rounded-sm rounded-r-none border-r-0 place-content-center bg-white pl-2 text-black dark:bg-gray-200"
                         :class="errors.name ? 'border-red-400' : 'border-gray-300'">
 
                         {{ actors.length > 0 ? '…can' : 'Users can' }}
@@ -61,7 +61,7 @@
 
                     <input type="text"
                         :id="elementId('name')"
-                        class="w-full block border-gray-300 rounded-sm rounded-l-none border-l-0 pl-1 focus:ring-0"
+                        class="w-full block border-gray-300 rounded-sm rounded-l-none border-l-0 pl-1 focus:ring-0 text-black dark:bg-gray-200"
                         :class="{ 'border-red-400': errors.name }"
                         required
                         v-model="form.name" />
@@ -97,8 +97,8 @@
                 </FormInput>
             </div>
 
-            <div class="border border-gray-100 mb-4">
-                <div class="bg-gray-100 px-4 py-2">
+            <div class="border border-gray-100 mb-4 dark:border-gray-800">
+                <div class="bg-gray-100 px-4 py-2 dark:bg-gray-900">
                     <FormInput type="checkbox" :id="elementId('is_blocked')" label="This requirement is blocked." :error="errors.is_blocked" v-model="form.is_blocked">
                         <template v-slot:help>
                             <p class="font-semibold mb-4">Check this if something is holding up the completion of the requirement.</p>
@@ -112,7 +112,7 @@
                         </template>
                     </FormInput>
                 </div>
-                <div class="bg-white p-4" v-if="form.is_blocked">
+                <div class="bg-white p-4 dark:bg-gray-950" v-if="form.is_blocked">
                     <FormInput type="text" :id="elementId('blocked_reason')" label="The reason this requirement is blocked" :error="errors.blocked_reason" v-model="form.blocked_reason" :required="form.is_blocked" />
                 </div>
             </div>
@@ -131,10 +131,10 @@
                     class="space-y-4">
 
                     <template #item="{index, element}">
-                        <div class="border border-gray-200 bg-white">
+                        <div class="border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                             <div class="flex">
-                                <div class="px-4 py-1 bg-gray-200 cursor-grab rounded-br-xl"><IconSet name="grip-horizontal" class="size-4 handle" /></div>
-                                <button type="button" class="ml-auto px-4 py-1 bg-red-400 rounded-bl-xl text-white" v-on:click="removeTask(index)"><IconSet name="x-lg" /></button>
+                                <div class="px-4 py-1 bg-gray-200 cursor-grab rounded-br-xl dark:bg-gray-800"><IconSet name="grip-horizontal" class="size-4 handle" /></div>
+                                <button type="button" class="ml-auto px-4 py-1 bg-red-400 rounded-bl-xl text-white dark:bg-red-950 dark:text-red-100 dark:hover:bg-red-900" v-on:click="removeTask(index)"><IconSet name="x-lg" /></button>
                             </div>
 
                             <div class="p-4">
@@ -186,7 +186,7 @@
                         <div class="w-full">
                             <FormInput type="text" :id="elementId('unknown_name_' + index)" v-model="unknown.name" required />
                         </div>
-                        <button type="button" class="text-red-400" v-on:click="removeUnknown(index)"><IconSet name="x" class="size-6" /></button>
+                        <button type="button" class="text-red-400 dark:text-red-300" v-on:click="removeUnknown(index)"><IconSet name="x" class="size-6" /></button>
                     </div>
                 </div>
 

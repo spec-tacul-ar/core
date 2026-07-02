@@ -6,7 +6,7 @@
 
         <DropdownMenu v-else ref="dropdown">
             <template #trigger="{ toggle }">
-                <button type="button" class="flex items-end gap-1 border rounded-full bg-gray-200 leading-none px-2 py-1" @click="toggle">
+                <button type="button" class="flex items-end gap-1 border rounded-full bg-gray-200 leading-none px-2 py-1 dark:border-gray-700 dark:bg-gray-800" @click="toggle">
                     {{ collaboration.role_name }}
 
                     <IconSet name="caret-down" class="size-3" />
@@ -40,7 +40,7 @@
                 Viewer
             </DropdownMenuItem>
 
-            <div class="h-px w-full bg-gray-200 my-2"></div>
+            <div class="h-px w-full bg-gray-200 my-2 dark:bg-gray-800"></div>
 
             <DropdownMenuItem
                 @click="remove"

@@ -1,7 +1,7 @@
 <template>
     <div class="flex gap-4 p-4">
         <div>
-            <div class="text-sm uppercase text-gray-500">Invitation</div>
+            <div class="text-sm uppercase text-gray-500 dark:text-gray-400">Invitation</div>
 
             <div class="flex flex-wrap items-center gap-y-2 gap-x-4">
                 <div class="text-2xl font-semibold">{{ invitation.project_name }}</div>
@@ -15,12 +15,12 @@
 
         <div class="ml-auto text-right">
             <div class="flex justify-end gap-1">
-                <span class="inline-flex gap-2 leading-none p-1 px-2 text-sm rounded-full items-center bg-gray-200 text-gray-500">
+                <span class="inline-flex gap-2 leading-none p-1 px-2 text-sm rounded-full items-center bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-300">
                     {{ invitation.role_name }}
                 </span>
             </div>
 
-            <p class="text-sm text-gray-500 mt-2">Invited by {{ invitation.account_name }} {{ created_at }} ago</p>
+            <p class="text-sm text-gray-500 mt-2 dark:text-gray-400">Invited by {{ invitation.account_name }} {{ created_at }} ago</p>
         </div>
     </div>
 </template>

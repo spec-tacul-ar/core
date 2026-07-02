@@ -9,7 +9,7 @@
     <DropdownMenu class="hidden sm:flex">
         <template #trigger="{ toggle }">
             <Tooltip text="Download">
-                <button type="button" class="flex items-center whitespace-nowrap gap-2 p-2 rounded-full border border-gray-100 transition-colors" @click="toggle">
+                <button type="button" class="flex items-center whitespace-nowrap gap-2 p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-800" @click="toggle">
                     <IconSet name="download" class="size-6" />
                 </button>
             </Tooltip>

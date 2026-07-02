@@ -15,7 +15,7 @@
         <Card class="p-6">
             <h2 class="font-display text-2xl mb-4">Access tokens</h2>
 
-            <div class="flex items-start gap-4 border-b border-gray-200 pb-6 mb-6">
+            <div class="flex items-start gap-4 border-b border-gray-200 pb-6 mb-6 dark:border-gray-800">
                 <p>This page lists active OAuth tokens that have been issued. For services that do not support the OAuth flow, you can create bearer tokens to use in Authorization headers.</p>
 
                 <RouterLink :to="{ name: 'account.integrations.tokens.create' }" class="shrink-0 btn btn-primary"><IconSet name="plus-lg" /> Create new token</RouterLink>
@@ -27,7 +27,7 @@
 
             <LoadingSpinner v-if="tokens.isEmpty() && is_loading" label="Loading integrations" />
 
-            <p v-if="tokens.isEmpty() && !is_loading" class="text-center text-gray-400">You do not have any active integrations.</p>
+            <p v-if="tokens.isEmpty() && !is_loading" class="text-center text-gray-400 dark:text-gray-500">You do not have any active integrations.</p>
         </Card>
     </DefaultLayout>
 </template>

@@ -9,7 +9,7 @@
 
     <template v-if="this.type === 'select'">
         <select
-            class="w-full"
+            class="w-full text-black dark:bg-gray-200"
             :id="id"
             :class="{ 'border-red-400': error }"
             :required="required"

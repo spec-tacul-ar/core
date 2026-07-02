@@ -9,7 +9,7 @@
         </div>
 
         <div class="border border-gray-300 rounded overflow-hidden focus-within:ring-offset-0 focus-within:ring-1">
-            <div class="bg-gray-50 flex items-center flex-wrap gap-1 p-2 px-2">
+            <div class="bg-gray-50 flex items-center flex-wrap gap-1 p-2 px-2 dark:bg-gray-900">
                 <RichTextButton :editor="editor" name="bold" icon="bold" @click="editor.chain().focus().toggleBold().run()" />
                 <RichTextButton :editor="editor" name="italic" icon="italic" @click="editor.chain().focus().toggleItalic().run()" />
                 <RichTextButton :editor="editor" name="strike" icon="strike" @click="editor.chain().focus().toggleStrike().run()" />
@@ -24,7 +24,7 @@
                 <RichTextButton :editor="editor" name="hr" icon="hr" label="Divider" @click="editor.chain().focus().setHorizontalRule().run()" />
             </div>
 
-            <EditorContent :editor="editor" class="max-h-[calc(100vh/2)] overflow-auto" />
+            <EditorContent :editor="editor" class="max-h-[calc(100vh/2)] overflow-auto bg-white dark:bg-gray-200" />
         </div>
     </div>
 </template>
@@ -78,7 +78,7 @@ export default {
             content: this.modelValue,
             editorProps: {
                 attributes: {
-                    class: 'prose p-4 outline-none',
+                    class: 'prose min-h-40 bg-white p-4 outline-none text-black dark:bg-gray-200',
                 },
             },
             extensions: [

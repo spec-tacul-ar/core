@@ -41,7 +41,7 @@
                 :type="input_type"
                 :id="id"
                 :list="options ? id + '_options' : null"
-                class="w-full block border-gray-300 rounded-sm"
+                class="w-full block border-gray-300 rounded-sm text-black dark:bg-gray-200"
                 :class="error ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-black' "
                 :required="required"
                 v-bind="$attrs"

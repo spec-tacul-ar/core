@@ -21,7 +21,7 @@
                     class="space-y-2">
 
                     <template #item="{element}">
-                        <li class="flex items-center border border-gray-100">
+                        <li class="flex items-center border border-gray-100 dark:border-gray-800 dark:bg-gray-900">
                             <div class="handle cursor-grab px-2 py-2">
                                 <IconSet name="grip-vertical" class="size-6" />
                             </div>
@@ -43,7 +43,7 @@
                     class="space-y-2">
 
                     <template #item="{element}">
-                        <div class="mb-2 border border-gray-100">
+                        <div class="mb-2 border border-gray-100 dark:border-gray-800 dark:bg-gray-900">
                             <div class="flex items-center">
                                 <div class="handle cursor-grab px-2 py-2">
                                     <IconSet name="grip-vertical" class="size-6" />

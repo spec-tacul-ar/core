@@ -1,6 +1,6 @@
 <template>
     <ModalLayout>
-        <h2 class="text-4xl text-red-400 font-light mb-4">Delete feature</h2>
+        <h2 class="text-4xl text-red-400 dark:text-red-300 font-light mb-4">Delete feature</h2>
 
         <form v-if="!has_requirements" @submit.prevent="submit">
             <p class="mb-4">Deleting a feature will delete all data associated with it. Any comments on this feature will be deleted forever. Are you sure you want to do this?</p>

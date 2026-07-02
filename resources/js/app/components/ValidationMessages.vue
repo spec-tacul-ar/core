@@ -1,5 +1,5 @@
 <template>
-    <div v-if="messages.length" class="bg-red-400 text-white p-2 mb-4">
+    <div v-if="messages.length" class="bg-red-400 text-white p-2 mb-4 dark:bg-red-950 dark:text-red-100">
         <ul>
             <li v-for="message in messages" :key="message">{{ message }}</li>
         </ul>

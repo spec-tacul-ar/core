@@ -1,10 +1,10 @@
 <template>
     <button
         type="button"
-        class="w-full flex items-center gap-2 text-left hover:bg-gray-100 px-4 py-2"
+        class="w-full flex items-center gap-2 text-left hover:bg-gray-100 px-4 py-2 dark:hover:bg-gray-800"
         :class="{
             'pl-8': value == null,
-            'bg-gray-50': value != null
+            'bg-gray-50 dark:bg-gray-900': value != null
         }"
         @click="toggleFilter()">
         

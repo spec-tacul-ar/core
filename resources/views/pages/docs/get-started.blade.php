@@ -8,7 +8,7 @@
 
         <a href="https://spec.tacul.ar/app/register" class="btn btn-lg btn-primary max-w-64 mb-4 mx-auto">Create an account</a>
 
-        <section id="your-first-project" class="rounded-lg border border-gray-200 bg-gray-50 p-6 not-last:mb-4">
+        <section id="your-first-project" class="rounded-lg border border-gray-200 bg-gray-50 p-6 not-last:mb-4 dark:border-gray-800 dark:bg-gray-900">
             <h2>Your first project</h2>
 
             <p>A Spectacular project is the home for one specification. Start small: capture the shape of the product first, then fill in detail as you learn.</p>

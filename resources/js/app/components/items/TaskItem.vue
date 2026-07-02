@@ -1,10 +1,10 @@
 <template>
-    <li class="flex gap-4 items-center bg-white px-4 py-2">
+    <li class="flex gap-4 items-center bg-white px-4 py-2 dark:bg-gray-900">
         <div class="mr-auto">
             {{ task.name }}
         </div>
 
-        <span v-if="task.is_complete" class="flex items-center gap-1 text-green-400 text-nowrap">
+        <span v-if="task.is_complete" class="flex items-center gap-1 text-green-400 text-nowrap dark:text-green-300">
             <IconSet name="check" />
             Complete
         </span>

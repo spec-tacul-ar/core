@@ -3,14 +3,14 @@
         <template #toolbar>
             <Tooltip v-if="can_leave" text="Leave project">
                 <button type="button" class="p-2" @click="leave">
-                    <IconSet name="leave" class="text-red-400 size-6" />
+                    <IconSet name="leave" class="text-red-400 dark:text-red-300 size-6" />
                 </button>
             </Tooltip>
         </template>
 
         <h2 class="text-4xl font-light mb-4">People</h2>
 
-        <dl class="bg-gray-50 p-4 -mx-4 grid grid-cols-[max-content_1fr] gap-4 mb-4">
+        <dl class="bg-gray-50 p-4 -mx-4 grid grid-cols-[max-content_1fr] gap-4 mb-4 dark:bg-gray-900">
             <dt class="font-semibold">Owners</dt>
             <dd>Can do everything, including invite others and delete the project.</dd>
 
@@ -21,7 +21,7 @@
             <dd>Can only view projects and leave comments.</dd>
         </dl>
 
-        <div class="divide-y divide-gray-200 mb-4">
+        <div class="divide-y divide-gray-200 mb-4 dark:divide-gray-800">
             <div v-for="collaboration in collaborations" :key="collaboration.id">
                 <CollaborationItem :collaboration="collaboration" />
             </div>
@@ -58,15 +58,15 @@
                 <button type="submit" class="btn btn-primary mt-2">Invite</button>
             </form>
 
-            <div class="divide-y divide-gray-200">
+            <div class="divide-y divide-gray-200 dark:divide-gray-800">
                 <div v-for="invitation in invitations" :key="invitation.id" class="flex items-center gap-2 py-4">
                     <div class="mr-auto">
                         <div class="flex gap-4 items-baseline">
                             <p class="font-semibold mr-auto">{{ invitation.email }}</p>
-                            <span class="border bg-gray-200 text-sm rounded leading-none px-2 py-1">{{ invitation.role_name }}</span>
+                            <span class="border bg-gray-200 text-sm rounded leading-none px-2 py-1 dark:border-gray-700 dark:bg-gray-800">{{ invitation.role_name }}</span>
                         </div>
 
-                        <p class="text-sm text-gray-400">Invited by {{ invitation.account_name }}</p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500">Invited by {{ invitation.account_name }}</p>
                     </div>
 
                     <button type="button" class="btn btn-sm btn-danger-outline" @click="removeInvitation(invitation)"><IconSet name="x-lg" class="size-4" /></button>

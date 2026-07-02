@@ -27,18 +27,18 @@ export default {
     computed: {
         colour_classes() {
             if (this.disabled && this.danger) {
-                return 'text-red-200';
+                return 'text-red-200 dark:text-red-900';
             }
 
             if (this.disabled) {
-                return 'text-gray-400';
+                return 'text-gray-400 dark:text-gray-600';
             }
 
             if (this.danger) {
-                return 'text-red-400 hover:bg-red-400 hover:text-white';
+                return 'text-red-400 hover:bg-red-400 hover:text-white dark:text-red-300 dark:hover:bg-red-950 dark:hover:text-red-100';
             }
 
-            return 'hover:bg-gray-100';
+            return 'hover:bg-gray-100 dark:hover:bg-gray-800';
         }
     },
     inheritAttrs: false,
@@ -52,4 +52,3 @@ export default {
     },
 };
 </script>
-

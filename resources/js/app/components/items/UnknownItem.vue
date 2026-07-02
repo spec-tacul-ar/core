@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-yellow-200 flex items-center justify-between px-4 py-2">
+    <div class="bg-yellow-200 flex items-center justify-between px-4 py-2 text-gray-950 dark:bg-yellow-950 dark:text-yellow-100">
         <p>
             {{ unknown.name }}
         </p>

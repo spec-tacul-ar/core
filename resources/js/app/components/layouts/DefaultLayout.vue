@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="fixed z-10 flex items-center bg-white border-b border-gray-100 top-0 left-0 right-0 h-16 print:hidden"
+        class="fixed z-10 flex items-center bg-white border-b border-gray-100 top-0 left-0 right-0 h-16 print:hidden dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100"
         :class="[
             use_animations ? 'motion-reduce:transition-none transition-position duration-500' : '',
             show_sidepanel ? 'md:right-(--sidepanel-width)' : '',
@@ -9,17 +9,17 @@
         <a
             v-if="is_projects_index"
             href="/"
-            class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r">
+            class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r dark:border-gray-800">
 
-            <img src="/images/logo.svg" class="h-8 w-auto mt-1" />
+            <img src="/images/logo.svg" class="h-8 w-auto mt-1 dark:brightness-0 dark:invert" />
         </a>
 
         <RouterLink
             v-else
             :to="{name: 'projects.index'}"
-            class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r">
+            class="shrink-0 h-full flex justify-center items-center px-4 border-gray-100 md:w-(--sidebar-width) md:border-r dark:border-gray-800">
 
-            <img src="/images/logo.svg" class="h-8 w-auto mt-1" />
+            <img src="/images/logo.svg" class="h-8 w-auto mt-1 dark:brightness-0 dark:invert" />
         </RouterLink>
 
         <div v-if="has_toggles" class="flex w-full items-center gap-2 px-4">
@@ -44,7 +44,7 @@
             <div
                 id="sidebar"
                 ref="sidebar"
-                class="z-10 bg-white shadow-lg backdrop-blur-lg fixed overflow-y-auto w-(--sidebar-width) max-w-full top-16 bottom-0 pb-safe overscroll-contain motion-reduce:transition-none border-r border-gray-100"
+                class="z-10 bg-white shadow-lg backdrop-blur-lg fixed overflow-y-auto w-(--sidebar-width) max-w-full top-16 bottom-0 pb-safe overscroll-contain motion-reduce:transition-none border-r border-gray-100 dark:border-gray-800 dark:bg-gray-950"
                 :class="[
                     use_animations ? 'transition-position duration-500' : '',
                     show_sidebar && allow_sidebar ? 'left-0' : '-left-(--sidebar-width)',
@@ -82,7 +82,7 @@
             <div
                 id="sidepanel"
                 ref="sidepanel"
-                class="bg-white backdrop-blur-lg shadow-lg fixed w-(--sidepanel-width) max-w-full top-0 bottom-0 overscroll-contain motion-reduce:transition-none"
+                class="bg-white backdrop-blur-lg shadow-lg fixed w-(--sidepanel-width) max-w-full top-0 bottom-0 overscroll-contain motion-reduce:transition-none dark:bg-gray-950"
                 :class="[
                     show_sidepanel ? 'right-0' : '-right-(--sidepanel-width)',
                     use_animations ? 'transition-position duration-500' : '',

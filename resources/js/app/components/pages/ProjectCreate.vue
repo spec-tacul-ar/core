@@ -28,7 +28,7 @@
                         <FormInput name="user" :id="'actor_' + actor.id" v-model="actor.name" @keydown.enter.prevent="form.actors.length === index + 1 ? addActor() : null" />
                     
                         <button v-if="form.actors.length === index + 1" type="button" class="p-2" @click="addActor()"><IconSet name="plus-lg" class="size-6" /></button>
-                        <button v-else @click="removeActor(index)" type="button" class="p-2 text-red-400"><IconSet name="x" class="size-6" /></button>
+                        <button v-else @click="removeActor(index)" type="button" class="p-2 text-red-400 dark:text-red-300"><IconSet name="x" class="size-6" /></button>
                     </div>
                 </div>
             </Card>
@@ -42,7 +42,7 @@
                         <FormInput name="feature" :id="'feature_' + feature.id" v-model="feature.name" @keydown.enter.prevent="form.features.length === index + 1 ? addFeature() : null" />
 
                         <button v-if="form.features.length === index + 1" type="button" class="p-2" @click="addFeature()"><IconSet name="plus-lg" class="size-6" /></button>
-                        <button v-else @click="removeFeature(index)" type="button" class="p-2 text-red-400"><IconSet name="x" class="size-6" /></button>
+                        <button v-else @click="removeFeature(index)" type="button" class="p-2 text-red-400 dark:text-red-300"><IconSet name="x" class="size-6" /></button>
                     </div>
                 </div>
             </Card>

@@ -1,7 +1,7 @@
 <template>
     <ModalLayout>
         <form @submit.prevent="submit">
-            <h2 class="text-4xl text-red-400 font-light mb-4">Delete project</h2>
+            <h2 class="text-4xl text-red-400 dark:text-red-300 font-light mb-4">Delete project</h2>
 
             <p class="mb-4">Deleting a project will delete all data associated with it including all requirements. This is not reversible. Are you sure you want to do this?</p>
 

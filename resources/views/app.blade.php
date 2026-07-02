@@ -31,12 +31,18 @@
 
             body {
                 margin: 0;
-                color: #1e2939;
+                color: #111827;
                 background-color: #f9fafb;
                 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='7.5' width='0.5' height='16' fill='%23f3f4f6'/%3E%3Crect y='7.5' width='16' height='0.5' fill='%23f3f4f6'/%3E%3Crect width='0.5' height='16' fill='%23edeff2'/%3E%3Crect width='16' height='0.5' fill='%23edeff2'/%3E%3C/svg%3E");
                 background-repeat: repeat;
                 background-size: auto;
                 background-attachment: fixed;
+            }
+
+            .dark body {
+                color: #9ca3af;
+                background-color: #030712;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='7.5' width='0.5' height='16' fill='%23111827'/%3E%3Crect y='7.5' width='16' height='0.5' fill='%23111827'/%3E%3Crect width='0.5' height='16' fill='%231f2937'/%3E%3Crect width='16' height='0.5' fill='%231f2937'/%3E%3C/svg%3E");
             }
 
             @media print {
@@ -58,6 +64,10 @@
             #logo {
                 width: auto;
                 height: 55px;
+            }
+
+            .dark #logo {
+                filter: brightness(0) invert(1);
             }
 
             #app {
