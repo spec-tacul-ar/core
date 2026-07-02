@@ -8,21 +8,19 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <meta name="color-scheme" content="light dark">
         <script>
-            // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-            document.documentElement.classList.toggle(
-                'dark',
-                localStorage.theme === 'dark'
-                || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
-            );
+            (function () {
+                const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-            // Whenever the user explicitly chooses light mode
-            // localStorage.theme = 'light';
+                const applyTheme = () => document.documentElement.classList.toggle(
+                    'dark',
+                    localStorage.theme === 'dark'
+                    || (!('theme' in localStorage) && media.matches),
+                );
 
-            // Whenever the user explicitly chooses dark mode
-            // localStorage.theme = 'dark';
+                applyTheme();
 
-            // Whenever the user explicitly chooses to respect the OS preference
-            // localStorage.removeItem('theme');
+                media.addEventListener('change', applyTheme);
+            })();
         </script>
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
