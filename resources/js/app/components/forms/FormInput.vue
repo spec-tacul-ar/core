@@ -5,8 +5,8 @@
                 <input
                     :type="input_type"
                     :id="id"
-                    class="text-black border-gray-300 ring-black ring-0 focus:ring-offset-0 focus:ring-1"
-                    :class="{ 'is-invalid': error, 'rounded-sm': input_type.toLowerCase() === 'checkbox' }"
+                    class="form-choice"
+                    :class="{ 'is-invalid border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:ring-red-800': error, 'rounded-sm': input_type.toLowerCase() === 'checkbox' }"
                     v-bind="$attrs"
                     v-model="checked"
                     @input="$emit('update:modelValue', checked)" />
@@ -41,8 +41,8 @@
                 :type="input_type"
                 :id="id"
                 :list="options ? id + '_options' : null"
-                class="w-full block border-gray-300 rounded-sm text-black dark:bg-gray-200"
-                :class="error ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-black' "
+                class="form-control"
+                :class="error ? 'border-red-400 focus:border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:border-red-800 dark:focus:ring-red-800' : ''"
                 :required="required"
                 v-bind="$attrs"
                 v-bind:value="modelValue"

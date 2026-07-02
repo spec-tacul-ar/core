@@ -5,7 +5,7 @@
         <Tooltip text="Outline">
             <button
                 type="button"
-                class="flex items-center gap-2 p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-800"
+                class="flex items-center gap-2 p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
                 :class="[ open && sidebar === 'outline' ? 'bg-gray-200 dark:bg-gray-800' : '' ]"
                 @click="$emit('change', 'outline')">
 
@@ -16,7 +16,7 @@
         <Tooltip text="Filters">
             <button
                 type="button"
-                class="relative flex items-center gap-2 p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-800"
+                class="relative flex items-center gap-2 p-2 rounded-full border border-gray-100 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
                 :class="[ open && sidebar === 'filters' ? 'bg-gray-200 dark:bg-gray-800' : '' ]"
                 @click="$emit('change', 'filters')">
 

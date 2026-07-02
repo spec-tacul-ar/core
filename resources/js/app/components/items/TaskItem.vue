@@ -4,7 +4,7 @@
             {{ task.name }}
         </div>
 
-        <span v-if="task.is_complete" class="flex items-center gap-1 text-green-400 text-nowrap dark:text-green-300">
+        <span v-if="task.is_complete" class="flex items-center gap-1 text-green-400 text-nowrap dark:text-green-500">
             <IconSet name="check" />
             Complete
         </span>

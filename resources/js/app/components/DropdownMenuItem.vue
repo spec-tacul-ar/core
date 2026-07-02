@@ -38,7 +38,7 @@ export default {
                 return 'text-red-400 hover:bg-red-400 hover:text-white dark:text-red-300 dark:hover:bg-red-950 dark:hover:text-red-100';
             }
 
-            return 'hover:bg-gray-100 dark:hover:bg-gray-800';
+            return 'text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800';
         }
     },
     inheritAttrs: false,

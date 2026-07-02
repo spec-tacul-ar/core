@@ -1,7 +1,7 @@
 <template>
     <DropdownMenu>
         <template #trigger="{ toggle }">
-            <button type="button" class="flex gap-2 items-center p-2 -mr-2" @click="toggle">
+            <button type="button" class="flex gap-2 items-center p-2 -mr-2 dark:text-gray-400" @click="toggle">
                 <IconSet name="person-circle" class="size-6 shrink-0" />
 
                 <span v-if="account" class="hidden lg:block whitespace-nowrap">{{ account.name }}</span>

@@ -53,16 +53,16 @@
 
                 <label class="flex items-stretch rounded focus-within:ring" :class="{ 'ring-red-400': errors.name }">
                     <div
-                        class="whitespace-nowrap border rounded-sm rounded-r-none border-r-0 place-content-center bg-white pl-2 text-black dark:bg-gray-200"
-                        :class="errors.name ? 'border-red-400' : 'border-gray-300'">
+                        class="form-control w-auto whitespace-nowrap rounded-r-none border-r-0 place-content-center pl-2"
+                        :class="errors.name ? 'border-red-400 dark:border-red-800' : ''">
 
                         {{ actors.length > 0 ? '…can' : 'Users can' }}
                     </div>
 
                     <input type="text"
                         :id="elementId('name')"
-                        class="w-full block border-gray-300 rounded-sm rounded-l-none border-l-0 pl-1 focus:ring-0 text-black dark:bg-gray-200"
-                        :class="{ 'border-red-400': errors.name }"
+                        class="form-control rounded-l-none border-l-0 pl-1 focus:ring-0"
+                        :class="{ 'border-red-400 dark:border-red-800': errors.name }"
                         required
                         v-model="form.name" />
                 </label>

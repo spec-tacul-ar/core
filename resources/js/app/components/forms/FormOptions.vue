@@ -9,9 +9,9 @@
 
     <template v-if="this.type === 'select'">
         <select
-            class="w-full text-black dark:bg-gray-200"
+            class="form-control"
             :id="id"
-            :class="{ 'border-red-400': error }"
+            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:border-red-800 dark:focus:ring-red-800': error }"
             :required="required"
             v-bind="$attrs"
             v-bind:value="modelValue"
@@ -28,8 +28,8 @@
                     :type="type"
                     :id="id + '_' + option.id"
                     :name="id + '_' + option.id"
-                    class="text-black outline-black"
-                    :class="{ 'border-red-400': error }"
+                    class="form-choice"
+                    :class="{ 'border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:ring-red-800': error }"
                     :value="option.id"
                     v-bind="$attrs"
                     v-model="model" />

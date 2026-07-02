@@ -8,7 +8,9 @@
             </InfoPopover>
         </div>
 
-        <div class="border border-gray-300 rounded overflow-hidden focus-within:ring-offset-0 focus-within:ring-1">
+        <div
+            class="form-control overflow-hidden focus-within:ring-1 focus-within:ring-gray-800 dark:focus-within:ring-gray-400"
+            :class="{ 'border-red-400 focus-within:ring-red-400 dark:border-red-800 dark:focus-within:ring-red-800': error }">
             <div class="bg-gray-50 flex items-center flex-wrap gap-1 p-2 px-2 dark:bg-gray-900">
                 <RichTextButton :editor="editor" name="bold" icon="bold" @click="editor.chain().focus().toggleBold().run()" />
                 <RichTextButton :editor="editor" name="italic" icon="italic" @click="editor.chain().focus().toggleItalic().run()" />
@@ -24,7 +26,7 @@
                 <RichTextButton :editor="editor" name="hr" icon="hr" label="Divider" @click="editor.chain().focus().setHorizontalRule().run()" />
             </div>
 
-            <EditorContent :editor="editor" class="max-h-[calc(100vh/2)] overflow-auto bg-white dark:bg-gray-200" />
+            <EditorContent :editor="editor" class="max-h-[calc(100vh/2)] overflow-auto bg-white dark:bg-gray-400" />
         </div>
     </div>
 </template>
@@ -78,7 +80,7 @@ export default {
             content: this.modelValue,
             editorProps: {
                 attributes: {
-                    class: 'prose min-h-40 bg-white p-4 outline-none text-black dark:bg-gray-200',
+                    class: 'prose min-h-40 bg-white p-4 outline-none text-black dark:bg-gray-400 dark:text-gray-950',
                 },
             },
             extensions: [
