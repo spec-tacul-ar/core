@@ -62,6 +62,8 @@ class GetItemTool extends Tool
                 ->where('timestamp', '>', $validated['since'])
                 ->map(fn($revision) => [
                     'timestamp' => $revision['timestamp'],
+                    'account_id' => $revision['account_id'] ?? null,
+                    'is_ai' => $revision['is_ai'] ?? false,
                     'data' => $item->obfuscateIdentifiers($revision['data']),
                 ])
                 ->values();

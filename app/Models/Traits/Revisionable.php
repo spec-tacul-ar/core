@@ -58,6 +58,8 @@ trait Revisionable
 
         $this->history->push([
             'timestamp' => now()->toISOString(),
+            'account_id' => auth()->user()?->sqid,
+            'is_ai' => false,
             'data' => $data,
         ]);
 

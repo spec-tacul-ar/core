@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Account;
 use App\Models\Feature;
 use App\Models\Project;
 use App\Models\Requirement;
@@ -25,6 +26,33 @@ class HistoryTest extends TestCase
 
         $this->assertCount(1, $project->history);
         $this->assertEquals(['name' => 'Old Name'], $project->history->last()['data']);
+    }
+
+    public function test_revisions_store_the_authenticated_account_sqid_and_ai_flag(): void
+    {
+        $account = Account::factory()->create();
+        $project = Project::factory()->create(['name' => 'Old Name']);
+
+        $this->actingAs($account);
+
+        $project->update(['name' => 'New Name']);
+
+        $revision = $project->history->last();
+
+        $this->assertSame($account->sqid, $revision['account_id']);
+        $this->assertFalse($revision['is_ai']);
+    }
+
+    public function test_revisions_without_an_authenticated_user_store_null_account_id(): void
+    {
+        $project = Project::factory()->create(['name' => 'Old Name']);
+
+        $project->update(['name' => 'New Name']);
+
+        $revision = $project->history->last();
+
+        $this->assertNull($revision['account_id']);
+        $this->assertFalse($revision['is_ai']);
     }
 
     public function test_history_is_removed_from_queries(): void
