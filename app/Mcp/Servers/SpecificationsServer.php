@@ -5,6 +5,7 @@ namespace App\Mcp\Servers;
 use App\Mcp\Tools\GetChangesTool;
 use App\Mcp\Tools\GetItemTool;
 use App\Mcp\Tools\GetProjectTool;
+use App\Mcp\Tools\ListProjectAccountsTool;
 use App\Mcp\Tools\ListProjectsTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
@@ -20,6 +21,7 @@ class SpecificationsServer extends Server
         GetChangesTool::class,
         GetItemTool::class,
         GetProjectTool::class,
+        ListProjectAccountsTool::class,
         ListProjectsTool::class,
     ];
 

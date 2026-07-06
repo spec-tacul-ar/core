@@ -7,6 +7,7 @@ use App\Mcp\Servers\SpecificationsServer;
 use App\Mcp\Tools\GetChangesTool;
 use App\Mcp\Tools\GetItemTool;
 use App\Mcp\Tools\GetProjectTool;
+use App\Mcp\Tools\ListProjectAccountsTool;
 use App\Mcp\Tools\ListProjectsTool;
 use App\Models\Account;
 use App\Models\Project;
@@ -26,6 +27,7 @@ class SpecificationsToolTest extends TestCase
         $this->assertSame('GetChangesTool', app(GetChangesTool::class)->name());
         $this->assertSame('GetItemTool', app(GetItemTool::class)->name());
         $this->assertSame('GetProjectTool', app(GetProjectTool::class)->name());
+        $this->assertSame('ListProjectAccountsTool', app(ListProjectAccountsTool::class)->name());
         $this->assertSame('ListProjectsTool', app(ListProjectsTool::class)->name());
     }
 
@@ -48,6 +50,62 @@ class SpecificationsToolTest extends TestCase
                 ->has('generated_at'),
             )
             ->assertDontSee($otherProject->sqid);
+    }
+
+    public function test_list_project_accounts_returns_only_names_and_sqids_for_project_collaborators(): void
+    {
+        $owner = Account::factory()->create([
+            'name' => 'Ada Lovelace',
+            'email' => 'ada@example.com',
+        ]);
+        $editor = Account::factory()->create([
+            'name' => 'Grace Hopper',
+            'email' => 'grace@example.com',
+        ]);
+        $outsider = Account::factory()->create([
+            'name' => 'Hidden User',
+            'email' => 'hidden@example.com',
+        ]);
+        $project = Project::factory()->create();
+
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($editor, $project, Role::EDITOR);
+
+        SpecificationsServer::actingAs($owner)
+            ->tool(ListProjectAccountsTool::class, [
+                'id' => $project->sqid,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                ->count('accounts', 2)
+                ->where('accounts.0.name', 'Ada Lovelace')
+                ->where('accounts.0.sqid', $owner->sqid)
+                ->where('accounts.1.name', 'Grace Hopper')
+                ->where('accounts.1.sqid', $editor->sqid)
+                ->missing('accounts.0.email')
+                ->missing('accounts.0.role')
+                ->missing('accounts.0.id')
+                ->missing('accounts.0.created_at')
+                ->missing('accounts.0.updated_at')
+                ->missing('generated_at'),
+            )
+            ->assertDontSee($outsider->sqid)
+            ->assertDontSee('hidden@example.com')
+            ->assertDontSee('ada@example.com')
+            ->assertDontSee('grace@example.com');
+    }
+
+    public function test_list_project_accounts_does_not_return_unauthorized_projects(): void
+    {
+        $fixture = $this->createProjectFixture();
+        $otherAccount = Account::factory()->create();
+
+        SpecificationsServer::actingAs($otherAccount)
+            ->tool(ListProjectAccountsTool::class, [
+                'id' => $fixture['project']->sqid,
+            ])
+            ->assertHasErrors(['Project not found.']);
     }
 
     public function test_fetch_changes_returns_empty_collections_when_project_has_no_new_activity(): void
