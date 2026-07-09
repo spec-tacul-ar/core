@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
@@ -58,5 +59,8 @@ class AppServiceProvider extends ServiceProvider
             'feature' => Feature::class,
             'requirement' => Requirement::class,
         ]);
+
+        // Don't let the HTTP Host header dictate URLs.
+        URL::useOrigin(config('app.url'));
     }
 }

@@ -171,14 +171,23 @@ class FortifyAuthenticationTest extends TestCase
 
         $account = Account::factory()->create(['email' => 'reset@example.test']);
 
-        $this->postJson('/auth/password/request', [
-            'email' => $account->email,
-        ])->assertOk();
+        $this
+            ->withServerVariables(['HTTP_HOST' => 'attacker.example'])
+            ->postJson('/auth/password/request', [
+                'email' => $account->email,
+            ])
+            ->assertOk();
 
         Notification::assertSentTo($account, ResetPassword::class, function (ResetPassword $notification) use ($account) {
-            $path = parse_url($notification->toMail($account)->actionUrl, PHP_URL_PATH);
+            $actionUrl = $notification->toMail($account)->actionUrl;
+            $actionUrlOrigin = parse_url($actionUrl, PHP_URL_SCHEME).'://'.parse_url($actionUrl, PHP_URL_HOST);
 
-            $this->assertStringStartsWith('/app/password/reset/', $path);
+            if ($port = parse_url($actionUrl, PHP_URL_PORT)) {
+                $actionUrlOrigin .= ':'.$port;
+            }
+
+            $this->assertSame(config('app.url'), $actionUrlOrigin);
+            $this->assertStringStartsWith('/app/password/reset/', parse_url($actionUrl, PHP_URL_PATH));
 
             return true;
         });
