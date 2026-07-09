@@ -36,6 +36,10 @@ class SocialiteController extends Controller
         $account = Account::findBySocial($provider, $social->id);
 
         if (! $account) {
+            if (! config('spectacular.registration')) {
+                abort(404);
+            }
+
             try {
                 $validated = Validator::make([
                     'name' => $social->getName(),
