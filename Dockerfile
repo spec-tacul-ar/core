@@ -11,8 +11,6 @@ COPY --from=node:22-bookworm-slim /usr/local/bin/ /usr/local/bin/
 COPY --from=node:22-bookworm-slim /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY . .
-
 ENV APP_URL=http://localhost:8000
 
 EXPOSE 8000

@@ -63,7 +63,9 @@ If you don't have PHP available, you can run the app with Docker. Once ready, yo
 docker compose up --build
 ```
 
-Upgrades are simple too - just grab the latest code and rebuild the container. The database will be preserved.
+Docker provides the PHP, Composer, and Node runtime. Your checkout is mounted into the container, so the database and uploaded files stay on your machine.
+
+Upgrades are simple too - just grab the latest code and restart Docker. Rebuild the container when the runtime dependencies change.
 
 ## MCP for AI Agents
 
