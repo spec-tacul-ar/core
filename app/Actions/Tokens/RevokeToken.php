@@ -27,6 +27,7 @@ class RevokeToken
     public function handle(Token $token): void
     {
         $token->revoke();
+        $token->refreshToken?->revoke();
     }
 
     public function asController(Token $token): Response

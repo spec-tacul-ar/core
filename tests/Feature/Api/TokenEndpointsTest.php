@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
+use Laravel\Passport\RefreshToken;
 use Laravel\Passport\Token;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
@@ -61,6 +62,7 @@ class TokenEndpointsTest extends TestCase
         $other = Account::factory()->create();
 
         $ownToken = $this->createTokenRecord($account);
+        $ownRefreshToken = $this->createRefreshTokenRecord($ownToken);
         $otherToken = $this->createTokenRecord($other);
 
         $this->actingAsAccount($account);
@@ -78,6 +80,11 @@ class TokenEndpointsTest extends TestCase
 
         $this->assertDatabaseHas('oauth_access_tokens', [
             'id' => $ownToken->id,
+            'revoked' => true,
+        ]);
+
+        $this->assertDatabaseHas('oauth_refresh_tokens', [
+            'id' => $ownRefreshToken->id,
             'revoked' => true,
         ]);
     }
@@ -151,6 +158,16 @@ class TokenEndpointsTest extends TestCase
             'client_id' => ($attributes['client'] ?? $this->personalAccessClient())->id,
             'name' => $attributes['name'] ?? 'Test token',
             'scopes' => $attributes['scopes'] ?? [],
+            'revoked' => $attributes['revoked'] ?? false,
+            'expires_at' => $attributes['expires_at'] ?? now()->addDay(),
+        ]);
+    }
+
+    private function createRefreshTokenRecord(Token $token, array $attributes = []): RefreshToken
+    {
+        return RefreshToken::query()->forceCreate([
+            'id' => $attributes['id'] ?? str()->random(40),
+            'access_token_id' => $token->id,
             'revoked' => $attributes['revoked'] ?? false,
             'expires_at' => $attributes['expires_at'] ?? now()->addDay(),
         ]);
