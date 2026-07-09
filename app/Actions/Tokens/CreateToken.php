@@ -36,7 +36,7 @@ class CreateToken
 
     public function handle(Account $account, array $data): PersonalAccessTokenResult
     {
-        return $account->createToken($data['name']);
+        return $account->createToken($data['name'], ['mcp:use']);
     }
 
     public function asController(ActionRequest $request): JsonResponse

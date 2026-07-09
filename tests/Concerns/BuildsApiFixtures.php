@@ -12,14 +12,17 @@ use App\Models\Task;
 use App\Models\Unknown;
 use App\Models\Actor;
 use Laravel\Passport\Passport;
+use Laravel\Passport\TransientToken;
 
 trait BuildsApiFixtures
 {
-    protected function actingAsAccount(?Account $account = null): Account
+    protected function actingAsAccount(?Account $account = null, ?array $scopes = null): Account
     {
         $account ??= Account::factory()->create();
 
-        Passport::actingAs($account);
+        $scopes === null
+            ? $this->actingAs($account->withAccessToken(new TransientToken), 'api')
+            : Passport::actingAs($account, $scopes);
 
         return $account;
     }

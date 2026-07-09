@@ -115,6 +115,32 @@ class TokenEndpointsTest extends TestCase
             'revoked' => false,
             'user_id' => $account->sqid,
         ]);
+
+        $this->assertSame(['mcp:use'], Token::query()->where('name', 'Local automation')->firstOrFail()->scopes);
+    }
+
+    public function test_mcp_bearer_tokens_cannot_create_tokens(): void
+    {
+        $account = Account::factory()->create();
+
+        $this->actingAsAccount($account, ['mcp:use']);
+
+        $this->postJson('/api/tokens', [
+            'name' => 'Disallowed token',
+        ])->assertForbidden();
+
+        $this->assertDatabaseMissing('oauth_access_tokens', [
+            'name' => 'Disallowed token',
+        ]);
+    }
+
+    public function test_bearer_tokens_cannot_call_general_api_endpoints(): void
+    {
+        $account = Account::factory()->create();
+
+        $this->actingAsAccount($account, ['mcp:use']);
+
+        $this->getJson('/api/account')->assertForbidden();
     }
 
     private function createTokenRecord(Account $account, array $attributes = []): Token
