@@ -52,7 +52,7 @@ class SpecificationsToolTest extends TestCase
             ->assertDontSee($otherProject->sqid);
     }
 
-    public function test_list_project_accounts_returns_only_names_and_sqids_for_project_collaborators(): void
+    public function test_list_project_accounts_returns_only_names_and_ids_for_project_collaborators(): void
     {
         $owner = Account::factory()->create([
             'name' => 'Ada Lovelace',
@@ -80,12 +80,12 @@ class SpecificationsToolTest extends TestCase
                 fn(AssertableJson $json) => $json
                 ->count('accounts', 2)
                 ->where('accounts.0.name', 'Ada Lovelace')
-                ->where('accounts.0.sqid', $owner->sqid)
+                ->where('accounts.0.id', $owner->sqid)
                 ->where('accounts.1.name', 'Grace Hopper')
-                ->where('accounts.1.sqid', $editor->sqid)
+                ->where('accounts.1.id', $editor->sqid)
                 ->missing('accounts.0.email')
                 ->missing('accounts.0.role')
-                ->missing('accounts.0.id')
+                ->missing('accounts.0.sqid')
                 ->missing('accounts.0.created_at')
                 ->missing('accounts.0.updated_at')
                 ->missing('generated_at'),
