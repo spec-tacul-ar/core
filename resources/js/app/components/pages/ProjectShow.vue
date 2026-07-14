@@ -99,7 +99,7 @@ export default {
         SpinnerButton,
         ActorItem,
     },
-    inject: ['api'],
+    inject: ['api', 'echo'],
     computed: {
         features() {
             return this.project.features.sortBy('id').sortBy('weight');
@@ -114,6 +114,7 @@ export default {
     data() {
         return {
             is_restoring: false,
+            latest_activity: null,
             sidebar: 'outline',
         };
     },
@@ -129,6 +130,9 @@ export default {
             }
 
             this.sidebar = next;
+        },
+        handleActivity() {
+
         },
         openProjectDeleteModal() {
             useModalStore().open(ProjectDelete, {project: this.project});
@@ -156,8 +160,11 @@ export default {
     },
     mounted() {
         this.checkScrollPosition();
-        
+
         window.addEventListener('scroll', this.checkScrollPosition);
+
+        this.echo.private('projects.' + this.project_id)
+            .listen('ProjectActivity', (message) => this.handleActivity(message.activity_at));
     },
     props: {
         'project_id': {
@@ -189,6 +196,8 @@ export default {
     },
     unmounted() {
         window.removeEventListener('scroll', this.checkScrollPosition);
+
+        this.echo.leave('projects.' + this.project_id);
     },
     watch: {
         '$route': {
