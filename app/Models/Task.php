@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     use HasFactory;
+    use Traits\BroadcastsActivity;
     use Traits\HasSqid;
     use Traits\Revisionable;
 

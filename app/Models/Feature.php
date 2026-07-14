@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Feature extends Model
 {
     use HasFactory;
+    use Traits\BroadcastsActivity;
     use Traits\HasSqid;
     use Traits\Revisionable;
     use Traits\TracksActivity;
