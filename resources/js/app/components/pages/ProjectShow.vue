@@ -66,7 +66,6 @@
 
             <FeatureItem :feature="feature" v-for="feature in features" :key="feature.id" />
         </section>
-
     </DefaultLayout>
 </template>
 
@@ -114,7 +113,6 @@ export default {
     data() {
         return {
             is_restoring: false,
-            latest_activity: null,
             sidebar: 'outline',
         };
     },
@@ -130,9 +128,6 @@ export default {
             }
 
             this.sidebar = next;
-        },
-        handleActivity() {
-
         },
         openProjectDeleteModal() {
             useModalStore().open(ProjectDelete, {project: this.project});
@@ -160,11 +155,16 @@ export default {
     },
     mounted() {
         this.checkScrollPosition();
-
+        
         window.addEventListener('scroll', this.checkScrollPosition);
 
         this.echo.private('projects.' + this.project_id)
-            .listen('ProjectActivity', (message) => this.handleActivity(message.activity_at));
+            .listen('ProjectItemSaved', (message) => {
+                console.log(message);
+            })
+            .listen('ProjectItemDeleted', (message) => {
+                console.log(message);
+            });
     },
     props: {
         'project_id': {

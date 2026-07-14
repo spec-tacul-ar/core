@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\ProjectActivity;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -45,11 +44,6 @@ class Project extends Model
             $project->invitations->each->delete();
             $project->actors()->withTrashed()->get()->each->forceDelete();
         });
-    }
-
-    protected function handleActivity(): void
-    {
-        broadcast(new ProjectActivity($this));
     }
 
     /* Relations */
