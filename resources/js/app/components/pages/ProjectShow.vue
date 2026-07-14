@@ -83,8 +83,8 @@ import Project from '@/stores/models/Project';
 import SidebarSwitches from "@/components/navigation/SidebarSwitches.vue";
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import ActorItem from '@/components/items/ActorItem.vue';
-import { useAlertsStore, useModalStore } from '@/stores';
 import { inject } from 'vue';
+import { useAlertsStore, useModalStore } from '@/stores';
 
 export default {
     components: {

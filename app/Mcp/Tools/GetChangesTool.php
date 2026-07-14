@@ -26,7 +26,7 @@ class GetChangesTool extends Tool
         // TODO Explicit error messages for AI
         $validated = $request->validate([
             'id' => ['required', 'string'],
-            'since' => ['required', 'date'],
+            'since' => ['required', 'date', 'before_or_equal:now'],
         ]);
 
         $project = (new Project())->resolveRouteBinding($validated['id']);

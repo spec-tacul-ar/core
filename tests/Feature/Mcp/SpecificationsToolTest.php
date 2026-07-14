@@ -118,13 +118,25 @@ class SpecificationsToolTest extends TestCase
         $response = SpecificationsServer::actingAs($fixture['account'])
             ->tool(GetChangesTool::class, [
                 'id' => $project->sqid,
-                'since' => now()->addMinute()->toISOString(),
+                'since' => now()->toISOString(),
             ])
             ->assertOk();
 
         $this->assertEmptyChangesOrTextResponse($response);
 
         $this->travelBack();
+    }
+
+    public function test_fetch_changes_rejects_a_future_timestamp(): void
+    {
+        $fixture = $this->createProjectFixture();
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetChangesTool::class, [
+                'id' => $fixture['project']->sqid,
+                'since' => now()->addSecond()->toISOString(),
+            ])
+            ->assertHasErrors(['since']);
     }
 
     public function test_fetch_changes_returns_entities_updated_since_the_given_timestamp(): void
