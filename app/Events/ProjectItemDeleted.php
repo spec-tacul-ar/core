@@ -28,8 +28,8 @@ class ProjectItemDeleted implements ShouldBroadcast, ShouldDispatchAfterCommit, 
     public function broadcastWith(): array
     {
         return [
-            'type' => class_basename($this->model),
-            'id' => $this->model->getKey(),
+            'repository' => str($this->model::class)->classBasename()->plural()->lower(),
+            'id' => $this->model->sqid,
         ];
     }
 }

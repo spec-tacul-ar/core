@@ -84,6 +84,7 @@ import SpinnerButton from '@/components/SpinnerButton.vue';
 import ActorItem from '@/components/items/ActorItem.vue';
 import { inject } from 'vue';
 import { useAlertsStore, useModalStore } from '@/stores';
+import Model from '@/stores/Model';
 
 export default {
     components: {
@@ -160,10 +161,10 @@ export default {
 
         this.echo.private('projects.' + this.project_id)
             .listen('ProjectItemSaved', (message) => {
-                console.log(message);
+                Model.repository(message.repository).save(message.data);
             })
             .listen('ProjectItemDeleted', (message) => {
-                console.log(message);
+                Model.repository(message.repository).delete(message.id);
             });
     },
     props: {

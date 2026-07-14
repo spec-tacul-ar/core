@@ -28,7 +28,7 @@ class ProjectItemSaved implements ShouldBroadcast, ShouldDispatchAfterCommit, Sh
     public function broadcastWith(): array
     {
         return [
-            'type' => class_basename($this->model),
+            'repository' => str($this->model::class)->classBasename()->plural()->lower(),
             'data' => $this->model->toResource(),
         ];
     }
