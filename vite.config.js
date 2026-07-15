@@ -19,6 +19,10 @@ export default defineConfig({
                         return 'vendor-rte';
                     }
 
+                    if (contains(id, ['/@laravel/echo-vue/', '/pusher-js/'])) {
+                        return 'vendor-realtime';
+                    }
+
                     if (contains(id, ['node_modules'])) {
                          return 'vendor';
                     }
