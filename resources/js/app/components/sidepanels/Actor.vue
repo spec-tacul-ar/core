@@ -12,6 +12,10 @@
                 {{ is_creating ? 'Create user' : 'Edit user' }}
             </h2>
 
+            <p v-if="other_editor_names" class="mb-4 text-amber-600 dark:text-amber-300">
+                Also editing this user: {{ other_editor_names }}.
+            </p>
+
             <ValidationMessages :errors="errors" />
 
             <div class="mb-4">
@@ -51,11 +55,11 @@ import TrackDirty from '@/mixins/TrackDirty';
 import UniqueId from '@/mixins/UniqueId';
 import ValidationMessages from '@/components/ValidationMessages.vue';
 import Actor from '@/stores/models/Actor';
-import { useAlertsStore } from '@/stores';
+import { useAlertsStore, useAuthStore } from '@/stores';
 import { inject } from 'vue';
 
 export default {
-    inject: ['api'],
+    inject: ['api', 'echo'],
     beforeRouteLeave() {
         return !this.is_dirty || this.confirmClose();
     },
@@ -69,6 +73,14 @@ export default {
         is_creating() {
             return !this.actor_id;
         },
+        other_editors() {
+            const account = useAuthStore().account;
+
+            return this.editors.filter(editor => String(editor.id) !== String(account?.id));
+        },
+        other_editor_names() {
+            return this.other_editors.map(editor => editor.name).join(', ');
+        },
     },
     data() {
         return {
@@ -78,6 +90,7 @@ export default {
                 summary: this.actor?.summary,
             },
             'errors': {},
+            'editors': [],
             'is_waiting': false,
         };
     },
@@ -112,6 +125,16 @@ export default {
                 .finally(() => this.is_waiting = false);
         }
     },
+    mounted() {
+        if (!this.actor_id) {
+            return;
+        }
+
+        this.echo.join('actors.editing.' + this.actor_id)
+            .here((users) => this.editors = users)
+            .joining((user) => this.editors.push(user))
+            .leaving((user) => this.editors = this.editors.filter(editor => String(editor.id) !== String(user.id)));
+    },
     mixins: [
         KeyboardShortcuts,
         TrackDirty,
@@ -126,6 +149,11 @@ export default {
             'type': String,
             'required': false,
         },
+    },
+    unmounted() {
+        if (this.actor_id) {
+            this.echo.leave('actors.editing.' + this.actor_id);
+        }
     },
     async setup(props) {
         if (!props.actor_id) {
