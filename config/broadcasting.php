@@ -42,7 +42,7 @@ return [
                 'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
             ],
             'client_options' => [
-                'verify' => env('APP_ENV') !== 'local',
+                'verify' => env('REVERB_TLS_VERIFY', true),
             ],
         ],
 
