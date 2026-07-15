@@ -27,6 +27,12 @@
 
         <h2 id="leaving">Leaving a project</h2>
         <p>Collaborators can leave a project via the team panel. Owners can leave only when another owner remains, preventing a project from being left without someone in charge.</p>
+
+        <h2 id="real-time">Real-time collaboration</h2>
+
+        <p>When real-time collaboration is enabled, project changes appear for other collaborators without a page refresh. Spectacular also shows an editing indicator when someone else is working on the same project, actor, feature or requirement.</p>
+
+        <p>This feature is disabled by default for self-hosted installations. To enable it, configure a broadcast driver and queue worker for your environment. Laravel documents the available drivers and required setup in its <a href="https://laravel.com/docs/13.x/broadcasting">broadcasting guide</a>.</p>
     </article>
 
     <x-docs.next-link href="/docs/feedback">Feedback</x-docs.next-link>

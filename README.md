@@ -16,6 +16,7 @@ The built-in MCP server lets agents such as Codex, Cursor, and Claude read your 
 * Maintain the specification as change requests come in
 * Give AI agents structured requirements through MCP
 * Track progress as requirements move through delivery
+* Keep collaborators in sync with live project updates and editing indicators
 * Document ambiguities and highlight blockers
 * Effortlessly export to Markdown and HTML
 
@@ -66,6 +67,12 @@ docker compose up --build
 Docker provides the PHP, Composer, and Node runtime. Your checkout is mounted into the container, so the database and uploaded files stay on your machine.
 
 Upgrades are simple too - just grab the latest code and restart Docker. Rebuild the container when the runtime dependencies change.
+
+### Real-time collaboration
+
+Spectacular can keep a project in sync for everyone viewing it and show when another collaborator is editing a project, actor, feature, or requirement. Real-time collaboration is disabled by default, so self-hosted installations continue to work without a WebSocket service.
+
+To enable it, configure a Laravel broadcasting driver and a queue worker for your deployment. See the [Laravel broadcasting documentation](https://laravel.com/docs/13.x/broadcasting) for supported drivers and configuration instructions.
 
 ## MCP for AI Agents
 

@@ -80,6 +80,7 @@
                             <x-docs.sidebar-link label="Get Started" href="/docs/get-started">
                                 <x-docs.sidebar-sublink href="/docs/get-started#your-first-project">Your First Project</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/get-started#self-hosting">Self-Hosting</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/get-started#real-time">Real-time Collaboration</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
                             <x-docs.sidebar-link label="AI-assisted Development" href="/docs/ai">
@@ -113,6 +114,7 @@
                             <x-docs.sidebar-link label="Team" href="/docs/team">
                                 <x-docs.sidebar-sublink href="/docs/team#roles">Roles</x-docs.sidebar-sublink>
                                 <x-docs.sidebar-sublink href="/docs/team#invitations">Invitations</x-docs.sidebar-sublink>
+                                <x-docs.sidebar-sublink href="/docs/team#real-time">Real-time Collaboration</x-docs.sidebar-sublink>
                             </x-docs.sidebar-link>
 
                             <x-docs.sidebar-link label="Feedback" href="/docs/feedback"></x-docs.sidebar-link>

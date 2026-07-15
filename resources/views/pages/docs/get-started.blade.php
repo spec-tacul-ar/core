@@ -144,6 +144,10 @@ php artisan serve</code></pre>
 
         <p>In addition to Laravel's configuration options, Spectacular has a number of feature flags you can use to quickly customise the application's behaviour. Look inside the <code>config/spectacular.php</code> file and identify any that fit your use case. It's highly recommended that these changes are made through the use of <a href="https://laravel.com/docs/13.x/configuration#environment-configuration">environment variables</a> instead of modifying the settings file directly.</p>
 
+        <h3 id="real-time">Real-time collaboration</h3>
+
+        <p>Real-time collaboration is optional and disabled by default. Enable it when you want project updates and editing indicators to appear immediately for other collaborators. Configure a Laravel broadcasting driver, the corresponding environment variables and a queue worker. Follow the <a href="https://laravel.com/docs/13.x/broadcasting">Laravel broadcasting documentation</a> for the provider-specific steps.</p>
+
         <h3>Customisation</h3>
 
         <p>Unlike many SaaS offerings, Spectacular is available as free and open-source software. That means you can modify the code however you need to under the terms of the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero General Public License v3.0</a>. However, you must also share the source code for all users of the software.</p>

@@ -6,7 +6,7 @@
 
         <p>Spectacular gives requirements a single home that everyone (from customers to AI) can understand.</p>
 
-        <p>With Spectacular, the specification is not a document you write once and forget. It is active development context: a living, maintained source of truth that evolves as the project evolves. This does not mean returning to waterfall. Requirements can and should be clarified, discussed, and revisited throughout development and beyond. Teams can still use GitHub Issues, Linear, Jira, Slack, Notion, and other tools, but those tools should feed the specification rather than replace it.</p>
+        <p>With Spectacular, the specification is not a document you write once and forget. It is active development context: a living, maintained source of truth that evolves as the project evolves. Teams can still use GitHub Issues, Linear, Jira, Slack, Notion, and other tools, but those tools should feed the specification rather than replace it. When real-time collaboration is enabled, changes are shared with other collaborators as they happen.</p>
 
         <p>Use Spectacular when you want an answer to the question: What are we building, exactly?</p>
 
