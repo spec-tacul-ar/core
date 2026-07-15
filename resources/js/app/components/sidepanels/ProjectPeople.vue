@@ -78,6 +78,7 @@
 
 <script>
 import CollaborationItem from '@/components/items/CollaborationItem.vue';
+import Collaboration from '@/stores/models/Collaboration';
 import Invitation from '@/stores/models/Invitation';
 import Project from '@/stores/models/Project';
 import FormInput from '@/components/forms/FormInput.vue';
@@ -212,6 +213,9 @@ export default {
         UniqueId
     ],
     mounted() {
+        this.api.get('collaborations', { query: { project_id: this.project_id } })
+            .then((result) => Collaboration.repository().saveMany(result.data));
+
         if (this.project.can_manage) {
             this.api.get('invitations', { query: { project_id: this.project_id } })
                 .then((result) => Invitation.repository().saveMany(result.data))

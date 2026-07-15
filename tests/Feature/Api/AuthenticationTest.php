@@ -92,6 +92,7 @@ class AuthenticationTest extends TestCase
                 'project_id' => '{project}',
             ]],
             'comments.browse' => ['GET', '/api/comments?project_id={project}'],
+            'collaborations.browse' => ['GET', '/api/collaborations?project_id={project}'],
             'comments.delete' => ['POST', '/api/comments/{comment}/delete'],
             'collaborations.edit' => ['POST', '/api/collaborations/{collaboration}/edit', ['role' => Role::EDITOR->value]],
             'collaborations.delete' => ['POST', '/api/collaborations/{collaboration}/delete'],

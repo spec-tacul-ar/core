@@ -91,6 +91,55 @@ class CollaborationTest extends TestCase
         $this->assertDatabaseHas('comments', ['id' => $comment->id]);
     }
 
+    public function test_collaborations_browse_endpoint_returns_project_members_with_account_names(): void
+    {
+        $project = Project::factory()->create();
+        $otherProject = Project::factory()->create();
+
+        $viewer = Account::factory()->create(['name' => 'Viewer Name']);
+        $owner = Account::factory()->create(['name' => 'Owner Name']);
+        $otherMember = Account::factory()->create(['name' => 'Other Member']);
+        $outsider = Account::factory()->create();
+
+        $viewerCollaboration = $this->attachCollaboration($viewer, $project, Role::VIEWER);
+        $ownerCollaboration = $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->attachCollaboration($otherMember, $otherProject, Role::OWNER);
+
+        $this->actingAsAccount($viewer);
+
+        $this->getJson('/api/collaborations?project_id=' . $project->sqid)
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'id' => $viewerCollaboration->sqid,
+                'account_name' => 'Viewer Name',
+            ])
+            ->assertJsonFragment([
+                'id' => $ownerCollaboration->sqid,
+                'account_name' => 'Owner Name',
+            ])
+            ->assertJsonMissing(['account_name' => 'Other Member']);
+
+        $this->actingAsAccount($outsider);
+
+        $this->getJson('/api/collaborations?project_id=' . $project->sqid)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('project_id');
+    }
+
+    public function test_collaborations_browse_endpoint_requires_a_valid_project_id(): void
+    {
+        $this->actingAsAccount();
+
+        $this->getJson('/api/collaborations')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('project_id');
+
+        $this->getJson('/api/collaborations?project_id=not-an-id')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('project_id');
+    }
+
     public function test_comments_browse_endpoint_allows_viewers_but_not_outsiders(): void
     {
         $project = Project::factory()->create();
