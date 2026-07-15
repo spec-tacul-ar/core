@@ -21,7 +21,7 @@ trait BuildsApiFixtures
         $account ??= Account::factory()->create();
 
         $scopes === null
-            ? $this->actingAs($account->withAccessToken(new TransientToken), 'api')
+            ? $this->actingAs($account->withAccessToken(new TransientToken()), 'api')
             : Passport::actingAs($account, $scopes);
 
         return $account;

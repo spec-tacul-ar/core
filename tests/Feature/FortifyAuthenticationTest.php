@@ -180,10 +180,10 @@ class FortifyAuthenticationTest extends TestCase
 
         Notification::assertSentTo($account, ResetPassword::class, function (ResetPassword $notification) use ($account) {
             $actionUrl = $notification->toMail($account)->actionUrl;
-            $actionUrlOrigin = parse_url($actionUrl, PHP_URL_SCHEME).'://'.parse_url($actionUrl, PHP_URL_HOST);
+            $actionUrlOrigin = parse_url($actionUrl, PHP_URL_SCHEME) . '://' . parse_url($actionUrl, PHP_URL_HOST);
 
             if ($port = parse_url($actionUrl, PHP_URL_PORT)) {
-                $actionUrlOrigin .= ':'.$port;
+                $actionUrlOrigin .= ':' . $port;
             }
 
             $this->assertSame(config('app.url'), $actionUrlOrigin);
