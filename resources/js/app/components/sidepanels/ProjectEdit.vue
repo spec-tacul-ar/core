@@ -12,6 +12,8 @@
                     <IconSet name="archive" class="text-gray-600 size-6 dark:text-gray-300" />
                 </button>
             </Tooltip>
+
+            <EditingWarning :editors="other_editors" class="ml-auto" />
         </template>
 
         <template #buttons>
@@ -53,8 +55,10 @@
 </template>
 
 <script>
+import EditingWarning from '@/components/EditingWarning.vue';
 import FormInput from '@/components/forms/FormInput.vue';
 import FormRichText from '@/components/forms/FormRichText.vue';
+import EditingPresence from '@/mixins/EditingPresence';
 import IconSet from '@/components/IconSet.vue';
 import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
 import ProjectDelete from '@/components/modals/ProjectDelete.vue';
@@ -72,12 +76,18 @@ export default {
         return !this.is_dirty || this.confirmClose();
     },
     components: {
+        EditingWarning,
         FormInput,
         FormRichText,
         IconSet,
         SidepanelLayout,
         SpinnerButton,
         Tooltip,
+    },
+    computed: {
+        editing_channel() {
+            return 'projects.editing.' + this.project_id;
+        },
     },
     data() {
         const project = Project.repository().find(this.project_id);
@@ -129,6 +139,7 @@ export default {
         }
     },
     mixins: [
+        EditingPresence,
         KeyboardShortcuts,
         TrackDirty,
         UniqueId

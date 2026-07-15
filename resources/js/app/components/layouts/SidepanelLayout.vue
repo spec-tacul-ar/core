@@ -1,6 +1,6 @@
 <template>
     <div class="flex h-full flex-col relative">
-        <div class="fixed top-0 bg-white shadow-lg shadow-white w-full max-w-(--sidepanel-width) h-16 flex items-center px-4 sm:px-8 dark:bg-gray-950 dark:shadow-gray-950">
+        <div class="fixed z-10 top-0 bg-white shadow-lg shadow-white w-full max-w-(--sidepanel-width) h-16 flex items-center px-4 sm:px-8 dark:bg-gray-950 dark:shadow-gray-950">
             <div class="flex items-center w-full -ml-2">
                 <slot name="toolbar"></slot>
             </div>

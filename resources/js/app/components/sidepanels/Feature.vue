@@ -1,5 +1,9 @@
 <template>
     <SidepanelLayout help="/docs/features">
+        <template #toolbar>
+            <EditingWarning :editors="other_editors" class="ml-auto" />
+        </template>
+
         <template #buttons>
             <div class="flex items-center gap-4">
                 <SpinnerButton type="submit" class="btn btn-primary" :loading="is_waiting" @click="submit">Save</SpinnerButton>
@@ -47,8 +51,10 @@
 </template>
 
 <script>
+import EditingWarning from '@/components/EditingWarning.vue';
 import FormInput from '@/components/forms/FormInput.vue';
 import FormRichText from '@/components/forms/FormRichText.vue';
+import EditingPresence from '@/mixins/EditingPresence';
 import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
 import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@/components/SpinnerButton.vue';
@@ -65,6 +71,7 @@ export default {
         return !this.is_dirty || this.confirmClose();
     },
     components: {
+        EditingWarning,
         FormInput,
         FormRichText,
         SidepanelLayout,
@@ -74,6 +81,9 @@ export default {
     computed: {
         is_creating() {
             return !this.feature_id;
+        },
+        editing_channel() {
+            return this.feature_id ? 'features.editing.' + this.feature_id : null;
         },
     },
     data() {
@@ -123,6 +133,7 @@ export default {
         }
     },
     mixins: [
+        EditingPresence,
         KeyboardShortcuts,
         TrackDirty,
         UniqueId

@@ -4,6 +4,8 @@
             <button v-if="requirement_id" type="button" class="hidden sm:block p-2" @click="scrollToRequirement()">
                 <IconSet name="scroll-to" class="size-6" />
             </button>
+
+            <EditingWarning :editors="other_editors" class="ml-auto" />
         </template>
 
         <template #buttons>
@@ -198,6 +200,7 @@
 
 <script>
 import Draggable from 'vuedraggable';
+import EditingWarning from '@/components/EditingWarning.vue';
 import FormInput from '@/components/forms/FormInput.vue';
 import FormLabel from '@/components/forms/FormLabel.vue';
 import FormRichText from '@/components/forms/FormRichText.vue';
@@ -205,6 +208,7 @@ import FormOptions from '@/components/forms/FormOptions.vue';
 import IconSet from '@/components/IconSet.vue';
 import InfoPopover from '@/components/InfoPopover.vue';
 import KeyboardShortcuts from '@/mixins/KeyboardShortcuts';
+import EditingPresence from '@/mixins/EditingPresence';
 import SidepanelLayout from '@/components/layouts/SidepanelLayout.vue';
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import TrackDirty from '@/mixins/TrackDirty';
@@ -224,6 +228,7 @@ export default {
     },
     components: {
         Draggable,
+        EditingWarning,
         FormInput,
         FormLabel,
         FormRichText,
@@ -240,6 +245,9 @@ export default {
         },
         is_creating() {
             return !this.requirement_id;
+        },
+        editing_channel() {
+            return this.requirement_id ? 'requirements.editing.' + this.requirement_id : null;
         },
         name_prefix() {
             const actors = this.actors.filter(actor => this.form.actor_ids.includes(actor.id)).map(actor => actor.name);
@@ -368,6 +376,7 @@ export default {
         }
     },
     mixins: [
+        EditingPresence,
         KeyboardShortcuts,
         TrackDirty,
         UniqueId
