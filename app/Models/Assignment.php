@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignment extends Model
 {
+    use Traits\BroadcastsActivity;
     use Traits\HasSqid;
     use Traits\Revisionable;
 

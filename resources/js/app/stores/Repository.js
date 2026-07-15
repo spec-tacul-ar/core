@@ -22,13 +22,15 @@ export default (model) => {
             delete(id) {
                 const index = this.items.findIndex(item => item.id === id);
 
+                if (index === -1) {
+                    return;
+                }
+
                 if (typeof this.items[index].onDelete === 'function') { 
                     this.items[index].onDelete();
                 }
 
-                if (index !== -1) {
-                    this.items.splice(index, 1);
-                }
+                this.items.splice(index, 1);
             },
             deleteMany(ids) {
                 ids.forEach(id => this.delete(id));

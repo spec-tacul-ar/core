@@ -489,4 +489,63 @@ class AccountProjectsTest extends TestCase
 
         $this->postJson('/api/projects/' . $fixture['project']->getRouteKey() . '/readmark')->assertNotFound();
     }
+
+    public function test_fetching_project_changes_uses_the_project_from_the_url(): void
+    {
+        $this->travelTo('2026-01-01 00:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $since = now()->toISOString();
+
+        $this->travelTo('2026-01-01 00:01:00');
+        $fixture['feature']->update(['name' => 'Updated feature']);
+
+        $this->actingAsAccount($fixture['account']);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/changes?since=' . urlencode($since))
+            ->assertOk()
+            ->assertJsonPath('data.features.0.id', $fixture['feature']->sqid)
+            ->assertJsonPath('data.features.0.name', 'Updated feature')
+            ->assertJsonMissingPath('data.project');
+
+        $this->travelBack();
+    }
+
+    public function test_fetching_project_changes_returns_empty_collections_when_project_is_unchanged(): void
+    {
+        $this->travelTo('2026-01-01 00:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $since = now()->toISOString();
+
+        $this->actingAsAccount($fixture['account']);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/changes?since=' . urlencode($since))
+            ->assertOk()
+            ->assertJsonPath('data', []);
+
+        $this->travelBack();
+    }
+
+    public function test_fetching_project_changes_rejects_unauthorized_projects(): void
+    {
+        $fixture = $this->createProjectFixture();
+        $otherAccount = Account::factory()->create();
+
+        $this->actingAsAccount($otherAccount);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/changes?since=' . urlencode(now()->toISOString()))
+            ->assertNotFound();
+    }
+
+    public function test_fetching_project_changes_rejects_a_future_since_timestamp(): void
+    {
+        $fixture = $this->createProjectFixture();
+
+        $this->actingAsAccount($fixture['account']);
+
+        $this->getJson('/api/projects/' . $fixture['project']->sqid . '/changes?since=' . urlencode(now()->addSecond()->toISOString()))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('since');
+    }
 }

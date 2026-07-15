@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\AsSqid;
 use App\Models\Scopes\WeightedScope;
+use App\Models\Traits\BroadcastsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Actor extends Model
 {
+    use BroadcastsActivity;
     use HasFactory;
     use Traits\HasSqid;
     use Traits\Revisionable;

@@ -66,7 +66,6 @@
 
             <FeatureItem :feature="feature" v-for="feature in features" :key="feature.id" />
         </section>
-
     </DefaultLayout>
 </template>
 
@@ -83,8 +82,9 @@ import Project from '@/stores/models/Project';
 import SidebarSwitches from "@/components/navigation/SidebarSwitches.vue";
 import SpinnerButton from '@/components/SpinnerButton.vue';
 import ActorItem from '@/components/items/ActorItem.vue';
-import { useAlertsStore, useModalStore } from '@/stores';
 import { inject } from 'vue';
+import { useAlertsStore, useModalStore } from '@/stores';
+import Model from '@/stores/Model';
 
 export default {
     components: {
@@ -99,7 +99,7 @@ export default {
         SpinnerButton,
         ActorItem,
     },
-    inject: ['api'],
+    inject: ['api', 'echo'],
     computed: {
         features() {
             return this.project.features.sortBy('id').sortBy('weight');
@@ -158,6 +158,14 @@ export default {
         this.checkScrollPosition();
         
         window.addEventListener('scroll', this.checkScrollPosition);
+
+        this.echo.private('projects.' + this.project_id)
+            .listen('ProjectItemSaved', (message) => {
+                Model.repository(message.repository).save(message.data);
+            })
+            .listen('ProjectItemDeleted', (message) => {
+                Model.repository(message.repository).delete(message.id);
+            });
     },
     props: {
         'project_id': {
@@ -189,6 +197,8 @@ export default {
     },
     unmounted() {
         window.removeEventListener('scroll', this.checkScrollPosition);
+
+        this.echo.leave('projects.' + this.project_id);
     },
     watch: {
         '$route': {

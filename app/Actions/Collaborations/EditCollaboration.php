@@ -35,9 +35,6 @@ class EditCollaboration
 
     public function handle(Collaboration $collaboration, array $validated): Collaboration
     {
-        $currentRole = $collaboration->role;
-        $newRole = Role::from($validated['role']);
-
         $collaboration->update($validated);
 
         return $collaboration;
