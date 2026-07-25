@@ -53,18 +53,22 @@
                     <FormOptions type="checkbox" :id="elementId('actor_ids')" v-model="form.actor_ids" :options="actors" :error="errors.actor_ids" inline />
                 </div>
 
-                <label class="flex items-stretch rounded focus-within:ring" :class="{ 'ring-red-400': errors.name }">
-                    <div
-                        class="form-control w-auto whitespace-nowrap rounded-r-none border-r-0 place-content-center pl-2"
-                        :class="errors.name ? 'border-red-400 dark:border-red-800' : ''">
+                <label class="relative block">
+                    <span
+                        aria-hidden="true"
+                        class="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2"
+                        :class="actors.length > 0 ? 'w-12' : 'w-[4.75rem]'">
 
                         {{ actors.length > 0 ? '…can' : 'Users can' }}
-                    </div>
+                    </span>
 
                     <input type="text"
                         :id="elementId('name')"
-                        class="form-control rounded-l-none border-l-0 pl-1 focus:ring-0"
-                        :class="{ 'border-red-400 dark:border-red-800': errors.name }"
+                        class="form-control"
+                        :class="[
+                            actors.length > 0 ? 'pl-12' : 'pl-[4.75rem]',
+                            errors.name ? 'border-red-400 focus:border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:border-red-800 dark:focus:ring-red-800' : '',
+                        ]"
                         required
                         v-model="form.name" />
                 </label>
