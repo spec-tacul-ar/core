@@ -27,6 +27,7 @@ class ProjectItemSaved implements ShouldBroadcast, ShouldDispatchAfterCommit, Sh
     public function broadcastOn(): array
     {
         $project = $this->model instanceof Project ? $this->model : $this->model->project;
+
         return [
             new PrivateChannel('projects.' . $project->sqid),
             new PresenceChannel($this->repository . '.editing.' . $this->model->sqid),

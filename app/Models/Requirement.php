@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
+use Znck\Eloquent\Relations\BelongsToThrough;
+use Znck\Eloquent\Traits\BelongsToThrough as HasBelongsToThrough;
 
 class Requirement extends Model
 {
@@ -20,6 +22,7 @@ class Requirement extends Model
     use Traits\HasSqid;
     use Traits\Revisionable;
     use Traits\TracksActivity;
+    use HasBelongsToThrough;
 
     protected $appends = ['title'];
 
@@ -104,6 +107,11 @@ class Requirement extends Model
     public function feature(): BelongsTo
     {
         return $this->belongsTo(Feature::class);
+    }
+
+    public function project(): BelongsToThrough
+    {
+        return $this->belongsToThrough(Project::class, Feature::class);
     }
 
     public function tasks(): HasMany

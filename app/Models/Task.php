@@ -7,6 +7,8 @@ use App\Models\Scopes\WeightedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Znck\Eloquent\Relations\BelongsToThrough;
+use Znck\Eloquent\Traits\BelongsToThrough as HasBelongsToThrough;
 
 class Task extends Model
 {
@@ -14,6 +16,7 @@ class Task extends Model
     use Traits\BroadcastsActivity;
     use Traits\HasSqid;
     use Traits\Revisionable;
+    use HasBelongsToThrough;
 
     protected $casts = [
         'is_complete' => 'boolean',
@@ -40,6 +43,11 @@ class Task extends Model
     public function requirement(): BelongsTo
     {
         return $this->belongsTo(Requirement::class);
+    }
+
+    public function project(): BelongsToThrough
+    {
+        return $this->belongsToThrough(Project::class, [Feature::class, Requirement::class]);
     }
 
     /* Helpers */
