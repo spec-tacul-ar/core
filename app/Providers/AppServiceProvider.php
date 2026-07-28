@@ -37,6 +37,19 @@ class AppServiceProvider extends ServiceProvider
                         return null;
                     }
                 }
+
+                public function retrieveByToken($identifier, #[\SensitiveParameter] $token)
+                {
+                    $account = $this->retrieveById($identifier);
+
+                    if (! $account) {
+                        return null;
+                    }
+
+                    $remember_token = $account->getRemember_token();
+
+                    return $remember_token && hash_equals($remember_token, $token) ? $account : null;
+                }
             };
         });
 

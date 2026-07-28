@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Features;
 use Tests\TestCase;
 
@@ -148,6 +149,18 @@ class FortifyAuthenticationTest extends TestCase
             config(['session.driver' => $previousDriver]);
             app('session')->forgetDrivers();
         }
+    }
+
+    public function test_remember_tokens_retrieve_accounts_by_sqid(): void
+    {
+        $account = Account::factory()->create([
+            'remember_token' => 'remember-token',
+        ]);
+
+        $retrievedAccount = Auth::createUserProvider('accounts')
+            ->retrieveByToken($account->sqid, 'remember-token');
+
+        $this->assertTrue($account->is($retrievedAccount));
     }
 
     public function test_login_rejects_invalid_credentials(): void
