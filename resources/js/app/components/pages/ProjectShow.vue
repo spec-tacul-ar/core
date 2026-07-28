@@ -53,6 +53,7 @@
             </div>
 
             <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4 dark:bg-gray-900">
+                <p v-if="actors.length === 0" class="italic text-gray-400 dark:text-gray-500">No users</p>
                 <ActorItem :actor="actor" v-for="actor in actors" :key="actor.id" />
             </div>
         </section>
