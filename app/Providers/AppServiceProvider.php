@@ -46,9 +46,9 @@ class AppServiceProvider extends ServiceProvider
                         return null;
                     }
 
-                    $remember_token = $account->getRemember_token();
+                    $rememberToken = $account->getRememberToken();
 
-                    return $remember_token && hash_equals($remember_token, $token) ? $account : null;
+                    return $rememberToken && hash_equals($rememberToken, $token) ? $account : null;
                 }
             };
         });
