@@ -57,7 +57,7 @@
                     <span
                         aria-hidden="true"
                         class="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2"
-                        :class="actors.length > 0 ? 'w-12' : 'w-[4.75rem]'">
+                        :class="actors.length > 0 ? 'w-12' : 'w-[4.75rem] whitespace-nowrap'">
 
                         {{ actors.length > 0 ? '…can' : 'Users can' }}
                     </span>
