@@ -19,6 +19,9 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
+    env:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: database/database.sqlite
 
     steps:
       - uses: actions/checkout@v6
