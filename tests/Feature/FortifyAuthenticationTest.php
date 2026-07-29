@@ -75,12 +75,12 @@ class FortifyAuthenticationTest extends TestCase
 
     public function test_registration_and_verification_follow_spectacular_enable_flags(): void
     {
-        $previousRegistration = getenv('SPECTACULAR_ENABLE_REGISTRATION');
-        $previousVerification = getenv('SPECTACULAR_ENABLE_VERIFICATION');
+        $previousRegistration = $this->environmentVariable('SPECTACULAR_ENABLE_REGISTRATION');
+        $previousVerification = $this->environmentVariable('SPECTACULAR_ENABLE_VERIFICATION');
 
         try {
-            putenv('SPECTACULAR_ENABLE_REGISTRATION=false');
-            putenv('SPECTACULAR_ENABLE_VERIFICATION=false');
+            $this->setEnvironmentVariable('SPECTACULAR_ENABLE_REGISTRATION', 'false');
+            $this->setEnvironmentVariable('SPECTACULAR_ENABLE_VERIFICATION', 'false');
 
             $spectacular = require config_path('spectacular.php');
             $fortify = require config_path('fortify.php');
@@ -92,13 +92,43 @@ class FortifyAuthenticationTest extends TestCase
             $this->assertContains(Features::resetPasswords(), $features);
             $this->assertNotContains(Features::emailVerification(), $features);
         } finally {
-            $previousRegistration === false
-                ? putenv('SPECTACULAR_ENABLE_REGISTRATION')
-                : putenv('SPECTACULAR_ENABLE_REGISTRATION=' . $previousRegistration);
+            $this->restoreEnvironmentVariable('SPECTACULAR_ENABLE_REGISTRATION', $previousRegistration);
+            $this->restoreEnvironmentVariable('SPECTACULAR_ENABLE_VERIFICATION', $previousVerification);
+        }
+    }
 
-            $previousVerification === false
-                ? putenv('SPECTACULAR_ENABLE_VERIFICATION')
-                : putenv('SPECTACULAR_ENABLE_VERIFICATION=' . $previousVerification);
+    private function environmentVariable(string $name): array
+    {
+        return [
+            'environment' => $_ENV[$name] ?? null,
+            'server' => $_SERVER[$name] ?? null,
+            'process' => getenv($name),
+        ];
+    }
+
+    private function setEnvironmentVariable(string $name, string $value): void
+    {
+        putenv("{$name}={$value}");
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+
+    private function restoreEnvironmentVariable(string $name, array $value): void
+    {
+        $value['process'] === false
+            ? putenv($name)
+            : putenv("{$name}={$value['process']}");
+
+        if ($value['environment'] === null) {
+            unset($_ENV[$name]);
+        } else {
+            $_ENV[$name] = $value['environment'];
+        }
+
+        if ($value['server'] === null) {
+            unset($_SERVER[$name]);
+        } else {
+            $_SERVER[$name] = $value['server'];
         }
     }
 
