@@ -71,8 +71,9 @@ class DecodeSqids
             return null;
         }
 
-        $ids = $this->sqids->decode((string) $value);
+        $value = (string) $value;
+        $ids = $this->sqids->decode($value);
 
-        return count($ids) === 1 ? $ids[0] : null;
+        return count($ids) === 1 && $this->sqids->encode($ids) === $value ? $ids[0] : null;
     }
 }

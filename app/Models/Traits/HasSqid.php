@@ -9,6 +9,13 @@ use Sqids\SqidsInterface;
 
 trait HasSqid
 {
+    protected SqidsInterface $sqids;
+
+    protected function initializeHasSqid(): void
+    {
+        $this->sqids = app(SqidsInterface::class);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'sqid';
@@ -17,9 +24,9 @@ trait HasSqid
     public function resolveRouteBinding($value, $field = null)
     {
         if ($field === null) {
-            $ids = app(SqidsInterface::class)->decode($value);
+            $ids = $this->sqids->decode($value);
 
-            if (count($ids) !== 1) {
+            if (count($ids) !== 1 || $this->sqids->encode($ids) !== $value) {
                 throw (new ModelNotFoundException())->setModel(static::class, $value);
             }
 
@@ -32,9 +39,9 @@ trait HasSqid
     public function resolveSoftDeletableRouteBinding($value, $field = null)
     {
         if ($field === null) {
-            $ids = app(SqidsInterface::class)->decode($value);
+            $ids = $this->sqids->decode($value);
 
-            if (count($ids) !== 1) {
+            if (count($ids) !== 1 || $this->sqids->encode($ids) !== $value) {
                 return null;
             }
 
@@ -48,7 +55,7 @@ trait HasSqid
     {
         $id = $this->getKey();
 
-        $sqid = $id ? app(SqidsInterface::class)->encode([$id]) : null;
+        $sqid = $id ? $this->sqids->encode([$id]) : null;
 
         return Attribute::make(
             get: fn() => $sqid,
