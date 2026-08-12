@@ -20,8 +20,13 @@ Route::get('invitations/{invitation}', [InvitationController::class, 'accept'])
 Route::controller(SocialiteController::class)
     ->middleware('guest')
     ->group(function () {
-        Route::get('auth/{provider}/redirect', 'redirect');
-        Route::get('auth/{provider}/callback', 'callback');
+        $providers = array_keys(config('spectacular.socialite'));
+
+        Route::get('auth/{provider}/redirect', 'redirect')
+            ->whereIn('provider', $providers);
+
+        Route::get('auth/{provider}/callback', 'callback')
+            ->whereIn('provider', $providers);
     });
 
 Route::view('app/{any?}', 'app')
