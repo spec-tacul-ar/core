@@ -1,4 +1,5 @@
 import Model from '../Model';
+import { translate } from '@/translations';
 
 export default class Requirement extends Model {
     static repository_name = 'requirements';
@@ -56,15 +57,17 @@ export default class Requirement extends Model {
     }
 
     get title() {
+        const locale = this.feature.project.locale ?? 'en';
+
         const actors = this.assignments.map(assignment => assignment.actor.name);
 
         if (actors.isEmpty()) {
-            return 'Users can ' + this.name;
+            actors.push(translate('Users', locale));
         }
 
-        const last_actor = actors.pop();
+        const roles = new Intl.ListFormat(locale).format(actors.all());
 
-        return (actors.isNotEmpty() ? actors.join(', ') + ' and ' : ' ') + last_actor + ' can ' + this.name;
+        return roles + ' ' + translate('can', locale) + ' ' + this.name;
     }
 
     get is_filtered() {

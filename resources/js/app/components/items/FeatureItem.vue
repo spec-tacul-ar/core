@@ -10,7 +10,7 @@
         <h3 class="font-semibold text-2xl mb-2"><a :href="'#feature_' + feature.id">{{ feature.name }}</a></h3>
         
         <RichText :markup="feature.description" class="mb-4" v-if="feature.description" />
-        <p class="italic text-gray-400 mb-4 dark:text-gray-500" v-else>No description</p>
+        <p class="italic text-gray-400 mb-4 dark:text-gray-500" v-else>{{ $t('No description', feature.project.locale) }}</p>
 
         <div class="space-y-8 mt-6">
             <RequirementItem :requirement="requirement" v-for="requirement in requirements" :key="requirement.id" />

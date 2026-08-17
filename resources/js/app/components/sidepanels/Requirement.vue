@@ -53,22 +53,20 @@
                     <FormOptions type="checkbox" :id="elementId('actor_ids')" v-model="form.actor_ids" :options="actors" :error="errors.actor_ids" inline />
                 </div>
 
-                <label class="relative block">
+                <label
+                    class="form-control flex items-center overflow-hidden p-0 focus-within:border-gray-800 focus-within:ring-1 focus-within:ring-gray-800 dark:focus-within:border-gray-400 dark:focus-within:ring-gray-400"
+                    :class="errors.name ? 'border-red-400 focus-within:border-red-400 focus-within:ring-red-400 dark:border-red-800 dark:focus-within:border-red-800 dark:focus-within:ring-red-800' : ''">
+
                     <span
                         aria-hidden="true"
-                        class="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-2"
-                        :class="actors.length > 0 ? 'w-12' : 'w-[4.75rem] whitespace-nowrap'">
+                        class="pointer-events-none shrink-0 whitespace-nowrap pl-3">
 
-                        {{ actors.length > 0 ? '…can' : 'Users can' }}
+                        {{ name_prefix }}
                     </span>
 
                     <input type="text"
                         :id="elementId('name')"
-                        class="form-control"
-                        :class="[
-                            actors.length > 0 ? 'pl-12' : 'pl-[4.75rem]',
-                            errors.name ? 'border-red-400 focus:border-red-400 focus:ring-red-400 dark:border-red-800 dark:focus:border-red-800 dark:focus:ring-red-800' : '',
-                        ]"
+                        class="min-w-0 grow border-0 bg-transparent py-2 pl-2 pr-3 focus:ring-0 dark:bg-transparent"
                         required
                         v-model="form.name" />
                 </label>
@@ -254,15 +252,7 @@ export default {
             return this.requirement_id ? 'requirements.editing.' + this.requirement_id : null;
         },
         name_prefix() {
-            const actors = this.actors.filter(actor => this.form.actor_ids.includes(actor.id)).map(actor => actor.name);
-
-            if (actors.isEmpty()) {
-                return;
-            }
-
-            const last_actor = actors.pop();
-
-            return (actors.isNotEmpty() ? actors.join(', ') + ' and ' : ' ') + last_actor + ' can...';
+            return (this.actors.length > 0 ? '…' : this.$t('Users', this.project.locale) + ' ') + this.$t('can', this.project.locale);
         },
         actors() {
             return this.project.actors.sortBy('weight').all();

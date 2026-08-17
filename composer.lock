@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6d1f60613480dfdf2b038672421ac9c",
+    "content-hash": "26f398fa039272d082275a426502e00a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5452,93 +5452,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.12.24"
             },
             "time": "2026-06-29T15:41:09+00:00"
-        },
-        {
-            "name": "punic/punic",
-            "version": "3.8.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/punic/punic.git",
-                "reference": "142707201a246a9c2ea909605cd56177af87f961"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/142707201a246a9c2ea909605cd56177af87f961",
-                "reference": "142707201a246a9c2ea909605cd56177af87f961",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "replace": {
-                "punic/calendar": "*",
-                "punic/common": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4 || ^8.5 || ^9.5"
-            },
-            "bin": [
-                "bin/punic-data"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Punic\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michele Locati",
-                    "email": "mlocati@gmail.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Remo Laubacher",
-                    "email": "remo.laubacher@gmail.com",
-                    "role": "Collaborator, motivator and perfectionist supporter"
-                },
-                {
-                    "name": "Christian Schmidt",
-                    "email": "github@chsc.dk",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP-Unicode CLDR",
-            "homepage": "https://github.com/punic/punic",
-            "keywords": [
-                "calendar",
-                "cldr",
-                "date",
-                "date-time",
-                "i18n",
-                "internationalization",
-                "l10n",
-                "localization",
-                "php",
-                "time",
-                "translate",
-                "translations",
-                "unicode"
-            ],
-            "support": {
-                "issues": "https://github.com/punic/punic/issues",
-                "source": "https://github.com/punic/punic/tree/3.8.1"
-            },
-            "funding": [
-                {
-                    "url": "https://paypal.me/mlocati",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/mlocati",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-03-29T06:56:57+00:00"
         },
         {
             "name": "pusher/pusher-php-server",

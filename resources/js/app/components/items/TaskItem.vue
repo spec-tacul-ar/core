@@ -6,7 +6,7 @@
 
         <span v-if="task.is_complete" class="flex items-center gap-1 text-green-400 text-nowrap dark:text-green-500">
             <IconSet name="check" />
-            Complete
+            {{ $t('Complete', project.locale) }}
         </span>
 
         <DropdownMenu v-if="project.can_write" ref="dropdown">

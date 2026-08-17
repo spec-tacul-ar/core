@@ -4,8 +4,8 @@
         class="relative">
 
         <div class="absolute -top-4 right-10 flex gap-2">
-            <span class="bg-red-400 text-white rounded-full px-4 py-1 dark:bg-red-950 dark:text-red-100" v-if="requirement.is_blocked">Blocked</span>
-            <span class="bg-green-400 text-white rounded-full px-4 py-1 dark:bg-green-950 dark:text-green-100" v-if="requirement.is_complete && !requirement.is_blocked">Complete</span>
+            <span class="bg-red-400 text-white rounded-full px-4 py-1 dark:bg-red-950 dark:text-red-100" v-if="requirement.is_blocked">{{ $t('Blocked', project.locale) }}</span>
+            <span class="bg-green-400 text-white rounded-full px-4 py-1 dark:bg-green-950 dark:text-green-100" v-if="requirement.is_complete && !requirement.is_blocked">{{ $t('Complete', project.locale) }}</span>
         </div>
 
         <div
@@ -29,14 +29,14 @@
 
                 <div class="px-4">
                     <RichText v-if="requirement.description" :markup="requirement.description" />
-                    <p v-if="!requirement.description" class="italic text-gray-400 dark:text-gray-500">No description</p>
+                    <p v-if="!requirement.description" class="italic text-gray-400 dark:text-gray-500">{{ $t('No description', project.locale) }}</p>
                 </div>
 
                 <div v-if="requirement.unknowns.isNotEmpty()" class="space-y-2">
                     <UnknownItem :unknown="unknown" v-for="unknown in requirement.unknowns" :key="unknown.id" />
                 </div>
 
-                <p v-if="requirement.source" class="px-4"><strong>Source:</strong> {{ requirement.source }}</p>
+                <p v-if="requirement.source" class="px-4"><strong>{{ $t('Source', project.locale) }}:</strong> {{ requirement.source }}</p>
             </div>
 
             <ul class="border-t border-gray-200 divide-y divide-gray-200 dark:border-gray-800 dark:divide-gray-800" v-if="requirement.tasks.isNotEmpty()">
@@ -44,7 +44,7 @@
             </ul>
             
             <div class="flex justify-between items-center bg-gray-200 rounded-b-xl px-4 py-2 dark:bg-gray-800">
-                <div class="text-sm text-gray-400 dark:text-gray-500"><strong>Ref:</strong> {{ requirement.reference }}</div>
+                <div class="text-sm text-gray-400 dark:text-gray-500"><strong>{{ $t('Ref', project.locale) }}:</strong> {{ requirement.reference }}</div>
             </div>
         </div>
     </article>

@@ -6,6 +6,7 @@ import echo from '@/echo';
 import router from '@/router';
 import settings from '@/settings';
 import stores from '@/stores';
+import translations from '@/translations';
 import { createApp } from 'vue';
 
 createApp(App)
@@ -14,4 +15,5 @@ createApp(App)
     .use(router)
     .use(settings)
     .use(stores)
+    .use(translations)
     .mount('#app');
