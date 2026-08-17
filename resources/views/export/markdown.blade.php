@@ -20,7 +20,7 @@
 {{----}}{{----}}
 {{----}}{{----}}{{ $feature->description ? Str::htmlToMarkdown($feature->description) . "\n" : '' }}
 {{----}}{{----}}@foreach ($feature->requirements as $requirement)
-{{----}}{{----}}{{----}}#### {{ Str::escapeMarkdown($requirement->title) }}{{ $requirement->is_complete && !$requirement->is_blocked ? ' [Complete]' : null }}
+{{----}}{{----}}{{----}}#### ({{ $requirement->reference }}) {{ Str::escapeMarkdown($requirement->title) }}{{ $requirement->is_complete && !$requirement->is_blocked ? ' [Complete]' : null }}
 {{----}}{{----}}{{----}}{{ $requirement->is_blocked ? "\n" . '**[Blocked] ' . Str::escapeMarkdown($requirement->blocked_reason) . '**' . "\n" : '' }}
 {{----}}{{----}}{{----}}{{ $requirement->description ? Str::htmlToMarkdown($requirement->description) . "\n" : '' }}
 {{----}}{{----}}{{----}}{{ $requirement->source ? '*Source: ' . Str::escapeMarkdown($requirement->source) . '*' . "\n" : '' }}

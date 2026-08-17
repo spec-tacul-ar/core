@@ -117,6 +117,28 @@ class ExportAuthorizationTest extends TestCase
             ->assertHeader('Content-Type', 'text/markdown; charset=utf-8');
     }
 
+    public function test_project_exports_include_requirement_references(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $requirement = $fixture['requirement'];
+        $requirement->reference = 42;
+        $requirement->saveQuietly();
+
+        $this->actingAs($fixture['account']);
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/html')
+            ->assertOk()
+            ->assertSeeText('Ref: 42');
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
+            ->assertOk()
+            ->assertSee('#### (42) ' . $requirement->title, false);
+
+        $this->getJson('/exports/' . $fixture['project']->sqid . '/json')
+            ->assertOk()
+            ->assertJsonPath('features.0.requirements.0.reference', 42);
+    }
+
     public function test_html_and_markdown_exports_do_not_lazy_load_relations(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);

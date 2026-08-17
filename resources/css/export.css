@@ -97,6 +97,10 @@ hr {
         @apply before:content-['Source:_'] before:font-semibold m-4;
     }
 
+    .reference {
+        @apply border-t border-gray-200 bg-gray-100 text-sm text-gray-500 px-4 py-2;
+    }
+
     .tasks {
         @apply m-4;
 
