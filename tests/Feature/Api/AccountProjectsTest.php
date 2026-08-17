@@ -187,7 +187,7 @@ class AccountProjectsTest extends TestCase
         $this->actingAsAccount();
 
         $this->postJson('/api/projects', [
-            'locale' => 'de',
+            'locale' => 'ja',
             'name' => 'Roadmap',
         ])->assertUnprocessable()->assertJsonValidationErrors('locale');
     }
@@ -293,7 +293,7 @@ class AccountProjectsTest extends TestCase
         $this->actingAsAccount($owner);
 
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
-            'locale' => 'de',
+            'locale' => 'ja',
             'name' => $project->name,
         ])->assertUnprocessable()->assertJsonValidationErrors('locale');
     }

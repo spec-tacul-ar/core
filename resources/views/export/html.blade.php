@@ -95,7 +95,7 @@
                                             </div>
                                         @endif
 
-                                        <p class="reference"><strong>Ref:</strong> {{ $requirement->reference }}</p>
+                                        <p class="reference"><strong>{{ __('Ref', locale: $project->locale) }}:</strong> {{ $requirement->reference }}</p>
                                     </div>
                                 @endforeach
                             </div>

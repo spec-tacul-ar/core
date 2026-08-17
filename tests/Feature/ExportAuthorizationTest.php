@@ -165,7 +165,7 @@ class ExportAuthorizationTest extends TestCase
             ->assertSeeText('First Export Actor et Second Export Actor peuvent perform blocked action')
             ->assertSeeText('Bloqué: Waiting on dependency')
             ->assertSeeText('Source: Project brief')
-            ->assertSeeText('Inconnues')
+            ->assertSeeText('Questions en suspens')
             ->assertSeeText('Tâches')
             ->assertSeeText('Terminé');
 
@@ -176,7 +176,7 @@ class ExportAuthorizationTest extends TestCase
             ->assertSee('#### (' . $blocked_requirement->reference . ') First Export Actor et Second Export Actor peuvent perform blocked action', false)
             ->assertSee('**[Bloqué] Waiting on dependency**', false)
             ->assertSee('*Source: Project brief*', false)
-            ->assertSee('##### Inconnues', false)
+            ->assertSee('##### Questions en suspens', false)
             ->assertSee('#### (' . $complete_requirement->reference . ') Utilisateurs peuvent perform complete action [Terminé]', false)
             ->assertSee('##### Tâches', false)
             ->assertSee('* Export Task [Terminé]', false);
