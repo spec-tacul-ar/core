@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
@@ -114,6 +115,21 @@ class ExportAuthorizationTest extends TestCase
         $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
             ->assertOk()
             ->assertHeader('Content-Type', 'text/markdown; charset=utf-8');
+    }
+
+    public function test_html_and_markdown_exports_do_not_lazy_load_relations(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $this->actingAs($fixture['account']);
+
+        Model::preventLazyLoading();
+
+        try {
+            $this->get('/exports/' . $fixture['project']->sqid . '/html')->assertOk();
+            $this->get('/exports/' . $fixture['project']->sqid . '/markdown')->assertOk();
+        } finally {
+            Model::preventLazyLoading(false);
+        }
     }
 
     public function test_project_export_route_requires_authentication_and_allows_members(): void

@@ -13,6 +13,7 @@ class ExportController
             'actors',
             'features',
             'features.requirements',
+            'features.requirements.actors',
             'features.requirements.assignments.actor',
             'features.requirements.tasks',
             'features.requirements.unknowns',
