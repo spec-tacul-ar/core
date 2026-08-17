@@ -10,6 +10,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Rules\SluggableName as SluggableNameRule;
+use App\Rules\SupportedLocale as SupportedLocaleRule;
 
 class EditProject
 {
@@ -29,6 +30,7 @@ class EditProject
     {
         return [
             'description' => ['nullable', 'string', 'max:10000'],
+            'locale' => ['sometimes', 'string', new SupportedLocaleRule()],
             'name' => ['required', 'string', 'max:250', new SluggableNameRule()],
         ];
     }

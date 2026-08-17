@@ -40,12 +40,14 @@ class ExportAuthorizationTest extends TestCase
     public function test_project_json_export_allows_project_members(): void
     {
         $fixture = $this->createProjectFixture(Role::VIEWER);
+        $fixture['project']->refresh();
         $this->actingAs($fixture['account']);
 
         $response = $this->getJson('/exports/' . $fixture['project']->sqid . '/json');
 
         $response->assertOk();
         $response->assertJsonPath('name', $fixture['project']->name);
+        $response->assertJsonPath('locale', $fixture['project']->locale);
     }
 
     public function test_project_exports_only_return_the_requested_project(): void
@@ -114,6 +116,71 @@ class ExportAuthorizationTest extends TestCase
         $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
             ->assertOk()
             ->assertHeader('Content-Type', 'text/markdown; charset=utf-8');
+    }
+
+    public function test_html_and_markdown_exports_use_the_project_locale(): void
+    {
+        $account = Account::factory()->create();
+        $project = Project::factory()->create(['locale' => 'fr']);
+        $feature = Feature::factory()->for($project)->create(['name' => 'Export Feature']);
+
+        $first_actor = Actor::factory()->for($project)->create([
+            'name' => 'First Export Actor',
+            'weight' => 1,
+        ]);
+        $second_actor = Actor::factory()->for($project)->create([
+            'name' => 'Second Export Actor',
+            'weight' => 2,
+        ]);
+
+        $blocked_requirement = Requirement::factory()->for($feature)->create([
+            'name' => 'perform blocked action',
+            'blocked_reason' => 'Waiting on dependency',
+            'source' => 'Project brief',
+        ]);
+        $blocked_requirement->assignments()->createMany([
+            ['actor_id' => $first_actor->id],
+            ['actor_id' => $second_actor->id],
+        ]);
+        Unknown::factory()->for($blocked_requirement)->create(['name' => 'Open question']);
+
+        $complete_requirement = Requirement::factory()->for($feature)->create([
+            'name' => 'perform complete action',
+            'blocked_reason' => null,
+        ]);
+        Task::factory()->for($complete_requirement)->create([
+            'name' => 'Export Task',
+            'is_complete' => true,
+        ]);
+
+        $this->attachCollaboration($account, $project, Role::VIEWER);
+        $this->actingAs($account);
+
+        $this->get('/exports/' . $project->sqid . '/html')
+            ->assertOk()
+            ->assertSee('<html lang="fr">', false)
+            ->assertSeeText('Utilisateurs')
+            ->assertSeeText('Fonctionnalités')
+            ->assertSeeText('First Export Actor et Second Export Actor peuvent perform blocked action')
+            ->assertSeeText('Bloqué: Waiting on dependency')
+            ->assertSeeText('Source: Project brief')
+            ->assertSeeText('Inconnues')
+            ->assertSeeText('Tâches')
+            ->assertSeeText('Terminé');
+
+        $this->get('/exports/' . $project->sqid . '/markdown')
+            ->assertOk()
+            ->assertSee('## Utilisateurs', false)
+            ->assertSee('## Fonctionnalités', false)
+            ->assertSee('#### First Export Actor et Second Export Actor peuvent perform blocked action', false)
+            ->assertSee('**[Bloqué] Waiting on dependency**', false)
+            ->assertSee('*Source: Project brief*', false)
+            ->assertSee('##### Inconnues', false)
+            ->assertSee('#### Utilisateurs peuvent perform complete action [Terminé]', false)
+            ->assertSee('##### Tâches', false)
+            ->assertSee('* Export Task [Terminé]', false);
+
+        $this->assertSame('en', app()->getLocale());
     }
 
     public function test_project_export_route_requires_authentication_and_allows_members(): void

@@ -50,6 +50,21 @@
                 </template>
             </FormRichText>
 
+            <FormOptions
+                type="select"
+                :id="elementId('locale')"
+                label="Locale"
+                class="mb-4"
+                :error="errors.locale"
+                :options="locales"
+                v-model="form.locale"
+                required>
+                <template v-slot:help>
+                    <p class="font-semibold mb-4">The locale controls the language used for headings and labels within the specification.</p>
+                    <p>Changing this will not translate the specification.</p>
+                </template>
+            </FormOptions>
+
         </form>
     </SidepanelLayout>
 </template>
@@ -57,6 +72,7 @@
 <script>
 import EditingWarning from '@/components/EditingWarning.vue';
 import FormInput from '@/components/forms/FormInput.vue';
+import FormOptions from '@/components/forms/FormOptions.vue';
 import FormRichText from '@/components/forms/FormRichText.vue';
 import EditingPresence from '@/mixins/EditingPresence';
 import IconSet from '@/components/IconSet.vue';
@@ -78,6 +94,7 @@ export default {
     components: {
         EditingWarning,
         FormInput,
+        FormOptions,
         FormRichText,
         IconSet,
         SidepanelLayout,
@@ -95,8 +112,13 @@ export default {
         return {
             form: {
                 description: project.description,
+                locale: project.locale,
                 name: project.name,
             },
+            locales: [
+                { id: 'en', name: 'English' },
+                { id: 'fr', name: 'French' },
+            ],
             errors: {},
             is_archiving: false,
             is_waiting: false

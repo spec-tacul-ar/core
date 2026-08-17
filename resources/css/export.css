@@ -94,7 +94,7 @@ hr {
     }
 
     .source {
-        @apply before:content-['Source:_'] before:font-semibold m-4;
+        @apply m-4;
     }
 
     .tasks {
@@ -137,7 +137,7 @@ hr {
 }
 
 .blocker {
-    @apply bg-red-400 text-white p-4 before:content-['Blocked:_'] before:font-semibold mb-4;
+    @apply bg-red-400 text-white p-4 mb-4;
 }
 
 tfoot th {

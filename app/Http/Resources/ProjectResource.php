@@ -13,6 +13,7 @@ class ProjectResource extends JsonResource
             'id' => $this->sqid,
             'name' => $this->name,
             'description' => $this->description,
+            'locale' => $this->locale,
             'slug' => $this->slug,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

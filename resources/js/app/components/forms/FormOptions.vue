@@ -17,7 +17,7 @@
             v-bind:value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)">
 
-            <option :value="null"></option>
+            <option v-if="has_empty_option" :value="null"></option>
             <option :value="option.id" v-for="option in options" :key="option.id">{{ option.name }}</option>
         </select>
     </template>
@@ -50,6 +50,9 @@ export default {
         InfoPopover
     },
     computed: {
+        has_empty_option() {
+            return !this.required || (this.modelValue ?? '') === '';
+        },
         has_help_slot() {
             return this.$slots.help;
         },

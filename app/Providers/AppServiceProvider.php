@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -59,13 +60,15 @@ class AppServiceProvider extends ServiceProvider
             $this->binary('history')->nullable();
         });
 
+        Gate::policy(Token::class, TokenPolicy::class);
+
+        Lang::addJsonPath(lang_path('spectacular'));
+
         Passport::authorizationView(function ($parameters) {
             return view('mcp.authorize', $parameters);
         });
 
         Passport::cookie('spectacular_token');
-
-        Gate::policy(Token::class, TokenPolicy::class);
 
         Relation::enforceMorphMap([
             'account' => Account::class,

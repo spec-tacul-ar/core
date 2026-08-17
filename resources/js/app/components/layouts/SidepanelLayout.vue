@@ -46,7 +46,7 @@ export default {
         },
     },
     mounted() {
-        const element = this.$el.querySelector('input');
+        const element = this.$el.querySelector('input, select');
 
         if (element) {
             element.focus();
