@@ -94,6 +94,8 @@
                                                 </ul>
                                             </div>
                                         @endif
+
+                                        <p class="reference"><strong>Ref:</strong> {{ $requirement->reference }}</p>
                                     </div>
                                 @endforeach
                             </div>

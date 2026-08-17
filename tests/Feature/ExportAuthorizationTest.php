@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Requirement;
 use App\Models\Task;
 use App\Models\Unknown;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\BuildsApiFixtures;
 use Tests\TestCase;
@@ -172,15 +173,52 @@ class ExportAuthorizationTest extends TestCase
             ->assertOk()
             ->assertSee('## Utilisateurs', false)
             ->assertSee('## Fonctionnalités', false)
-            ->assertSee('#### First Export Actor et Second Export Actor peuvent perform blocked action', false)
+            ->assertSee('#### (' . $blocked_requirement->reference . ') First Export Actor et Second Export Actor peuvent perform blocked action', false)
             ->assertSee('**[Bloqué] Waiting on dependency**', false)
             ->assertSee('*Source: Project brief*', false)
             ->assertSee('##### Inconnues', false)
-            ->assertSee('#### Utilisateurs peuvent perform complete action [Terminé]', false)
+            ->assertSee('#### (' . $complete_requirement->reference . ') Utilisateurs peuvent perform complete action [Terminé]', false)
             ->assertSee('##### Tâches', false)
             ->assertSee('* Export Task [Terminé]', false);
 
         $this->assertSame('en', app()->getLocale());
+    }
+
+    public function test_project_exports_include_requirement_references(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $requirement = $fixture['requirement'];
+        $requirement->reference = 42;
+        $requirement->saveQuietly();
+
+        $this->actingAs($fixture['account']);
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/html')
+            ->assertOk()
+            ->assertSeeText('Ref: 42');
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
+            ->assertOk()
+            ->assertSee('#### (42) ' . $requirement->title, false);
+
+        $this->getJson('/exports/' . $fixture['project']->sqid . '/json')
+            ->assertOk()
+            ->assertJsonPath('features.0.requirements.0.reference', 42);
+    }
+
+    public function test_html_and_markdown_exports_do_not_lazy_load_relations(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $this->actingAs($fixture['account']);
+
+        Model::preventLazyLoading();
+
+        try {
+            $this->get('/exports/' . $fixture['project']->sqid . '/html')->assertOk();
+            $this->get('/exports/' . $fixture['project']->sqid . '/markdown')->assertOk();
+        } finally {
+            Model::preventLazyLoading(false);
+        }
     }
 
     public function test_project_export_route_requires_authentication_and_allows_members(): void
