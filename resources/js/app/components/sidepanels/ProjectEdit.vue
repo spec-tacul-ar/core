@@ -53,7 +53,7 @@
             <FormOptions
                 type="select"
                 :id="elementId('locale')"
-                label="Locale"
+                label="Language and locale"
                 class="mb-4"
                 :error="errors.locale"
                 :options="locales"
