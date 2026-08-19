@@ -12,6 +12,8 @@ use App\Models\Account;
 use App\Models\Comment;
 use App\Models\Collaboration;
 use App\Models\Invitation;
+use App\Models\Task;
+use App\Models\Unknown;
 
 class TestSeeder extends Seeder
 {
@@ -51,21 +53,38 @@ class TestSeeder extends Seeder
             ->has(
                 Feature::factory()
                     ->count($this->faker->numberBetween(2, 5))
-                    ->has(
+                    ->afterCreating(function (Feature $feature) {
                         Requirement::factory()
                             ->count($this->faker->numberBetween(1, 5))
-                            ->hasTasks($this->faker->numberBetween(1, 3))
-                            ->hasUnknowns($this->faker->numberBetween(0, 3))
+                            ->for($feature)
                             ->afterCreating(function (Requirement $requirement) {
-                                $actors = $this->faker->randomElements($requirement->feature->project->actors, null);
+                                Task::factory()
+                                    ->count($this->faker->numberBetween(1, 3))
+                                    ->for($requirement)
+                                    ->create();
+
+                                Unknown::factory()
+                                    ->count($this->faker->numberBetween(0, 3))
+                                    ->for($requirement)
+                                    ->create();
+
+                                $actors = $requirement->feature->project->actors
+                                    ->take($this->faker->numberBetween(0, $requirement->feature->project->actors->count()));
 
                                 foreach ($actors as $actor) {
                                     $requirement->assignments()->make()->actor()->associate($actor)->save();
                                 }
-                            }),
-                    ),
+                            })
+                            ->create();
+                    }),
             )
             ->create();
+
+        $project->tasks
+            ->values()
+            ->each(fn($task) => $task->update([
+                'is_complete' => $this->faker->boolean(),
+            ]));
 
         Project::factory()
             ->state(['name' => 'Other Project'])

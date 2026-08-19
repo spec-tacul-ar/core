@@ -20,6 +20,28 @@ class NestedResourcesTest extends TestCase
     use BuildsApiFixtures;
     use RefreshDatabase;
 
+    public function test_requirements_read_endpoint_requires_project_view_access(): void
+    {
+        $project = Project::factory()->create();
+        $requirement = Requirement::factory()
+            ->for(Feature::factory()->for($project))
+            ->create();
+        $viewer = Account::factory()->create();
+
+        $this->attachCollaboration($viewer, $project, Role::VIEWER);
+        $this->actingAsAccount($viewer);
+
+        $this->getJson('/api/requirements/' . $requirement->sqid)
+            ->assertOk()
+            ->assertJsonPath('data.id', $requirement->sqid)
+            ->assertJsonPath('data.activity_at', $requirement->activity_at->toJSON())
+            ->assertJsonPath('data.completed_at', null);
+
+        $this->actingAsAccount(Account::factory()->create());
+
+        $this->getJson('/api/requirements/' . $requirement->sqid)->assertNotFound();
+    }
+
     public function test_features_endpoints_require_project_edit_access(): void
     {
         $project = Project::factory()->create();
@@ -309,6 +331,7 @@ class NestedResourcesTest extends TestCase
             'reason' => 'Blocked block',
         ])->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertForbidden();
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/reopen')->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertForbidden();
         $this->postJson('/api/requirements/' . $requirement->sqid . '/unblock')->assertForbidden();
 
@@ -334,6 +357,10 @@ class NestedResourcesTest extends TestCase
             'reason' => 'Waiting on API access',
         ])->assertOk();
 
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('requirement');
+
         $this->assertDatabaseHas('requirements', [
             'id' => $requirement->id,
             'blocked_reason' => 'Waiting on API access',
@@ -346,10 +373,26 @@ class NestedResourcesTest extends TestCase
             'blocked_reason' => null,
         ]);
 
-        $this->postJson('/api/requirements/' . $requirement->sqid . '/complete')->assertOk();
+        $activityAt = $requirement->fresh()->activity_at->toJSON();
 
-        $this->assertDatabaseHas('tasks', ['id' => $taskA->id, 'is_complete' => true]);
-        $this->assertDatabaseHas('tasks', ['id' => $taskB->id, 'is_complete' => true]);
+        $completeResponse = $this->postJson('/api/requirements/' . $requirement->sqid . '/complete', [
+            'activity_at' => now()->addYear()->toISOString(),
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.activity_at', $activityAt);
+
+        $this->assertNotNull($completeResponse->json('data.completed_at'));
+
+        $this->assertDatabaseMissing('requirements', ['id' => $requirement->id, 'completed_at' => null]);
+        $this->assertDatabaseHas('tasks', ['id' => $taskA->id, 'is_complete' => false]);
+        $this->assertDatabaseHas('tasks', ['id' => $taskB->id, 'is_complete' => false]);
+
+        $this->postJson('/api/requirements/' . $requirement->sqid . '/reopen')
+            ->assertOk()
+            ->assertJsonPath('data.completed_at', null)
+            ->assertJsonPath('data.activity_at', $activityAt);
+
+        $this->assertDatabaseHas('requirements', ['id' => $requirement->id, 'completed_at' => null]);
 
         $this->postJson('/api/requirements/' . $requirement->sqid . '/delete')->assertNoContent();
         $this->assertSoftDeleted('requirements', ['id' => $requirement->id]);

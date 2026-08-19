@@ -49,12 +49,4 @@ class Task extends Model
     {
         return $this->belongsToThrough(Project::class, [Feature::class, Requirement::class]);
     }
-
-    /* Helpers */
-
-    public function complete(): void
-    {
-        $this->is_complete = true;
-        $this->save();
-    }
 }

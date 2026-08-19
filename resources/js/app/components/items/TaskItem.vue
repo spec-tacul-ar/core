@@ -35,6 +35,7 @@ import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import { useAlertsStore } from '@/stores';
 import IconSet from '@/components/IconSet.vue';
+import Requirement from '@/stores/models/Requirement';
 import Task from '@/stores/models/Task';
 
 export default {
@@ -57,8 +58,13 @@ export default {
             this.api.post('tasks/' + this.task.id + '/toggle', {
                 'is_complete': !this.task.is_complete
             })
-                .then((result) => {
+                .then(async (result) => {
                     Task.repository().save(result.data);
+
+                    // Task activity can make the requirement incomplete, so reload its timestamps.
+                    const requirement = await this.api.get('requirements/' + this.task.requirement_id);
+
+                    Requirement.repository().save(requirement.data);
 
                     useAlertsStore().push('Task updated.');
 
@@ -70,6 +76,11 @@ export default {
             this.is_waiting_for_remove = true;
 
             this.api.post('tasks/' + this.task.id + '/delete')
+                .then(async () => {
+                    const result = await this.api.get('requirements/' + this.task.requirement_id);
+
+                    Requirement.repository().save(result.data);
+                })
                 .then(() => {
                     this.$nextTick(function () {
                         Task.repository().delete(this.task.id);

@@ -436,7 +436,7 @@
                 },
                 {
                     "name": "mark tasks as complete",
-                    "description": "<p>Tasks can be either marked individually or with a <em>\"Mark all as complete\"</em> button.</p>",
+                    "description": "<p>Tasks can be marked complete or incomplete individually.</p>",
                     "blocked_reason": null,
                     "source": null,
                     "reference": 17,

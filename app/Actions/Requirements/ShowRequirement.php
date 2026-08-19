@@ -7,41 +7,30 @@ use App\Models\Requirement;
 use Illuminate\Auth\Access\Response as GateResponse;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class CompleteRequirement
+class ShowRequirement
 {
     use AsAction;
 
     public function authorize(ActionRequest $request): GateResponse
     {
-        return Gate::inspect('update', $request->route('requirement'));
+        return Gate::inspect('view', $request->route('requirement'));
     }
 
     public static function routes(Router $router): void
     {
-        $router->post('requirements/{requirement}/complete', static::class);
+        $router->get('requirements/{requirement}', static::class);
     }
 
     public function handle(Requirement $requirement): Requirement
     {
-        if ($requirement->is_blocked) {
-            throw ValidationException::withMessages([
-                'requirement' => 'Requirements cannot be completed while blocked.',
-            ]);
-        }
-
-        $requirement->complete();
-
         return $requirement;
     }
 
     public function asController(Requirement $requirement): RequirementResource
     {
-        $requirement = $this->handle($requirement);
-
-        return new RequirementResource($requirement);
+        return new RequirementResource($this->handle($requirement));
     }
 }

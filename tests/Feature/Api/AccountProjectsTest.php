@@ -87,10 +87,21 @@ class AccountProjectsTest extends TestCase
         $feature = Feature::factory()->for($alpha)->create();
         $blockedRequirement = Requirement::factory()->for($feature)->create(['blocked_reason' => 'Waiting on vendor']);
         $openRequirement = Requirement::factory()->for($feature)->create(['blocked_reason' => null]);
+        $staleRequirement = Requirement::factory()->for($feature)->create(['blocked_reason' => null]);
 
         Task::factory()->for($blockedRequirement)->create(['is_complete' => true]);
         Task::factory()->for($openRequirement)->create(['is_complete' => false]);
+        Task::factory()->for($staleRequirement)->create(['is_complete' => true]);
         Unknown::factory()->for($blockedRequirement)->create();
+
+        $openRequirement->forceFill([
+            'activity_at' => now()->subMinute(),
+            'completed_at' => now(),
+        ])->saveQuietly();
+        $staleRequirement->forceFill([
+            'activity_at' => now(),
+            'completed_at' => now()->subMinute(),
+        ])->saveQuietly();
 
         Feature::factory()->for($hidden)->create();
 
@@ -100,12 +111,13 @@ class AccountProjectsTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonPath('data.0.name', 'Alpha');
-        $response->assertJsonPath('data.0.requirements_count', 2);
+        $response->assertJsonPath('data.0.requirements_count', 3);
         $response->assertJsonPath('data.0.blocked_requirements_count', 1);
         $response->assertJsonPath('data.0.unknowns_count', 1);
-        $response->assertJsonPath('data.0.tasks_count', 2);
-        $response->assertJsonPath('data.0.requirements_with_tasks_count', 2);
-        $response->assertJsonPath('data.0.requirements_all_tasks_complete_count', 1);
+        $response->assertJsonPath('data.0.tasks_count', 3);
+        $response->assertJsonPath('data.0.completed_requirements_count', 1);
+        $response->assertJsonMissingPath('data.0.requirements_with_tasks_count');
+        $response->assertJsonMissingPath('data.0.requirements_all_tasks_complete_count');
         $response->assertJsonPath('data.0.read_at', $readmark->read_at->toJSON());
         $response->assertJsonPath('data.0.collaborations.0.account_id', $account->sqid);
         $response->assertJsonMissingPath('data.0.collaborations.0.account_name');

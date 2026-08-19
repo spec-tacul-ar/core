@@ -47,12 +47,17 @@ export default {
             this.api.post('unknowns/' + this.unknown.id + '/delete')
                 .then(() => {
                     if (this.form.text) {
-                        this.api.post('requirements/' + this.unknown.requirement_id + '/append', {
+                        return this.api.post('requirements/' + this.unknown.requirement_id + '/append', {
                             text: this.form.text,
-                        })
-                            .then((result) => Requirement.repository().save(result.data));
+                        });
                     }
+                })
+                .then(async () => {
+                    const result = await this.api.get('requirements/' + this.unknown.requirement_id);
 
+                    Requirement.repository().save(result.data);
+                })
+                .then(() => {
                     this.$emit('close');
 
                     Unknown.repository().delete(this.unknown.id);

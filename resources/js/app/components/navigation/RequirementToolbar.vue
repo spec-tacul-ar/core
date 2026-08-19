@@ -5,8 +5,9 @@
         </RouterLink>
 
         <DropdownMenu>
-            <DropdownMenuItem v-if="project.can_write && requirement.has_tasks && !requirement.is_complete" type="button" :loading="is_waiting_for_complete" icon="check-all" @click.stop="complete()">Complete all tasks</DropdownMenuItem>
-            <DropdownMenuItem v-if="project.can_write && requirement.is_blocked" type="button" :loading="is_waiting_for_unblock" icon="unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write && !requirement.is_blocked && !requirement.is_complete" type="button" :loading="is_waiting" icon="check-lg" @click.stop="markComplete()">Mark complete</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write && requirement.is_complete" type="button" :loading="is_waiting" icon="x-lg" @click.stop="reopen()">Reopen</DropdownMenuItem>
+            <DropdownMenuItem v-if="project.can_write && requirement.is_blocked" type="button" :loading="is_waiting" icon="unblock" @click.stop="unblock()">Unblock</DropdownMenuItem>
             <DropdownMenuItem :to="{ name: 'projects.requirements.feedback', params: { requirement_id: requirement.id }}" icon="feedback">Feedback</DropdownMenuItem>
                         
             <slot name="menu" />
@@ -22,7 +23,6 @@ import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import RequirementDelete from '@/components/modals/RequirementDelete.vue';
 import IconSet from '@/components/IconSet.vue';
 import Requirement from '@/stores/models/Requirement';
-import Task from '@/stores/models/Task';
 import { useAlertsStore, useModalStore } from '@/stores';
 
 export default {
@@ -34,27 +34,37 @@ export default {
     },
     data() {
         return {
-            'is_waiting_for_complete': false,
-            'is_waiting_for_unblock': false
+            'is_waiting': false
         };
     },
     methods: {
-        complete() {
-            this.is_waiting_for_complete = true;
+        markComplete() {
+            this.is_waiting = true;
 
             this.api.post('requirements/' + this.requirement.id + '/complete')
                 .then((result) => {
-                    Task.repository().saveMany(result.data);
+                    Requirement.repository().save(result.data);
 
                     useAlertsStore().push('Requirement completed.');
                 })
-                .finally(() => this.is_waiting_for_complete = false);
+                .finally(() => this.is_waiting = false);
         },
         openRequirementDeleteModal() {
             useModalStore().open(RequirementDelete, {requirement: this.requirement});
         },
+        reopen() {
+            this.is_waiting = true;
+
+            this.api.post('requirements/' + this.requirement.id + '/reopen')
+                .then((result) => {
+                    Requirement.repository().save(result.data);
+
+                    useAlertsStore().push('Requirement reopened.');
+                })
+                .finally(() => this.is_waiting = false);
+        },
         unblock() {
-            this.is_waiting_for_unblock = true;
+            this.is_waiting = true;
 
             this.api.post('requirements/' + this.requirement.id + '/unblock')
                 .then((result) => {
@@ -62,7 +72,7 @@ export default {
 
                     useAlertsStore().push('Requirement unblocked.');
                 })
-                .finally(() => this.is_waiting_for_unblock = false);
+                .finally(() => this.is_waiting = false);
         }
     },
     props: ['requirement'],

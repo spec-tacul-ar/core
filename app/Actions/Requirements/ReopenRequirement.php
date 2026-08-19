@@ -7,11 +7,10 @@ use App\Models\Requirement;
 use Illuminate\Auth\Access\Response as GateResponse;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class CompleteRequirement
+class ReopenRequirement
 {
     use AsAction;
 
@@ -22,18 +21,12 @@ class CompleteRequirement
 
     public static function routes(Router $router): void
     {
-        $router->post('requirements/{requirement}/complete', static::class);
+        $router->post('requirements/{requirement}/reopen', static::class);
     }
 
     public function handle(Requirement $requirement): Requirement
     {
-        if ($requirement->is_blocked) {
-            throw ValidationException::withMessages([
-                'requirement' => 'Requirements cannot be completed while blocked.',
-            ]);
-        }
-
-        $requirement->complete();
+        $requirement->reopen();
 
         return $requirement;
     }

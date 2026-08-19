@@ -29,8 +29,7 @@ class ProjectResource extends JsonResource
             'unknowns_count' => $this->unknowns_count,
             'tasks_count' => $this->tasks_count,
             'collaborations_count' => $this->collaborations_count,
-            'requirements_with_tasks_count' => $this->requirements_with_tasks_count,
-            'requirements_all_tasks_complete_count' => $this->requirements_all_tasks_complete_count,
+            'completed_requirements_count' => $this->completed_requirements_count,
         ];
     }
 }

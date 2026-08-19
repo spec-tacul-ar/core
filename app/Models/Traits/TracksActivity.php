@@ -2,6 +2,8 @@
 
 namespace App\Models\Traits;
 
+use App\Events\ProjectItemSaved;
+
 trait TracksActivity
 {
     protected function initializeTracksActivity(): void
@@ -18,6 +20,10 @@ trait TracksActivity
                 'activity_at' => now(),
             ])->saveQuietly();
         });
+
+        if ($this->wasChanged('activity_at')) {
+            broadcast(new ProjectItemSaved($this))->toOthers();
+        }
 
         $this->handleActivity();
     }

@@ -96,6 +96,8 @@ class ExportController
                             'name' => $requirement->name,
                             'description' => $requirement->description,
                             'blocked_reason' => $requirement->blocked_reason,
+                            'activity_at' => $requirement->activity_at,
+                            'completed_at' => $requirement->completed_at,
                             'source' => $requirement->source,
                             'reference' => $requirement->reference,
                             'weight' => $requirement->weight,

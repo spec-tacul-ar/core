@@ -39,13 +39,32 @@ class ExportAuthorizationTest extends TestCase
 
     public function test_project_json_export_allows_project_members(): void
     {
+        $this->travelTo('2026-08-18 10:00:00');
+
         $fixture = $this->createProjectFixture(Role::VIEWER);
+        $fixture['requirement']->update(['blocked_reason' => null]);
+
+        $this->travelTo('2026-08-18 10:01:00');
+        $fixture['requirement']->complete();
+
         $this->actingAs($fixture['account']);
 
         $response = $this->getJson('/exports/' . $fixture['project']->sqid . '/json');
 
         $response->assertOk();
         $response->assertJsonPath('name', $fixture['project']->name);
+        $response->assertJsonPath('features.0.requirements.0.completed_at', $fixture['requirement']->completed_at->toJSON());
+        $response->assertJsonPath('features.0.requirements.0.activity_at', $fixture['requirement']->activity_at->toJSON());
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/html')
+            ->assertOk()
+            ->assertSeeText('Complete');
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
+            ->assertOk()
+            ->assertSee('[Complete]');
+
+        $this->travelBack();
     }
 
     public function test_project_exports_only_return_the_requested_project(): void
