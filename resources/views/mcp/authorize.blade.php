@@ -41,6 +41,26 @@
 
                 <p class="break-words font-medium text-center mb-4">{{ $user->email }}</p>
 
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 mb-4 space-y-4 dark:border-gray-700 dark:bg-gray-800">
+                    <div>
+                        <p class="text-sm font-medium mb-2">Permissions requested</p>
+
+                        <ul class="space-y-2">
+                            @foreach($scopes as $scope)
+                                <li>
+                                    <code class="text-sm font-medium">{{ $scope->id }}</code>
+                                    <span class="block text-sm text-gray-600 dark:text-gray-400">{{ $scope->description }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-medium mb-1">Redirect URI</p>
+                        <code class="block break-all text-sm text-gray-600 dark:text-gray-400">{{ $request->query('redirect_uri') }}</code>
+                    </div>
+                </div>
+
                 <p class="mb-4">Only continue if you recognise this request. You can revoke access from your integrations later.</p>
 
                 <div class="flex gap-4">

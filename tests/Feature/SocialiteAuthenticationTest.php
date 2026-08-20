@@ -14,6 +14,14 @@ class SocialiteAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_socialite_routes_reject_unknown_providers_before_resolving_a_driver(): void
+    {
+        Socialite::shouldReceive('driver')->never();
+
+        $this->get('/auth/not-configured/redirect')->assertNotFound();
+        $this->get('/auth/not-configured/callback')->assertNotFound();
+    }
+
     public function test_socialite_signup_follows_registration_flag(): void
     {
         config(['spectacular.registration' => false]);
