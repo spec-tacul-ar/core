@@ -85,6 +85,7 @@ import TrackDirty from '@/mixins/TrackDirty';
 import UniqueId from '@/mixins/UniqueId';
 import Project from '@/stores/models/Project';
 import { useAlertsStore, useModalStore } from '@/stores';
+import { locales } from '@/translations';
 
 export default {
     inject: ['api'],
@@ -115,17 +116,7 @@ export default {
                 locale: project.locale,
                 name: project.name,
             },
-            locales: [
-                { id: 'da', name: 'Danish' },
-                { id: 'nl', name: 'Dutch' },
-                { id: 'en', name: 'English' },
-                { id: 'fr', name: 'French' },
-                { id: 'de', name: 'German' },
-                { id: 'it', name: 'Italian' },
-                { id: 'pl', name: 'Polish' },
-                { id: 'pt', name: 'Portuguese' },
-                { id: 'es', name: 'Spanish' },
-            ],
+            locales,
             errors: {},
             is_archiving: false,
             is_waiting: false

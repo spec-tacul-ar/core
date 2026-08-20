@@ -9,6 +9,11 @@ const messages = Object.fromEntries(Object.entries(files).map(([path, translatio
     return [locale, translations];
 }));
 
+export const locales = Object.keys(messages).map(locale => ({
+    id: locale,
+    name: new Intl.DisplayNames('en', { type: 'language' }).of(locale),
+}));
+
 export function translate(key, locale) {
     return messages[locale]?.[key] ?? messages.en?.[key] ?? key;
 }
