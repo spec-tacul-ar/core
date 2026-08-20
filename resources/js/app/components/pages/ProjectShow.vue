@@ -47,20 +47,20 @@
 
         <section id="users" class="mb-8">
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
-                <h2 class="text-3xl"><a href="#users">Users</a></h2>
+                <h2 class="text-3xl"><a href="#users">{{ $t('Users', project.locale) }}</a></h2>
 
                 <RouterLink v-if="project.can_write" :to="{ name: 'projects.actors.create' }" class="btn btn-primary print:hidden" replace><IconSet name="plus-lg" /> Add user</RouterLink>
             </div>
 
             <div class="bg-white p-8 shadow rounded-3xl print:p-0 print:shadow-none space-y-4 dark:bg-gray-900">
-                <p v-if="actors.isEmpty()" class="italic text-gray-400 dark:text-gray-500">No users</p>
+                <p v-if="actors.isEmpty()" class="italic text-gray-400 dark:text-gray-500">{{ $t('No users', project.locale) }}</p>
                 <ActorItem :actor="actor" v-for="actor in actors" :key="actor.id" />
             </div>
         </section>
 
         <section id="features" class="mb-4">
             <div class="flex justify-between flex-wrap md:flex-nowrap items-center mb-4 ml-8 print:mx-0">
-                <h2 class="text-3xl"><a href="#features">Features</a></h2>
+                <h2 class="text-3xl"><a href="#features">{{ $t('Features', project.locale) }}</a></h2>
 
                 <RouterLink v-if="project.can_write" :to="{ name: 'projects.features.create' }" class="btn btn-primary"><IconSet name="plus-lg" /> Add feature</RouterLink>
             </div>

@@ -1,8 +1,8 @@
 <template>
     <ol class="p-4 space-y-4">
         <li><a href="#introduction" class="uppercase font-semibold" @click.prevent="scroll">Introduction</a></li>
-        <li><a href="#users" class="uppercase font-semibold" @click.prevent="scroll">Users</a></li>
-        <li><a href="#features" class="uppercase font-semibold" @click.prevent="scroll">Features</a></li>
+        <li><a href="#users" class="uppercase font-semibold" @click.prevent="scroll">{{ $t('Users', project.locale) }}</a></li>
+        <li><a href="#features" class="uppercase font-semibold" @click.prevent="scroll">{{ $t('Features', project.locale) }}</a></li>
         <li v-for="feature in this.project.features.sortBy('weight')" :key="feature.id">
             <a :href="'#feature_' + feature.id" class="block uppercase mb-3" @click.prevent="scroll">{{ feature.name }}</a>
 

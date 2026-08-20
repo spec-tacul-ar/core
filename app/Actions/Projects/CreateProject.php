@@ -7,6 +7,7 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Account;
 use App\Models\Project;
 use App\Rules\SluggableName as SluggableNameRule;
+use App\Rules\SupportedLocale as SupportedLocaleRule;
 use Illuminate\Auth\Access\Response as GateResponse;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Gate;
@@ -34,6 +35,7 @@ class CreateProject
             'actors.*' => ['string', 'max:250'],
             'features' => ['array', 'max:25'],
             'features.*' => ['string', 'max:250'],
+            'locale' => ['sometimes', 'string', new SupportedLocaleRule()],
             'name' => ['required', 'string', 'max:250', new SluggableNameRule()],
         ];
     }

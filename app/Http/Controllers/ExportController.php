@@ -68,6 +68,7 @@ class ExportController
             'id' => $project->uuid,
             'name' => $project->name,
             'description' => $project->description,
+            'locale' => $project->locale,
             'actors' => $project->actors
                 ->sortBy('created_at')
                 ->sortBy('weight')

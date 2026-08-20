@@ -138,12 +138,14 @@ class AccountProjectsTest extends TestCase
 
         $response = $this->postJson('/api/projects', [
             'features' => ['Authentication'],
+            'locale' => 'fr',
             'name' => 'Roadmap',
             'actors' => ['Operators'],
         ]);
 
         $response->assertCreated();
         $response->assertJsonPath('data.name', 'Roadmap');
+        $response->assertJsonPath('data.locale', 'fr');
 
         $project = Project::query()->where('name', 'Roadmap')->firstOrFail();
 
@@ -174,6 +176,20 @@ class AccountProjectsTest extends TestCase
             'name' => 'Authentication',
             'project_id' => $project->id,
         ]);
+        $this->assertDatabaseHas('projects', [
+            'id' => $project->id,
+            'locale' => 'fr',
+        ]);
+    }
+
+    public function test_projects_add_endpoint_rejects_an_unsupported_locale(): void
+    {
+        $this->actingAsAccount();
+
+        $this->postJson('/api/projects', [
+            'locale' => 'ja',
+            'name' => 'Roadmap',
+        ])->assertUnprocessable()->assertJsonValidationErrors('locale');
     }
 
     public function test_projects_demo_endpoint_sets_collaboration_timestamps_for_real_accounts(): void
@@ -250,12 +266,14 @@ class AccountProjectsTest extends TestCase
 
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'description' => 'Updated description',
+            'locale' => 'fr',
             'name' => 'After',
-        ])->assertOk();
+        ])->assertOk()->assertJsonPath('data.locale', 'fr');
 
         $this->assertDatabaseHas('projects', [
             'id' => $project->id,
             'description' => 'Updated description',
+            'locale' => 'fr',
             'name' => 'After',
         ]);
 
@@ -264,6 +282,20 @@ class AccountProjectsTest extends TestCase
         $this->postJson('/api/projects/' . $project->sqid . '/edit', [
             'name' => 'Blocked',
         ])->assertForbidden();
+    }
+
+    public function test_projects_edit_endpoint_rejects_an_unsupported_locale(): void
+    {
+        $project = Project::factory()->create();
+        $owner = Account::factory()->create();
+
+        $this->attachCollaboration($owner, $project, Role::OWNER);
+        $this->actingAsAccount($owner);
+
+        $this->postJson('/api/projects/' . $project->sqid . '/edit', [
+            'locale' => 'ja',
+            'name' => $project->name,
+        ])->assertUnprocessable()->assertJsonValidationErrors('locale');
     }
 
     public function test_projects_organise_endpoint_allows_editors_and_forbids_viewers(): void

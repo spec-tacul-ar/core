@@ -144,11 +144,27 @@ class Requirement extends Model
     public function title(): Attribute
     {
         return new Attribute(function () {
-            $actors = $this->actors->isNotEmpty() ? $this->actors->pluck('name') : collect(['Users']);
+            $locale = $this->feature->project->locale;
+
+            $actors = $this->actors->isNotEmpty() ? $this->actors->pluck('name') : collect([__('Users', locale: $locale)]);
+
+            // We will try and use PHP 8.5's IntlListFormatter when available.
+            // This has better support for languages that change the conjunction based on vowel sounds.
+            if (class_exists(\IntlListFormatter::class)) {
+                try {
+                    $roles = (new \IntlListFormatter($locale))->format($actors->all());
+
+                    if ($roles !== false) {
+                        return $roles . ' ' . __('can', locale: $locale) . ' ' . $this->name;
+                    }
+                } catch (\IntlException) {
+                    // Fall back to the simple method below.
+                }
+            }
 
             $last_actor = $actors->pop();
 
-            return (!$actors->isEmpty() ? $actors->implode(', ') . ' and ' : '') . $last_actor . ' can ' . $this->name;
+            return (!$actors->isEmpty() ? $actors->implode(', ') . ' ' . __('and', locale: $locale) . ' ' : '') . $last_actor . ' ' . __('can', locale: $locale) . ' ' . $this->name;
         });
     }
 }
