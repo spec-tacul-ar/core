@@ -171,6 +171,8 @@ class Project extends Model
             'features.*.requirements.*.name' => ['nullable', 'string'],
             'features.*.requirements.*.description' => ['nullable', 'string'],
             'features.*.requirements.*.blocked_reason' => ['nullable', 'string'],
+            'features.*.requirements.*.activity_at' => ['nullable', 'date'],
+            'features.*.requirements.*.completed_at' => ['nullable', 'date'],
             'features.*.requirements.*.source' => ['nullable', 'string'],
             'features.*.requirements.*.reference' => ['nullable'],
             'features.*.requirements.*.weight' => ['nullable', 'integer'],
@@ -234,6 +236,15 @@ class Project extends Model
                         $requirement_model->assignments()->create([
                             'actor_id' => $actors[$actor_id]->id,
                         ]);
+                    }
+
+                    if (array_key_exists('completed_at', $requirement_data) || array_key_exists('activity_at', $requirement_data)) {
+                        $requirement_model->forceFill([
+                            'activity_at' => $requirement_data['activity_at'] ?? $requirement_model->activity_at,
+                            'completed_at' => $requirement_model->is_blocked
+                                ? null
+                                : ($requirement_data['completed_at'] ?? null),
+                        ])->saveQuietly();
                     }
                 }
             }

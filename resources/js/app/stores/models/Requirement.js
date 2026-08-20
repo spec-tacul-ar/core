@@ -31,7 +31,11 @@ export default class Requirement extends Model {
     }
 
     get is_complete() {
-        return this.has_tasks && this.tasks.every(task => task.is_complete);
+        if (this.completed_at === null || this.activity_at === null) {
+            return false;
+        }
+
+        return Date.parse(this.completed_at) > Date.parse(this.activity_at);
     }
 
     get is_blocked() {

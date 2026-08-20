@@ -61,6 +61,9 @@ class GetProjectTool extends Tool
                     'title' => $requirement->title,
                     'description' => Str::htmlToMarkdown($requirement->description),
                     'blocked_reason' => $requirement->blocked_reason,
+                    'activity_at' => $requirement->activity_at,
+                    'completed_at' => $requirement->completed_at,
+                    'is_complete' => $requirement->is_complete,
                     'reference' => $requirement->reference,
                     'source' => $requirement->source,
                     'assignments' => $requirement->assignments->map(fn($assignment) => [

@@ -20,6 +20,8 @@ class RequirementResource extends JsonResource
             'weight' => $this->weight,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'activity_at' => $this->activity_at,
+            'completed_at' => $this->completed_at,
 
             'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
             'unknowns' => UnknownResource::collection($this->whenLoaded('unknowns')),

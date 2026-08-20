@@ -45,7 +45,7 @@
 
         <h2 id="available-tools">Available tools</h2>
 
-        <p>The Spectacular MCP server currently exposes read-only tools. Agents can inspect specifications, but they cannot edit projects through MCP yet.</p>
+        <p>The Spectacular MCP server lets agents inspect specifications and update requirement completion.</p>
 
         <table>
             <thead>
@@ -70,6 +70,10 @@
                 <tr>
                     <td><code>GetChangesTool</code></td>
                     <td>Returns project entities that changed since an ISO 8601 timestamp.</td>
+                </tr>
+                <tr>
+                    <td><code>SetRequirementCompletionTool</code></td>
+                    <td>Marks an unblocked requirement as complete or reopens it.</td>
                 </tr>
             </tbody>
         </table>

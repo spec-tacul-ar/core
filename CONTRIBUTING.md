@@ -54,6 +54,6 @@ When we are dealing with a specific entity, we specify it after the entity type.
 
 `comments/234/update`
 
-Sometimes we have to break convention when bulk actions would be inefficient, owing to the number of requests that would otherwise be needed. In the example below, we mark all tasks belonging to requirement 345 as complete.
+Domain actions use a verb that describes the state transition. In the example below, we mark requirement 345 as complete.
 
 `requirements/345/complete`

@@ -76,6 +76,12 @@
             </x-slot:bad>
         </x-docs.examples>
 
+        <h3>Completion</h3>
+
+        <p>Use the requirement's dropdown menu to mark it as complete or reopen it. A blocked requirement cannot be marked as complete.</p>
+
+        <p>Completion is independent of task progress. If the requirement or one of its related items changes after it was completed, the requirement is considered incomplete until it is marked complete again.</p>
+
         <h3 id="tasks">Tasks</h3>
 
         <p>Tasks are the real steps needed to complete the requirement. Tasks are optional because the implementation of a requirement can be trivial or self-evident.</p>
@@ -101,9 +107,7 @@
 
         <h4>Is complete</h4>
 
-        <p>Check this box if a task has been completed. When all tasks have been marked as complete, the requirement itself is automatically marked as complete.</p>
-
-        <p>As the build progresses, you can mark tasks as complete. When all tasks are completed in a requirement, the requirement itself is marked as complete. In the requirement's dropdown menu, you will find an option to complete all tasks at once.</p>
+        <p>Check this box if a task has been completed. Task completion helps track the work within a requirement, but does not automatically complete the requirement itself.</p>
 
         <h3 id="unknowns">Unknowns</h3>
 

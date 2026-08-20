@@ -29,6 +29,7 @@ class Requirement extends Model
     protected $casts = [
         'actor_id' => 'integer',
         'actor_sqid' => AsSqid::class,
+        'completed_at' => 'datetime',
         'feature_sqid' => AsSqid::class,
     ];
 
@@ -60,11 +61,20 @@ class Requirement extends Model
             });
         });
 
-        static::saved(fn($requirement) => $requirement->trackActivity());
-        static::deleted(function ($requirement) {
-            if (! $requirement->isForceDeleting()) {
-                $requirement->trackActivity();
+        static::saving(function ($requirement) {
+            if ($requirement->isDirty('blocked_reason') && $requirement->is_blocked) {
+                $requirement->completed_at = null;
             }
+        });
+
+        static::saved(function ($requirement) {
+            if ($requirement->wasChanged('completed_at')) {
+                $requirement->handleActivity();
+
+                return;
+            }
+
+            $requirement->trackActivity();
         });
 
         static::deleting(function ($requirement) {
@@ -72,6 +82,12 @@ class Requirement extends Model
             $requirement->assignments->each->delete();
             $requirement->unknowns->each->delete();
             $requirement->tasks->each->delete();
+        });
+
+        static::deleted(function ($requirement) {
+            if (! $requirement->isForceDeleting()) {
+                $requirement->trackActivity();
+            }
         });
 
         static::forceDeleting(function ($requirement) {
@@ -124,6 +140,15 @@ class Requirement extends Model
         return $this->hasMany(Unknown::class)->chaperone();
     }
 
+    /* Scopes */
+
+    public function scopeCompleted($query)
+    {
+        return $query
+            ->whereNotNull($query->qualifyColumn('completed_at'))
+            ->whereColumn($query->qualifyColumn('completed_at'), '>', $query->qualifyColumn('activity_at'));
+    }
+
     /* Attributes */
 
     public function isBlocked(): Attribute
@@ -133,7 +158,13 @@ class Requirement extends Model
 
     public function isComplete(): Attribute
     {
-        return new Attribute(fn() => $this->tasks->isNotEmpty() && $this->tasks->every(fn($task) => $task->is_complete));
+        return new Attribute(function () {
+            if ($this->completed_at === null || $this->activity_at === null) {
+                return false;
+            }
+
+            return $this->completed_at->isAfter($this->activity_at);
+        });
     }
 
     public function name(): Attribute
@@ -166,5 +197,19 @@ class Requirement extends Model
 
             return (!$actors->isEmpty() ? $actors->implode(', ') . ' ' . __('and', locale: $locale) . ' ' : '') . $last_actor . ' ' . __('can', locale: $locale) . ' ' . $this->name;
         });
+    }
+
+    /* Helpers */
+
+    public function complete(): void
+    {
+        $this->completed_at = now();
+        $this->save();
+    }
+
+    public function reopen(): void
+    {
+        $this->completed_at = null;
+        $this->save();
     }
 }

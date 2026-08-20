@@ -9,6 +9,7 @@ use App\Mcp\Tools\GetItemTool;
 use App\Mcp\Tools\GetProjectTool;
 use App\Mcp\Tools\ListProjectAccountsTool;
 use App\Mcp\Tools\ListProjectsTool;
+use App\Mcp\Tools\SetRequirementCompletionTool;
 use App\Models\Account;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,6 +45,7 @@ class SpecificationsToolTest extends TestCase
         $this->assertSame('GetProjectTool', app(GetProjectTool::class)->name());
         $this->assertSame('ListProjectAccountsTool', app(ListProjectAccountsTool::class)->name());
         $this->assertSame('ListProjectsTool', app(ListProjectsTool::class)->name());
+        $this->assertSame('SetRequirementCompletionTool', app(SetRequirementCompletionTool::class)->name());
     }
 
     public function test_list_specifications_returns_object_structured_content(): void
@@ -270,6 +272,9 @@ class SpecificationsToolTest extends TestCase
                 ->where('features.0.name', 'Updated feature')
                 ->where('features.0.description', 'Updated feature description.')
                 ->where('features.0.requirements.0.id', $fixture['requirement']->sqid)
+                ->has('features.0.requirements.0.completed_at')
+                ->has('features.0.requirements.0.activity_at')
+                ->where('features.0.requirements.0.is_complete', false)
                 ->where('features.0.requirements.0.assignments.0.actor_id', $fixture['projectActor']->sqid)
                 ->where('features.0.requirements.0.tasks.0.id', $fixture['task']->sqid)
                 ->where('features.0.requirements.0.unknowns.0.id', $fixture['unknown']->sqid)
@@ -289,6 +294,94 @@ class SpecificationsToolTest extends TestCase
                 'id' => $fixture['project']->sqid,
             ])
             ->assertHasErrors(['Project not found.']);
+    }
+
+    public function test_requirement_completion_tool_marks_an_unblocked_requirement_complete_and_reopens_it(): void
+    {
+        $this->travelTo('2026-08-18 10:00:00');
+
+        $fixture = $this->createProjectFixture();
+        $fixture['requirement']->update(['blocked_reason' => null]);
+
+        $this->travelTo('2026-08-18 10:01:00');
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(SetRequirementCompletionTool::class, [
+                'id' => $fixture['requirement']->sqid,
+                'is_complete' => true,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                    ->where('id', $fixture['requirement']->sqid)
+                    ->where('is_complete', true)
+                    ->has('completed_at')
+                    ->has('activity_at'),
+            );
+
+        $completedAt = $fixture['requirement']->fresh()->completed_at->toJSON();
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(GetItemTool::class, [
+                'id' => $fixture['requirement']->sqid,
+                'type' => 'requirement',
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                    ->where('id', $fixture['requirement']->sqid)
+                    ->where('completed_at', $completedAt)
+                    ->has('activity_at')
+                    ->etc(),
+            );
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(SetRequirementCompletionTool::class, [
+                'id' => $fixture['requirement']->sqid,
+                'is_complete' => false,
+            ])
+            ->assertOk()
+            ->assertStructuredContent(
+                fn(AssertableJson $json) => $json
+                    ->where('id', $fixture['requirement']->sqid)
+                    ->where('completed_at', null)
+                    ->where('is_complete', false)
+                    ->has('activity_at'),
+            );
+
+        $this->assertNull($fixture['requirement']->fresh()->completed_at);
+
+        $this->travelBack();
+    }
+
+    public function test_requirement_completion_tool_rejects_blocked_requirements(): void
+    {
+        $fixture = $this->createProjectFixture();
+        $fixture['requirement']->update(['blocked_reason' => 'Waiting on access']);
+
+        SpecificationsServer::actingAs($fixture['account'])
+            ->tool(SetRequirementCompletionTool::class, [
+                'id' => $fixture['requirement']->sqid,
+                'is_complete' => true,
+            ])
+            ->assertHasErrors(['Requirements cannot be completed while blocked.']);
+
+        $this->assertNull($fixture['requirement']->fresh()->completed_at);
+    }
+
+    public function test_requirement_completion_tool_requires_edit_access(): void
+    {
+        $fixture = $this->createProjectFixture(Role::VIEWER);
+        $fixture['requirement']->update(['blocked_reason' => null]);
+
+        foreach ([true, false] as $isComplete) {
+            SpecificationsServer::actingAs($fixture['account'])
+                ->tool(SetRequirementCompletionTool::class, [
+                    'id' => $fixture['requirement']->sqid,
+                    'is_complete' => $isComplete,
+                ])
+                ->assertHasErrors(['Requirement not found or cannot be edited.']);
+        }
     }
 
     private function assertEmptyChangesOrTextResponse(TestResponse $response): void

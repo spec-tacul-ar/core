@@ -40,8 +40,14 @@ class ExportAuthorizationTest extends TestCase
 
     public function test_project_json_export_allows_project_members(): void
     {
+        $this->travelTo('2026-08-18 10:00:00');
+
         $fixture = $this->createProjectFixture(Role::VIEWER);
         $fixture['project']->refresh();
+        $fixture['requirement']->update(['blocked_reason' => null]);
+
+        $this->travelTo('2026-08-18 10:01:00');
+        $fixture['requirement']->complete();
         $this->actingAs($fixture['account']);
 
         $response = $this->getJson('/exports/' . $fixture['project']->sqid . '/json');
@@ -49,6 +55,18 @@ class ExportAuthorizationTest extends TestCase
         $response->assertOk();
         $response->assertJsonPath('name', $fixture['project']->name);
         $response->assertJsonPath('locale', $fixture['project']->locale);
+        $response->assertJsonPath('features.0.requirements.0.completed_at', $fixture['requirement']->completed_at->toJSON());
+        $response->assertJsonPath('features.0.requirements.0.activity_at', $fixture['requirement']->activity_at->toJSON());
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/html')
+            ->assertOk()
+            ->assertSeeText('Complete');
+
+        $this->get('/exports/' . $fixture['project']->sqid . '/markdown')
+            ->assertOk()
+            ->assertSee('[Complete]');
+
+        $this->travelBack();
     }
 
     public function test_project_exports_only_return_the_requested_project(): void
@@ -121,6 +139,8 @@ class ExportAuthorizationTest extends TestCase
 
     public function test_html_and_markdown_exports_use_the_project_locale(): void
     {
+        $this->travelTo('2026-08-18 10:00:00');
+
         $account = Account::factory()->create();
         $project = Project::factory()->create(['locale' => 'fr']);
         $feature = Feature::factory()->for($project)->create(['name' => 'Export Feature']);
@@ -153,6 +173,8 @@ class ExportAuthorizationTest extends TestCase
             'name' => 'Export Task',
             'is_complete' => true,
         ]);
+        $this->travelTo('2026-08-18 10:01:00');
+        $complete_requirement->complete();
 
         $this->attachCollaboration($account, $project, Role::VIEWER);
         $this->actingAs($account);
@@ -182,6 +204,7 @@ class ExportAuthorizationTest extends TestCase
             ->assertSee('* Export Task [Terminé]', false);
 
         $this->assertSame('en', app()->getLocale());
+        $this->travelBack();
     }
 
     public function test_project_exports_include_requirement_references(): void
